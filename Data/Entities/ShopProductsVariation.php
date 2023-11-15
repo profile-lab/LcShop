@@ -4,7 +4,7 @@ namespace LcShop\Data\Entities;
 
 use CodeIgniter\Entity\Entity;
 
-class ShopProductsColor extends Entity
+class ShopProductsVariation extends Entity
 {
 	protected $attributes = [
         'id_app' => null,

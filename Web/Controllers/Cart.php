@@ -114,7 +114,7 @@ class Cart extends ShopMaster
     {
         $processed_cart = [];
         if ($cart = session()->get('site_cart')) {
-            $shop_settings = $this->getShopSettings();
+            $shop_settings = $this->getShopSettings(__web_app_id__);
             // 
             $shop_products_model = new ShopProductsModel();
             $shop_products_model->setForFrontemd();

@@ -1,15 +1,17 @@
 <?php
 
-namespace Lc5\Cms\Controllers;
+namespace LcShop\Cms\Controllers;
 
-use Lc5\Data\Models\ShopProductsCategoriesModel;
-use Lc5\Data\Models\ShopProductsModel;
-use Lc5\Data\Entities\ShopProductItem;
+use Lc5\Cms\Controllers\MasterLc;
+// 
+use LcShop\Data\Models\ShopProductsCategoriesModel;
+use LcShop\Data\Models\ShopProductsModel;
+use LcShop\Data\Entities\ShopProductItem;
 
-use Lc5\Data\Models\ShopProductsTagsModel;
-use Lc5\Data\Models\ShopProductsColorsModel;
-use Lc5\Data\Models\ShopProductsSizesModel;
-use Lc5\Data\Models\ShopAliquoteModel;
+use LcShop\Data\Models\ShopProductsTagsModel;
+use LcShop\Data\Models\ShopProductsVariationsModel;
+use LcShop\Data\Models\ShopProductsSizesModel;
+use LcShop\Data\Models\ShopAliquoteModel;
 
 
 class ShopProducts extends MasterLc
@@ -32,7 +34,7 @@ class ShopProducts extends MasterLc
 		// 
 		$this->lc_ui_date->__set('currernt_module', 'shopproduct');
 		// 
-		$this->current_shop_setting  = $this->getShopSettings();
+		$this->current_shop_setting  = $this->getShopSettings($this->getCurrApp());
 		$this->lc_ui_date->__set('current_shop_setting', $this->current_shop_setting);
 	}
 
@@ -43,7 +45,7 @@ class ShopProducts extends MasterLc
 		$list = $this->shop_products_model->where('parent', 0)->findAll();
 		$this->lc_ui_date->list = $list;
 		// 
-		return view('Lc5\Cms\Views\shop/products/index', $this->lc_ui_date->toArray());
+		return view('LcShop\Cms\Views/products/index', $this->lc_ui_date->toArray());
 	}
 
 	//--------------------------------------------------------------------
@@ -73,8 +75,8 @@ class ShopProducts extends MasterLc
 		$curr_entity->tags_list = $this->getListLikeTags($shop_products_tags_model);
 		$shop_products_sizes_model = new ShopProductsSizesModel();
 		$curr_entity->sizes_list = $this->getListLikeTags($shop_products_sizes_model);
-		$shop_products_colors_model = new ShopProductsColorsModel();
-		$curr_entity->colors_list = $this->getListLikeTags($shop_products_colors_model);
+		$shop_products_variation_model = new ShopProductsVariationsModel();
+		$curr_entity->colors_list = $this->getListLikeTags($shop_products_variation_model);
 		// 
 		if ($this->req->getMethod() == 'post') {
 			// 
@@ -121,7 +123,7 @@ class ShopProducts extends MasterLc
 		}
 		// 
 		$this->lc_ui_date->entity = $curr_entity;
-		return view('Lc5\Cms\Views\shop/products/scheda', $this->lc_ui_date->toArray());
+		return view('LcShop\Cms\Views/products/scheda', $this->lc_ui_date->toArray());
 	}
 
 	//--------------------------------------------------------------------
@@ -139,8 +141,8 @@ class ShopProducts extends MasterLc
 		$curr_entity->tags_list = $this->getListLikeTags($shop_products_tags_model);
 		$shop_products_sizes_model = new ShopProductsSizesModel();
 		$curr_entity->sizes_list = $this->getListLikeTags($shop_products_sizes_model);
-		$shop_products_colors_model = new ShopProductsColorsModel();
-		$curr_entity->colors_list = $this->getListLikeTags($shop_products_colors_model);
+		$shop_products_variation_model = new ShopProductsVariationsModel();
+		$curr_entity->colors_list = $this->getListLikeTags($shop_products_variation_model);
 		$curr_entity->um_list = $this->getListUM();
 		// 
 		// 
@@ -204,7 +206,7 @@ class ShopProducts extends MasterLc
 
 		// 
 		$this->lc_ui_date->entity = $curr_entity;
-		return view('Lc5\Cms\Views\shop/products/scheda', $this->lc_ui_date->toArray());
+		return view('LcShop\Cms\Views/products/scheda', $this->lc_ui_date->toArray());
 	}
 
 

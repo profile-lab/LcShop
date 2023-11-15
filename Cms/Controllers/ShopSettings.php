@@ -1,8 +1,9 @@
 <?php
 
-namespace Lc5\Cms\Controllers;
+namespace LcShop\Cms\Controllers;
 
-use Lc5\Data\Models\ShopSettingsModel;
+use Lc5\Cms\Controllers\MasterLc;
+use LcShop\Data\Models\ShopSettingsModel;
 
 
 class ShopSettings extends MasterLc
@@ -21,7 +22,7 @@ class ShopSettings extends MasterLc
         $this->lc_ui_date->__set('currernt_module', 'shopproduct');
 		$this->lc_ui_date->__set('currernt_module_action', 'shopsettings');
 		$this->lc_ui_date->__set('currernt_module_tab', 'shopsettings');
-		$this->lc_ui_date->__set('shop_tools_tabs', $this->getShopToolsTabs());
+		$this->lc_ui_date->__set('shop_tools_tabs', LcShopConfigs::getShopToolsTabs() );
         // 
 		$this->lc_ui_date->__set('discount_type_list', [(object) ['val' => 'PRICE', 'nome' => 'Imponibile scontato'], (object) ['val' => 'PERCENTAGE', 'nome' => 'Percentuale di sconto'] ] );
     }
@@ -32,7 +33,7 @@ class ShopSettings extends MasterLc
         // // 
         $shop_settings_model = new ShopSettingsModel();
         // 
-        $curr_entity = $this->getShopSettings();
+        $curr_entity = $this->getShopSettings($this->getCurrApp());
         // 
         if ($this->req->getMethod() == 'post') {
             $validate_rules = [
@@ -53,7 +54,7 @@ class ShopSettings extends MasterLc
         }
         // 
         $this->lc_ui_date->entity = $curr_entity;
-        return view('Lc5\Cms\Views\shop/settings/scheda', $this->lc_ui_date->toArray());
+        return view('LcShop\Cms\Views/settings/scheda', $this->lc_ui_date->toArray());
     }
 
 

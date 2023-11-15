@@ -9,7 +9,7 @@ class ShopProductsCategory extends Entity
 	protected $attributes = [
 		'id_app' => null,
         'lang' => null,
-        'parent' => null,
+        'parent' => 0,
         'ordine' => null,
         'public' => null,
         'nome' => null,

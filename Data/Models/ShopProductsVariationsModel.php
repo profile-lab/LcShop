@@ -2,16 +2,16 @@
 namespace LcShop\Data\Models;
 
 use Lc5\Data\Models\MasterModel;
-class ShopProductsColorsModel extends MasterModel
+class ShopProductsVariationsModel extends MasterModel
 {
-	protected $table                = 'shop_products_colors';
+	protected $table                = 'shop_products_variation';
 	protected $primaryKey           = 'id';
 	protected $useSoftDeletes 		= true;
     protected $createdField  		= 'created_at';
     protected $updatedField  		= 'updated_at';
     protected $deletedField  		= 'deleted_at';
 	
-	protected $returnType           = 'LcShop\Data\Entities\ShopProductsColor';
+	protected $returnType           = 'LcShop\Data\Entities\ShopProductsVariation';
 	protected $allowedFields        = [
 		'id_app',
         'lang',

@@ -35,12 +35,12 @@ if (env('custom.hide_lc_cms') === TRUE) {
 				$routes->match(['get', 'post'], 'newpost', 'ShopProductsSizes::newpost', ['as' => 'lc_shop_prod_sizes_new']);
 				$routes->get('', 'ShopProductsSizes::index', ['as' => 'lc_shop_prod_sizes']);
 			});
-			$routes->group('colori', function ($routes) {
-				$routes->get('delete/(:num)', 'ShopProductsColors::delete/$1', ['as' => 'lc_shop_prod_colors_delete']);
-				$routes->match(['get', 'post'], 'combo-newpost', 'ShopProductsColors::ajaxCreate', ['as' => 'lc_shop_prod_colors_data_new']);
-				$routes->match(['get', 'post'], 'edit/(:num)', 'ShopProductsColors::edit/$1', ['as' => 'lc_shop_prod_colors_edit']);
-				$routes->match(['get', 'post'], 'newpost', 'ShopProductsColors::newpost', ['as' => 'lc_shop_prod_colors_new']);
-				$routes->get('', 'ShopProductsColors::index', ['as' => 'lc_shop_prod_colors']);
+			$routes->group('variations', function ($routes) {
+				$routes->get('delete/(:num)', 'ShopProductsVariations::delete/$1', ['as' => 'lc_shop_prod_colors_delete']);
+				$routes->match(['get', 'post'], 'combo-newpost', 'ShopProductsVariations::ajaxCreate', ['as' => 'lc_shop_prod_colors_data_new']);
+				$routes->match(['get', 'post'], 'edit/(:num)', 'ShopProductsVariations::edit/$1', ['as' => 'lc_shop_prod_colors_edit']);
+				$routes->match(['get', 'post'], 'newpost', 'ShopProductsVariations::newpost', ['as' => 'lc_shop_prod_colors_new']);
+				$routes->get('', 'ShopProductsVariations::index', ['as' => 'lc_shop_prod_colors']);
 			});
 			$routes->group('aliquote-iva', function ($routes) {
 				$routes->get('delete/(:num)', 'ShopAliquote::delete/$1', ['as' => 'lc_shop_aliquote_delete']);

@@ -1,12 +1,12 @@
 <?php
 
-namespace Lc5\Cms\Controllers;
+namespace LcShop\Cms\Controllers;
 
-use Lc5\Data\Models\ShopProductsTagsModel as CurrentModel;
-use Lc5\Data\Entities\ShopProductsTag  as CurrentEntity;
+use LcShop\Data\Models\ShopProductsTagsModel as CurrentModel;
+use LcShop\Data\Entities\ShopProductsTag  as CurrentEntity;
 
 use CodeIgniter\API\ResponseTrait;
-
+use Lc5\Cms\Controllers\MasterLc;
 
 class ShopProductsTags extends MasterLc
 {
@@ -25,9 +25,9 @@ class ShopProductsTags extends MasterLc
 		$this->lc_ui_date->__set('module_name', $this->module_name);
 		$this->lc_ui_date->__set('currernt_module_action', 'shopsettings');
 		$this->lc_ui_date->__set('currernt_module_tab', 'shopproductstags');
-		$this->lc_ui_date->__set('shop_tools_tabs', $this->getShopToolsTabs());
+		$this->lc_ui_date->__set('shop_tools_tabs', LcShopConfigs::getShopToolsTabs() );
 		// 
-		$this->current_shop_setting  = $this->getShopSettings();
+		$this->current_shop_setting  = $this->getShopSettings($this->getCurrApp());
 		$this->lc_ui_date->__set('current_shop_setting', $this->current_shop_setting);
 	}
 
@@ -44,7 +44,7 @@ class ShopProductsTags extends MasterLc
 		$list = $shop_products_tags_model->findAll();
 		$this->lc_ui_date->list = $list;
 		// 
-		return view('Lc5\Cms\Views\shop/like-tags/index', $this->lc_ui_date->toArray());
+		return view('LcShop\Cms\Views/like-tags/index', $this->lc_ui_date->toArray());
 	}
 
 
@@ -115,7 +115,7 @@ class ShopProductsTags extends MasterLc
 		}
 		// 
 		$this->lc_ui_date->entity = $curr_entity;
-		return view('Lc5\Cms\Views\shop/like-tags/scheda', $this->lc_ui_date->toArray());
+		return view('LcShop\Cms\Views/like-tags/scheda', $this->lc_ui_date->toArray());
 	}
 
 	//--------------------------------------------------------------------
@@ -154,7 +154,7 @@ class ShopProductsTags extends MasterLc
 		}
 		// 
 		$this->lc_ui_date->entity = $curr_entity;
-		return view('Lc5\Cms\Views\shop/like-tags/scheda', $this->lc_ui_date->toArray());
+		return view('LcShop\Cms\Views/like-tags/scheda', $this->lc_ui_date->toArray());
 	}
 
 	//--------------------------------------------------------------------

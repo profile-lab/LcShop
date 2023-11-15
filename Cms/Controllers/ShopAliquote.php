@@ -1,9 +1,10 @@
 <?php
 
-namespace Lc5\Cms\Controllers;
+namespace LcShop\Cms\Controllers;
 
-use Lc5\Data\Models\ShopAliquoteModel as CurrentModel;
-use Lc5\Data\Entities\ShopAliquota  as CurrentEntity;
+use Lc5\Cms\Controllers\MasterLc;
+use LcShop\Data\Models\ShopAliquoteModel as CurrentModel;
+use LcShop\Data\Entities\ShopAliquota  as CurrentEntity;
 
 
 
@@ -26,9 +27,9 @@ class ShopAliquote extends MasterLc
         $this->lc_ui_date->__set('currernt_module', 'shopproduct');
         $this->lc_ui_date->__set('currernt_module_action', 'shopsettings');
         $this->lc_ui_date->__set('currernt_module_tab', 'shopaliquote');
-        $this->lc_ui_date->__set('shop_tools_tabs', $this->getShopToolsTabs());
+		$this->lc_ui_date->__set('shop_tools_tabs', LcShopConfigs::getShopToolsTabs() );
         // 
-        $this->current_shop_setting  = $this->getShopSettings();
+        $this->current_shop_setting  = $this->getShopSettings($this->getCurrApp());
         $this->lc_ui_date->__set('current_shop_setting', $this->current_shop_setting);
 
     }
@@ -46,7 +47,7 @@ class ShopAliquote extends MasterLc
         $list = $shop_products_tags_model->findAll();
         $this->lc_ui_date->list = $list;
         // 
-        return view('Lc5\Cms\Views\shop/aliquote/index', $this->lc_ui_date->toArray());
+        return view('LcShop\Cms\Views/aliquote/index', $this->lc_ui_date->toArray());
     }
 
 
@@ -79,7 +80,7 @@ class ShopAliquote extends MasterLc
         }
         // 
         $this->lc_ui_date->entity = $curr_entity;
-        return view('Lc5\Cms\Views\shop/aliquote/scheda', $this->lc_ui_date->toArray());
+        return view('LcShop\Cms\Views/aliquote/scheda', $this->lc_ui_date->toArray());
     }
 
     //--------------------------------------------------------------------
@@ -111,7 +112,7 @@ class ShopAliquote extends MasterLc
         }
         // 
         $this->lc_ui_date->entity = $curr_entity;
-        return view('Lc5\Cms\Views\shop/aliquote/scheda', $this->lc_ui_date->toArray());
+        return view('LcShop\Cms\Views/aliquote/scheda', $this->lc_ui_date->toArray());
     }
 
     //--------------------------------------------------------------------

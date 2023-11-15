@@ -1,10 +1,10 @@
 <?php
 
-namespace Lc5\Cms\Controllers;
+namespace LcShop\Cms\Controllers;
 
-use Lc5\Data\Models\ShopProductsCategoriesModel;
-// use Lc5\Data\Models\ShopProductsModel;
-use Lc5\Data\Entities\ShopProductsCategory;
+use Lc5\Cms\Controllers\MasterLc;
+use LcShop\Data\Models\ShopProductsCategoriesModel;
+use LcShop\Data\Entities\ShopProductsCategory;
 
 class ShopProductsCategories extends MasterLc
 {
@@ -24,7 +24,7 @@ class ShopProductsCategories extends MasterLc
 		$this->lc_ui_date->__set('currernt_module_action', 'shopproductscat');
 
 		// 
-		$this->current_shop_setting  = $this->getShopSettings();
+		$this->current_shop_setting  = $this->getShopSettings($this->getCurrApp());
 		$this->lc_ui_date->__set('current_shop_setting', $this->current_shop_setting);
 	}
 
@@ -37,7 +37,7 @@ class ShopProductsCategories extends MasterLc
 		$list = $shop_product_cat_model->findAll();
 		$this->lc_ui_date->list = $list;
 		// 
-		return view('Lc5\Cms\Views\shop/products-cats/index', $this->lc_ui_date->toArray());
+		return view('LcShop\Cms\Views/products-cats/index', $this->lc_ui_date->toArray());
 	}
 	//--------------------------------------------------------------------
 	public function newpost()
@@ -74,7 +74,7 @@ class ShopProductsCategories extends MasterLc
 		}
 		// 
 		$this->lc_ui_date->entity = $curr_entity;
-		return view('Lc5\Cms\Views\shop/products-cats/scheda', $this->lc_ui_date->toArray());
+		return view('LcShop\Cms\Views/products-cats/scheda', $this->lc_ui_date->toArray());
 	}
 
 	//--------------------------------------------------------------------
@@ -111,6 +111,6 @@ class ShopProductsCategories extends MasterLc
 		}
 		// 
 		$this->lc_ui_date->entity = $curr_entity;
-		return view('Lc5\Cms\Views\shop/products-cats/scheda', $this->lc_ui_date->toArray());
+		return view('LcShop\Cms\Views/products-cats/scheda', $this->lc_ui_date->toArray());
 	}
 }

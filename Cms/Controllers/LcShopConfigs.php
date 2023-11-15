@@ -10,7 +10,7 @@ class LcShopConfigs
     public static function getLcModulesMenu(): array
     {
         $mudules = [];
-        $mudules['shop'] = (object) [
+        $mudules['lcshop'] = (object) [
             'label' => 'Shop',
             'route' => site_url(route_to('lc_shop')),
             'module' => 'lcshop',

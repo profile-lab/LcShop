@@ -9,7 +9,7 @@ use LcShop\Data\Models\ShopSettingsModel;
 // 
 use LcShop\Data\Models\ShopProductsCategoriesModel;
 use LcShop\Data\Models\ShopProductsTagsModel;
-use LcShop\Data\Models\ShopProductsColorsModel;
+use LcShop\Data\Models\ShopProductsVariationsModel;
 use LcShop\Data\Models\ShopProductsSizesModel;
 
 use Config\Services;
@@ -21,7 +21,7 @@ class Shop extends \Lc5\Web\Controllers\MasterWeb
     private $shop_products_cat_model;
     private $shop_products_model;
     private $shop_products_tags_model;
-    private $shop_products_colors_model;
+    private $shop_products_variation_model;
     private $shop_products_sizes_model;
     // 
     private $cart;
@@ -37,7 +37,7 @@ class Shop extends \Lc5\Web\Controllers\MasterWeb
     {
         parent::__construct();
         // 
-        $this->shop_settings = $this->getShopSettings();
+        $this->shop_settings = $this->getShopSettings(__web_app_id__);
         // 
         $this->shop_products_cat_model = new ShopProductsCategoriesModel();
         $this->shop_products_cat_model->setForFrontemd();
@@ -47,8 +47,8 @@ class Shop extends \Lc5\Web\Controllers\MasterWeb
 
         $this->shop_products_tags_model = new ShopProductsTagsModel();
         $this->shop_products_tags_model->setForFrontemd();
-        $this->shop_products_colors_model = new ShopProductsColorsModel();
-        $this->shop_products_colors_model->setForFrontemd();
+        $this->shop_products_variation_model = new ShopProductsVariationsModel();
+        $this->shop_products_variation_model->setForFrontemd();
         $this->shop_products_sizes_model = new ShopProductsSizesModel();
         $this->shop_products_sizes_model->setForFrontemd();
         // 
@@ -68,7 +68,7 @@ class Shop extends \Lc5\Web\Controllers\MasterWeb
         // }
         $this->web_ui_date->__set('tags', $this->tags);
         // 
-        $this->colors = $this->shop_products_colors_model->asObject()->findAll();
+        $this->colors = $this->shop_products_variation_model->asObject()->findAll();
         // foreach ($this->colors as $color) {
         //     $color->permalink = route_to(__locale_uri__ . 'web_shop_category', $color->guid);
         // }
