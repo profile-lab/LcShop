@@ -20,7 +20,7 @@ class ShopProductsCategories extends MasterLc
 		$this->lc_ui_date->__set('request', $this->req);
 		$this->lc_ui_date->__set('route_prefix', $this->route_prefix);
 		$this->lc_ui_date->__set('module_name', $this->module_name);
-		$this->lc_ui_date->__set('currernt_module', 'shopproduct');
+		$this->lc_ui_date->__set('currernt_module', 'lcshop');
 		$this->lc_ui_date->__set('currernt_module_action', 'shopproductscat');
 
 		// 

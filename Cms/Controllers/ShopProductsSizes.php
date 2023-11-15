@@ -23,7 +23,7 @@ class ShopProductsSizes extends MasterLc
 		$this->lc_ui_date->__set('request', $this->req);
 		$this->lc_ui_date->__set('route_prefix', $this->route_prefix);
 		$this->lc_ui_date->__set('module_name', $this->module_name);
-		$this->lc_ui_date->__set('currernt_module', 'shopproduct');
+		$this->lc_ui_date->__set('currernt_module', 'lcshop');
 		$this->lc_ui_date->__set('currernt_module_action', 'shopsettings');
 		$this->lc_ui_date->__set('currernt_module_tab', 'shopproductssizes');
 		$this->lc_ui_date->__set('shop_tools_tabs', LcShopConfigs::getShopToolsTabs() );

@@ -32,7 +32,7 @@ class ShopProducts extends MasterLc
 		$this->lc_ui_date->__set('route_prefix', $this->route_prefix);
 		$this->lc_ui_date->__set('module_name', $this->module_name);
 		// 
-		$this->lc_ui_date->__set('currernt_module', 'shopproduct');
+		$this->lc_ui_date->__set('currernt_module', 'lcshop');
 		// 
 		$this->current_shop_setting  = $this->getShopSettings($this->getCurrApp());
 		$this->lc_ui_date->__set('current_shop_setting', $this->current_shop_setting);
