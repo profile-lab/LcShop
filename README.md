@@ -7,7 +7,7 @@
         OR 
         git submodule add https://github.com/profile-lab/LcShop <destination folder>
 
-## Base Configuration 
+## Base Configuration and Namespaces
 
 
 Add LC5 psr4 namespace in App\Config\Autoload.php
@@ -20,10 +20,21 @@ Add LC5 psr4 namespace in App\Config\Autoload.php
         ];
 
 
+## App Services
 
-Add LC5 services in App\Config\Services.php
+Add LcShop and Siteuser services in App\Config\Services.php
 
 
+        //--------------------------------------------------------------------
+        public static function users($getShared = true)
+        {
+                if ($getShared) {
+                        return static::getSharedInstance('users');
+                }
+                return new \Lc5\Web\Controllers\Users\UserTools();
+        }
+
+        //--------------------------------------------------------------------
         public static function shopcart($getShared = true)
         {
                 if ($getShared) {
