@@ -33,7 +33,10 @@ class ShopSettings extends MasterLc
         // // 
         $shop_settings_model = new ShopSettingsModel();
         // 
-        $curr_entity = $this->getShopSettings($this->getCurrApp());
+        // $curr_entity = $this->getShopSettings($this->getCurrApp());
+        if (!$curr_entity = $shop_settings_model->where('id_app', $this->getCurrApp())->first()) {
+			throw \CodeIgniter\Exceptions\PageNotFoundException::forPageNotFound();
+		}
         // 
         if ($this->req->getMethod() == 'post') {
             $validate_rules = [
