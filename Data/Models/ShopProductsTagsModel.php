@@ -1,6 +1,8 @@
 <?php
 
-namespace Lc5\Data\Models;
+namespace LcShop\Data\Models;
+
+use Lc5\Data\Models\MasterModel;
 
 class ShopProductsTagsModel extends MasterModel
 {
@@ -11,7 +13,7 @@ class ShopProductsTagsModel extends MasterModel
 	protected $updatedField  		= 'updated_at';
 	protected $deletedField  		= 'deleted_at';
 
-	protected $returnType           = 'Lc5\Data\Entities\ShopProductsTag';
+	protected $returnType           = 'LcShop\Data\Entities\ShopProductsTag';
 	protected $allowedFields        = [
 		'id_app',
 		'lang',

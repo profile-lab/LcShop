@@ -1,6 +1,9 @@
 <?php
 
-namespace Lc5\Data\Models;
+namespace LcShop\Data\Models;
+
+use Lc5\Data\Models\MasterModel;
+
 class ShopProductsSizesModel extends MasterModel
 {
 	protected $table                = 'shop_products_sizes';
@@ -10,7 +13,7 @@ class ShopProductsSizesModel extends MasterModel
     protected $updatedField  		= 'updated_at';
     protected $deletedField  		= 'deleted_at';
 	
-	protected $returnType           = 'Lc5\Data\Entities\ShopProductsSize';
+	protected $returnType           = 'LcShop\Data\Entities\ShopProductsSize';
 	protected $allowedFields        = [
 		'id_app',
         'lang',

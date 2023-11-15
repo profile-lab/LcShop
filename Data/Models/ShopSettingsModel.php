@@ -1,6 +1,6 @@
 <?php
 
-namespace Lc5\Data\Models;
+namespace LcShop\Data\Models;
 
 use CodeIgniter\Model;
 
@@ -13,7 +13,7 @@ class ShopSettingsModel extends Model
     protected $updatedField  		= 'updated_at';
     protected $deletedField  		= 'deleted_at';
 	
-	protected $returnType           = 'Lc5\Data\Entities\Shopsettings';
+	protected $returnType           = 'LcShop\Data\Entities\Shopsettings';
 	protected $allowedFields        = [
 		'id',
         'id_app',

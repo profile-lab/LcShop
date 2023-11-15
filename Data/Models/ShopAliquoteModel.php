@@ -1,6 +1,8 @@
 <?php
 
-namespace Lc5\Data\Models;
+namespace LcShop\Data\Models;
+
+use Lc5\Data\Models\MasterModel;
 
 class ShopAliquoteModel extends MasterModel
 {
@@ -11,7 +13,7 @@ class ShopAliquoteModel extends MasterModel
 	protected $updatedField  		= 'updated_at';
 	protected $deletedField  		= 'deleted_at';
 
-	protected $returnType           = 'Lc5\Data\Entities\ShopAliquota';
+	protected $returnType           = 'LcShop\Data\Entities\ShopAliquota';
 	protected $allowedFields        = [
 		'id',
         'id_app',

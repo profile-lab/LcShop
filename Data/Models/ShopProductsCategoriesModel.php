@@ -1,6 +1,9 @@
 <?php
 
-namespace Lc5\Data\Models;
+namespace LcShop\Data\Models;
+
+use Lc5\Data\Models\MasterModel;
+use Lc5\Data\Models\MediaModel;
 
 class ShopProductsCategoriesModel  extends MasterModel
 {
@@ -11,7 +14,7 @@ class ShopProductsCategoriesModel  extends MasterModel
 	protected $updatedField  		= 'updated_at';
 	protected $deletedField  		= 'deleted_at';
 
-	protected $returnType           = 'Lc5\Data\Entities\ShopProductsCategory';
+	protected $returnType           = 'LcShop\Data\Entities\ShopProductsCategory';
 	protected $allowedFields        = [
 		'id_app',
 		'lang',

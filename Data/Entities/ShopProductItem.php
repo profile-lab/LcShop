@@ -1,6 +1,6 @@
 <?php
 
-namespace Lc5\Data\Entities;
+namespace LcShop\Data\Entities;
 
 use CodeIgniter\Entity\Entity;
 
