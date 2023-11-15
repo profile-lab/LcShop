@@ -21,13 +21,13 @@ class Shop extends \Lc5\Web\Controllers\MasterWeb
     private $shop_products_cat_model;
     private $shop_products_model;
     private $shop_products_tags_model;
-    private $shop_products_variation_model;
+    private $shop_products_variations_model;
     private $shop_products_sizes_model;
     // 
     private $cart;
     private $categories;
     private $tags;
-    private $colors;
+    private $variations;
     private $sizes;
 
     private $shop_settings;
@@ -47,8 +47,8 @@ class Shop extends \Lc5\Web\Controllers\MasterWeb
 
         $this->shop_products_tags_model = new ShopProductsTagsModel();
         $this->shop_products_tags_model->setForFrontemd();
-        $this->shop_products_variation_model = new ShopProductsVariationsModel();
-        $this->shop_products_variation_model->setForFrontemd();
+        $this->shop_products_variations_model = new ShopProductsVariationsModel();
+        $this->shop_products_variations_model->setForFrontemd();
         $this->shop_products_sizes_model = new ShopProductsSizesModel();
         $this->shop_products_sizes_model->setForFrontemd();
         // 
@@ -68,16 +68,10 @@ class Shop extends \Lc5\Web\Controllers\MasterWeb
         // }
         $this->web_ui_date->__set('tags', $this->tags);
         // 
-        $this->colors = $this->shop_products_variation_model->asObject()->findAll();
-        // foreach ($this->colors as $color) {
-        //     $color->permalink = route_to(__locale_uri__ . 'web_shop_category', $color->guid);
-        // }
-        $this->web_ui_date->__set('colors', $this->colors);
+        $this->variations = $this->shop_products_variations_model->asObject()->findAll();
+        $this->web_ui_date->__set('variations', $this->variations);
         // 
         $this->sizes = $this->shop_products_sizes_model->asObject()->findAll();
-        // foreach ($this->sizes as $size) {
-        //     $tag->permalink = route_to(__locale_uri__ . 'web_shop_category', $size->guid);
-        // }
         $this->web_ui_date->__set('sizes', $this->sizes);
         // 
 
