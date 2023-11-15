@@ -76,7 +76,8 @@ class ShopProducts extends MasterLc
 		$shop_products_sizes_model = new ShopProductsSizesModel();
 		$curr_entity->sizes_list = $this->getListLikeTags($shop_products_sizes_model);
 		$shop_products_variation_model = new ShopProductsVariationsModel();
-		$curr_entity->colors_list = $this->getListLikeTags($shop_products_variation_model);
+		$curr_entity->variation_list = $this->getListLikeTags($shop_products_variation_model);
+		$curr_entity->um_list = $this->getListUM();
 		// 
 		if ($this->req->getMethod() == 'post') {
 			// 
@@ -142,7 +143,7 @@ class ShopProducts extends MasterLc
 		$shop_products_sizes_model = new ShopProductsSizesModel();
 		$curr_entity->sizes_list = $this->getListLikeTags($shop_products_sizes_model);
 		$shop_products_variation_model = new ShopProductsVariationsModel();
-		$curr_entity->colors_list = $this->getListLikeTags($shop_products_variation_model);
+		$curr_entity->variation_list = $this->getListLikeTags($shop_products_variation_model);
 		$curr_entity->um_list = $this->getListUM();
 		// 
 		// 

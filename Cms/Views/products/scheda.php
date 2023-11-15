@@ -41,7 +41,7 @@
                     <?= view('Lc5\Cms\Views\form-cmp/text', ['item' => ['label' => 'Modello', 'name' => 'modello', 'value' => $entity->modello, 'placeholder' => 'Nome modello']]) ?>
                 </div>
                 <div class="row form-row row-colore">
-                    <?= view('Lc5\Cms\Views\form-cmp/select-search', ['item' => ['label' => 'Colore', 'input_class' => 'select-tags-colore', 'name' => 'colore', 'value' => (isset($entity->colore)) ? $entity->colore : null,  'sources' => $entity->colors_list]]) ?>
+                    <?= view('Lc5\Cms\Views\form-cmp/select-search', ['item' => ['label' => 'Colore', 'input_class' => 'select-tags-colore', 'name' => 'colore', 'value' => (isset($entity->colore)) ? $entity->colore : null,  'sources' => $entity->variation_list]]) ?>
                     <?= view('Lc5\Cms\Views\form-cmp/select-search', ['item' => ['label' => 'Misura', 'input_class' => 'select-tags-misura', 'name' => 'misura', 'value' => (isset($entity->misura)) ? $entity->misura : null,  'sources' => $entity->sizes_list]]) ?>
                 </div>
                 <div class="row">
