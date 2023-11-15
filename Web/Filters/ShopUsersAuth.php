@@ -1,6 +1,6 @@
 <?php
 
-namespace Lc5\Web\Filters;
+namespace LcShop\Web\Filters;
 
 use CodeIgniter\Filters\FilterInterface;
 use CodeIgniter\HTTP\RequestInterface;
@@ -8,7 +8,7 @@ use CodeIgniter\HTTP\ResponseInterface;
 // 
 use Config\Services;
 
-class SiteUsersAuth implements FilterInterface
+class ShopUsersAuth implements FilterInterface
 {
 	public function before(RequestInterface $request, $arguments = null)
 	{

@@ -10,6 +10,6 @@ namespace Config;
 
 if (file_exists(APPPATH . 'Routes/shop-web.php')) {
 	require APPPATH . 'Routes/shop-web.php';
-}else if (file_exists(ROOTPATH.'LcShop/Web/Routes/shop-web.php')) {
-	require ROOTPATH.'LcShop/Web/Routes/shop-web.php';
+}else if (file_exists(ROOTPATH.'LcShop/Web/Routes/lcshop-web.php')) {
+	require ROOTPATH.'LcShop/Web/Routes/lcshop-web.php';
 }

@@ -26,12 +26,10 @@ Add LC5 services in App\Config\Services.php
 
         public static function shopcart($getShared = true)
         {
-                if ($getShared)
-                {
-                return static::getSharedInstance('shopcart');
+                if ($getShared) {
+                        return static::getSharedInstance('shopcart');
                 }
-
-                return new \LcShop\Web\Controllers\Shop\Cart();
+                return new \LcShop\Web\Controllers\Cart();
         }
 
 ## Base Controller 
@@ -46,16 +44,16 @@ Add getShopSettings method in App\Controllers\BaseController.php
         protected function getShopSettings($current_app_id)
         {
                 if(!$current_app_id){
-                throw \CodeIgniter\Exceptions\PageNotFoundException::forPageNotFound();
-                }
-                if (class_exists('\LcShop\Data\Models\ShopSettingsModel')) {
-                // 
-                $shop_settings_model = new \LcShop\Data\Models\ShopSettingsModel();
-                if (!$shop_settings_entity = $shop_settings_model->asObject()->where('id_app', $current_app_id)->first()) {
                         throw \CodeIgniter\Exceptions\PageNotFoundException::forPageNotFound();
                 }
-                // 
-                return $shop_settings_entity;
+                if (class_exists('\LcShop\Data\Models\ShopSettingsModel')) {
+                        // 
+                        $shop_settings_model = new \LcShop\Data\Models\ShopSettingsModel();
+                        if (!$shop_settings_entity = $shop_settings_model->asObject()->where('id_app', $current_app_id)->first()) {
+                                throw \CodeIgniter\Exceptions\PageNotFoundException::forPageNotFound();
+                        }
+                        // 
+                        return $shop_settings_entity;
                 }
                 throw \CodeIgniter\Exceptions\PageNotFoundException::forPageNotFound();
 
