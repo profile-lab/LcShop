@@ -1,5 +1,5 @@
 <aside class="sidebar shop_sidebar">
-    <?= view($base_view_folder . 'shop/components/mini-cart') ?>
+    <?= view($base_view_folder . 'components/mini-cart') ?>
     <h4>Categorie</h4>
     <?php if (isset($categories) && is_array($categories)) { ?>
         <ul class="shop_category_list">

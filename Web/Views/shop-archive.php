@@ -16,11 +16,11 @@
         <div class="shop_content shop_content_listing">
             <?php if (isset($products_archive) && is_iterable($products_archive) && count($products_archive) > 0) { ?>
                 <?php foreach ($products_archive as $single) { ?>
-                    <?= view($base_view_folder . 'shop/components/product-listing-card', ['single_items' => $single]) ?>
+                    <?= view($base_view_folder . 'components/product-listing-card', ['single_items' => $single]) ?>
                 <?php } ?>
             <?php } ?>
         </div>
-        <?= view($base_view_folder . 'shop/components/sidebar') ?>
+        <?= view($base_view_folder . 'components/sidebar') ?>
     </div>
 </section>
 <?= $this->endSection() ?>
