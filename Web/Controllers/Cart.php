@@ -7,6 +7,10 @@ use LcShop\Data\Models\ShopSettingsModel;
 
 class Cart extends ShopMaster
 {
+    protected $cartTotal = 0;
+    protected $cartTotalFormatted = 0;
+    protected $referenze = 0;
+    protected $referenze_totali  = 0;
     //--------------------------------------------------------------------
     public function __construct()
     {
@@ -15,8 +19,7 @@ class Cart extends ShopMaster
     //--------------------------------------------------------------------
     public function checkCartAction() //($category_guid = null)
     {
-
-        if ($this->req->getMethod() == 'post') {
+        if ($this->req->getPost()) {
             if ($this->req->getPost('cart_action') == 'ADD') {
                 if ($this->addToCart($this->req->getPost('prod_id'), 'p_')) {
                     return TRUE;
@@ -75,7 +78,7 @@ class Cart extends ShopMaster
         if (!$cart = session()->get('site_cart')) {
             $cart = [];
         }
-        if(isset($cart[$row_key])){
+        if (isset($cart[$row_key])) {
             unset($cart[$row_key]);
         }
         session()->set(['site_cart' => $cart]);
@@ -87,8 +90,10 @@ class Cart extends ShopMaster
         if (!$cart = session()->get('site_cart')) {
             $cart = [];
         }
-        if(isset($cart[$row_key])){
-           $cart[$row_key]+= 1;
+        if (isset($cart[$row_key])) {
+            $cart[$row_key] += 1;
+        } else {
+            $cart[$row_key] = 1;
         }
         session()->set(['site_cart' => $cart]);
         return $cart;
@@ -99,12 +104,12 @@ class Cart extends ShopMaster
         if (!$cart = session()->get('site_cart')) {
             $cart = [];
         }
-        if(isset($cart[$row_key])){
-            $cart[$row_key]-= 1;
-            if($cart[$row_key] < 1){
+        if (isset($cart[$row_key])) {
+            $cart[$row_key] -= 1;
+            if ($cart[$row_key] < 1) {
                 unset($cart[$row_key]);
             }
-         }
+        }
         session()->set(['site_cart' => $cart]);
         return $cart;
     }
@@ -113,6 +118,8 @@ class Cart extends ShopMaster
     public function getSiteCart()
     {
         $processed_cart = [];
+        $this->cartTotal = 0;
+        $this->cartTotalFormatted = 0;
         if ($cart = session()->get('site_cart')) {
             $shop_settings = $this->getShopSettings(__web_app_id__);
             // 
@@ -124,16 +131,17 @@ class Cart extends ShopMaster
                     $key_parameters = explode('_', $key);
                     if (isset($key_parameters[1])) {
                         if ($prod = $shop_products_model->select(['id', 'nome', 'titolo', 'modello', 'giacenza', 'guid', 'price', 'promo_price', 'ali'])->asObject()->find($key_parameters[1])) {
-                            $permalink = route_to(__locale_uri__.'web_shop_detail',$prod->guid);
+                            $permalink = route_to(__locale_uri__ . 'web_shop_detail', $prod->guid);
                             if (isset($key_parameters[2]) && $key_parameters[2] != $key_parameters[1] && $modello = $shop_products_model->select(['id', 'nome', 'titolo', 'modello', 'giacenza', 'guid', 'price', 'promo_price', 'ali'])->asObject()->find($key_parameters[2])) {
                                 if ($modello->price < 0.01) {
                                     $modello->prezzo = $prod->prezzo;
                                 }
-                                $permalink = route_to(__locale_uri__.'web_shop_detail_model',$prod->guid, $modello->id);
-                            
+                                $permalink = route_to(__locale_uri__ . 'web_shop_detail_model', $prod->guid, $modello->id);
                             } else {
                                 $modello = $prod;
                             }
+                            $this->cartTotal += ($modello->prezzo * $qnt);
+                            $this->referenze_totali += $qnt;
 
                             $processed_cart[$key] = (object) [
                                 'row_key' => $key,
@@ -143,15 +151,21 @@ class Cart extends ShopMaster
                                 'modello' => $modello->modello,
                                 'qnt' => $qnt,
                                 'prezzo_uni' => number_format(($modello->prezzo), 2, ',', '.'),
-                                'prezzo' => number_format(($modello->prezzo*$qnt), 2, ',', '.')
+                                'prezzo' => number_format(($modello->prezzo * $qnt), 2, ',', '.')
                             ];
                         }
                     }
                 }
             }
         }
-        // d($processed_cart);
-        return $processed_cart;
+        $this->cartTotalFormatted = number_format($this->cartTotal, 2, ',', '.');
+        return (object) [
+            'products' => $processed_cart,
+            'total' => $this->cartTotal,
+            'total_formatted' => $this->cartTotalFormatted,
+            'referenze' => count($processed_cart),
+            'referenze_totali' => $this->referenze_totali,
+        ];
     }
 
 
