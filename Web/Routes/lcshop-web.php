@@ -2,8 +2,9 @@
 
 $req = \Config\Services::request();
 if (!$req->isCLI()) {
-	$supportedLocalesWithoutDefault = array_diff($req->config->supportedLocales, array($req->config->defaultLocale));
-	$uri =$req->getUri();
+	$uri = $req->getUri();
+	$supportedLocales = config(App::class)->{'supportedLocales'};
+	$supportedLocalesWithoutDefault = array_diff($supportedLocales, array($req->getDefaultLocale()));
 	if (in_array($uri->getSegment(1), $supportedLocalesWithoutDefault)) {
 		// 
 		if (env('custom.has_shop') === TRUE) {
