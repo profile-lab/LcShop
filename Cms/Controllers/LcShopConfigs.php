@@ -12,28 +12,32 @@ class LcShopConfigs
         $mudules = [];
         $mudules['lcshop'] = (object) [
             'label' => 'Shop',
-            'route' => site_url(route_to('lc_shop')),
+            'route' => 'lc_shop',
             'module' => 'lcshop',
             'ico' => 'basket',
             'items' => [
                 (object) [
                     'label' => 'Lista Prodotti',
-                    'route' => site_url(route_to('lc_shop_prod')),
+                    'route' => 'lc_shop_prod',
+                    // 'route' => site_url(route_to('lc_shop_prod')),
                     'module_action' => 'index',
                 ],
                 (object) [
                     'label' => 'Nuovo Prodotto',
-                    'route' => site_url(route_to('lc_shop_prod_new')),
+                    'route' => 'lc_shop_prod_new',
+                    // 'route' => site_url(route_to('lc_shop_prod_new')),
                     'module_action' => 'newpost',
                 ],
                 (object) [
                     'label' => 'Categorie Prodotti',
-                    'route' => site_url(route_to('lc_shop_prod_cat')),
+                    'route' => 'lc_shop_prod_cat',
+                    // 'route' => site_url(route_to('lc_shop_prod_cat')),
                     'module_action' => 'shopproductscat',
                 ],
                 (object) [
                     'label' => 'Settings',
-                    'route' => site_url(route_to('lc_shop_settings')),
+                    'route' => 'lc_shop_settings',
+                    // 'route' => site_url(route_to('lc_shop_settings')),
                     'module_action' => 'shopsettings',
                 ],
 
