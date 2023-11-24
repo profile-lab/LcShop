@@ -7,6 +7,10 @@
         OR 
         git submodule add https://github.com/profile-lab/LcShop <destination folder>
 
+## Update/Download submodules
+        
+        git submodule update --init --recursive
+
 ## Base Configuration and Namespaces
 
 
