@@ -170,6 +170,7 @@ class Shop extends \Lc5\Web\Controllers\MasterWeb
                 throw \CodeIgniter\Exceptions\PageNotFoundException::forPageNotFound();
             }
             $this->shop_products_model->extendModelByParent($curr_entity, 'min');
+            // d($curr_entity);
         }
 
 

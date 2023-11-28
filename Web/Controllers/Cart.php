@@ -117,6 +117,7 @@ class Cart extends ShopMaster
     //-------------------------------------------------
     public function getSiteCart()
     {
+        
         $processed_cart = [];
         $this->cartTotal = 0;
         $this->cartTotalFormatted = 0;

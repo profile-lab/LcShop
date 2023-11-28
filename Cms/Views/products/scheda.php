@@ -31,17 +31,20 @@
         <div class="col-12 col-lg-9 scheda_body">
             <div class="first-row">
                 <div class="row">
+                    <?php /*
+                    
                     <?php if (!isset($entity->parent_entity)) { ?>
                         <?= view('Lc5\Cms\Views\form-cmp/text', ['item' => ['label' => 'Nome', 'name' => 'nome', 'value' => $entity->nome,  'placeholder' => 'Nome']]) ?>
                         <?= view('Lc5\Cms\Views\form-cmp/text', ['item' => ['label' => 'Prodotto', 'name' => 'titolo', 'value' => $entity->titolo, 'placeholder' => 'Nome prodotto']]) ?>
                     <?php } ?>
+                    */ ?>
                     <?php /*
                     <?= view('Lc5\Cms\Views\form-cmp/text', ['item' => ['label' => 'Sottotitolo', 'name' => 'sottotitolo', 'value' => $entity->sottotitolo, 'placeholder' => '']]) ?>
                     */ ?>
                     <?= view('Lc5\Cms\Views\form-cmp/text', ['item' => ['label' => 'Modello', 'name' => 'modello', 'value' => $entity->modello, 'placeholder' => 'Nome modello']]) ?>
                 </div>
                 <div class="row form-row row-colore">
-                    <?= view('Lc5\Cms\Views\form-cmp/select-search', ['item' => ['label' => 'Colore', 'input_class' => 'select-tags-colore', 'name' => 'colore', 'value' => (isset($entity->colore)) ? $entity->colore : null,  'sources' => $entity->variations_list]]) ?>
+                    <?= view('Lc5\Cms\Views\form-cmp/select-search', ['item' => ['label' => 'Tipo', 'input_class' => 'select-tags-colore', 'name' => 'colore', 'value' => (isset($entity->colore)) ? $entity->colore : null,  'sources' => $entity->variations_list]]) ?>
                     <?= view('Lc5\Cms\Views\form-cmp/select-search', ['item' => ['label' => 'Misura', 'input_class' => 'select-tags-misura', 'name' => 'misura', 'value' => (isset($entity->misura)) ? $entity->misura : null,  'sources' => $entity->sizes_list]]) ?>
                 </div>
                 <div class="row">
@@ -128,7 +131,11 @@
                     <div class="bg-light rounded">
                         <?php if (!isset($entity->parent_entity)) { ?>
                             <div class="row">
+                                <?= view('Lc5\Cms\Views\form-cmp/readonly', ['item' => ['label' => 'Nome', 'value' => $entity->nome, 'name' => 'nome',  'width' => 'col-12', 'placeholder' => '', 'if_active_name' => 'nome',  'enabled' => (($entity->id) ? TRUE : FALSE)]]) ?>
+                                <?= view('Lc5\Cms\Views\form-cmp/readonly', ['item' => ['label' => 'Guid', 'value' => $entity->guid, 'width' => 'col-12', 'placeholder' => '', 'if_active_name' => 'guid',  'enabled' => (($entity->id) ? TRUE : FALSE)]]) ?>
+                                <?php /*
                                 <?= view('Lc5\Cms\Views\form-cmp/readonly', ['item' => ['label' => 'Guid', 'value' => $entity->guid,  'placeholder' => '']]) ?>
+                                */ ?>
                             </div>
                         <?php } ?>
                         <div class="row">
@@ -149,19 +156,13 @@
                         <div class="row">
                             <?= view('Lc5\Cms\Views\form-cmp/number', ['item' => ['label' => 'Imponibile', 'name' => 'price', 'value' => $entity->price,  'placeholder' => 'Prezzo imponibile € 0,00', 'step' => '0.01', 'decimal' => 2]]) ?>
                         </div>
-                        <?php if (!isset($entity->parent_entity)) { ?>
-                            <div class="row">
-                                <?php if (isset($entity->aliquote_list) && is_iterable($entity->aliquote_list)) { ?>
-                                    <?php if (count($entity->aliquote_list) > 1) { ?>
-                                        <?= view('Lc5\Cms\Views\form-cmp/select', ['item' => ['label' => 'Aliquota', 'name' => 'ali', 'value' => $entity->ali, 'sources' => $entity->aliquote_list, 'no_empty' => true]]) ?>
-                                    <?php } else { ?>
-                                        <?= view('Lc5\Cms\Views\form-cmp/hidden', ['item' => ['name' => 'ali', 'value' => $entity->aliquote_list[0]->val]]) ?>
-                                    <?php }  ?>
-                                <?php } else { ?>
-                                    <?= view('Lc5\Cms\Views\form-cmp/number', ['item' => ['label' => 'Aliquota', 'name' => 'ali', 'value' => $entity->ali, 'placeholder' => '%']]) ?>
-                                <?php } ?>
-                            </div>
-                        <?php } ?>
+                        <div class="row">
+                            <?php if (isset($entity->aliquote_list) && is_iterable($entity->aliquote_list)) { ?>
+                                <?= view('Lc5\Cms\Views\form-cmp/select', ['item' => ['label' => 'Aliquota', 'name' => 'ali', 'value' => $entity->ali, 'sources' => $entity->aliquote_list, 'no_empty' => true]]) ?>
+                            <?php } else { ?>
+                                <?= view('Lc5\Cms\Views\form-cmp/number', ['item' => ['label' => 'Aliquota', 'name' => 'ali', 'value' => $entity->ali, 'placeholder' => '%']]) ?>
+                            <?php } ?>
+                        </div>
                         <div class="row">
                             <?php if ($current_shop_setting->discount_type == 'PRICE') { ?>
                                 <?= view('Lc5\Cms\Views\form-cmp/number', ['item' => ['label' => 'Imponibile in promo', 'name' => 'promo_price', 'value' => $entity->promo_price, 'placeholder' => 'Imponibile in promo € 0,00', 'step' => '0.01', 'decimal' => 2]]) ?>
@@ -483,7 +484,8 @@
         justify-content: space-between;
         padding: .3em .2em;
     }
-    .input-tools-row input{
+
+    .input-tools-row input {
         width: auto
     }
 
@@ -494,19 +496,19 @@
         justify-content: space-between;
     }
 
-    .input-tools-result{
+    .input-tools-result {
         display: flex;
         flex-direction: row;
         align-items: center;
         justify-content: space-between;
-    
+
     }
-    .input-tools-result-label{
+
+    .input-tools-result-label {
         font-size: .7em;
         font-weight: bold;
         margin-right: .5em;
     }
-
 </style>
 
 

@@ -4,6 +4,8 @@ namespace LcShop\Data\Models;
 
 use Lc5\Data\Models\MasterModel;
 use Lc5\Data\Models\MediaModel;
+use LcShop\Data\Models\ShopProductsCategoriesModel;
+use LcShop\Data\Models\ShopAliquoteModel;
 
 class ShopProductsModel extends MasterModel
 {
@@ -107,7 +109,7 @@ class ShopProductsModel extends MasterModel
 			$item->full_nome_prodotto = '';
 			if (isset($item->titolo)) {
 				// $item->full_nome_prodotto = $item->titolo . ( isset($item->modello) && trim($item->modello)) ? ' '. $item->modello : '';
-				$item->full_nome_prodotto = $item->titolo . ' ' . $item->modello ;
+				$item->full_nome_prodotto = $item->titolo . ' ' . $item->modello;
 				// d($item->full_nome_prodotto);
 			}
 
@@ -199,10 +201,10 @@ class ShopProductsModel extends MasterModel
 				}
 			}
 			// 
-			if (isset($item->tags) && $item->tags && trim($item->tags) ) // && isJson($item->tags)) 
+			if (isset($item->tags) && $item->tags && trim($item->tags)) // && isJson($item->tags)) 
 			{
 				$item->tags = json_decode($item->tags);
-				if( json_last_error() !== JSON_ERROR_NONE ){
+				if (json_last_error() !== JSON_ERROR_NONE) {
 					$item->tags = [];
 				}
 
@@ -230,20 +232,19 @@ class ShopProductsModel extends MasterModel
 					if (isset($item->seo_title) && !trim($item->seo_title)) {
 						if (isset($item->titolo) && trim($item->titolo)) {
 							$item->seo_title = $item->titolo;
-						}else if (isset($item->nome) && trim($item->nome)) {
+						} else if (isset($item->nome) && trim($item->nome)) {
 							$item->seo_title = $item->nome;
 						}
 					}
 					if (isset($item->seo_description) && !trim($item->seo_description)) {
 						if (isset($item->titolo) && trim($item->titolo)) {
 							$item->seo_description = $item->titolo;
-						}else if (isset($item->nome) && trim($item->nome)) {
+						} else if (isset($item->nome) && trim($item->nome)) {
 							$item->seo_description = $item->nome;
 						}
 					}
 				}
 			}
-
 		}
 		return $item;
 	}
@@ -358,12 +359,41 @@ class ShopProductsModel extends MasterModel
 			$product->category_obj = null;
 		}
 		// 
-
+		// 
+		// 
+		if ($product->main_img_id < 1) {
+			$product->main_img_id = $parent_prod->main_img_id;
+			$product->main_img_obj = $parent_prod->main_img_obj;
+			$product->main_img_path = $parent_prod->main_img_path;
+		}
+		// 
+		if ($product->alt_img_id < 1) {
+			$product->alt_img_id = $parent_prod->alt_img_id;
+			$product->alt_img_obj = $parent_prod->alt_img_obj;
+			$product->alt_img_path = $parent_prod->alt_img_path;
+		}
+		// 
+		if (isset($product->gallery_obj) && is_array($product->gallery_obj) && count($product->gallery_obj) > 1) {
+			// 
+		}else{
+			$product->gallery = $parent_prod->gallery;
+			$product->gallery_obj = $parent_prod->gallery_obj;
+		}
+		// 
+		// 
+		// 
 		if ($product->price < 0.01) {
 			$product->price = $parent_prod->price;
 			$product->iva = $parent_prod->iva;
 			$product->promo_price = $parent_prod->promo_price;
 			$product->discount_perc = $parent_prod->discount_perc;
+			
+			//
+			$product->ali = $parent_prod->ali;
+			$product->aliquota_obj = $parent_prod->aliquota_obj;
+			$product->aliquota_vat = $parent_prod->aliquota_vat;
+			//
+
 		}
 		$this->dettaglioPrezzi($product);
 
@@ -378,6 +408,8 @@ class ShopProductsModel extends MasterModel
 		$models_list = [];
 		$modello_base = (object) [
 			'ali' => $parent_prod->ali,
+			'aliquota_obj' => $parent_prod->aliquota_obj, 
+			'aliquota_vat' => $parent_prod->aliquota_vat,
 			'alt_img_obj' => $parent_prod->alt_img_obj,
 			'alt_img_path' => $parent_prod->alt_img_path,
 			'entity_free_values_object' => $parent_prod->entity_free_values_object,
@@ -415,6 +447,11 @@ class ShopProductsModel extends MasterModel
 					$modello->iva = $modello_base->iva;
 					$modello->promo_price = $modello_base->promo_price;
 					$modello->discount_perc = $modello_base->discount_perc;
+					//
+					$modello->ali = $modello_base->ali;
+					$modello->aliquota_obj = $modello_base->aliquota_obj;
+					$modello->aliquota_vat = $modello_base->aliquota_vat;
+					//
 				}
 				$this->dettaglioPrezzi($modello);
 				// 
@@ -427,7 +464,6 @@ class ShopProductsModel extends MasterModel
 			$product->has_modelli = TRUE;
 		}
 		$product->modelli = $models_list;
-
 	}
 
 
@@ -445,7 +481,7 @@ class ShopProductsModel extends MasterModel
 			$shop_products_cat_model = new ShopProductsCategoriesModel();
 			$category_obj_qb = $shop_products_cat_model->asObject()->where('id', $product->category);
 			if ($select == 'min') {
-				$category_obj_qb->select(['id', 'nome', 'titolo', 'guid']); 
+				$category_obj_qb->select(['id', 'nome', 'titolo', 'guid']);
 			}
 			if ($product->category_obj = $category_obj_qb->first()) {
 				$product->category_obj->permalink = route_to(__locale_uri__ . 'web_shop_category', $product->category_obj->guid);
@@ -524,7 +560,15 @@ class ShopProductsModel extends MasterModel
 			$imponibile = number_format($item->price, 2, '.', '');
 			$aliquota_vat = 22;
 			if (isset($item->ali)) {
-				$aliquota_vat = $item->ali;
+				if ($item->ali > 0) {
+					$shop_aliquote_model = new ShopAliquoteModel();
+					$aliquota_obj = $shop_aliquote_model->asObject()->where('id', $item->ali)->select(['id', 'nome', 'val'])->first();
+					if ($aliquota_obj) {
+						$item->aliquota_obj = $aliquota_obj;
+						$item->aliquota_vat = $aliquota_vat = $aliquota_obj->val;
+					}
+
+				}
 			}
 			$iva = number_format((($imponibile * $aliquota_vat) / 100), 2, '.', '');
 			// 

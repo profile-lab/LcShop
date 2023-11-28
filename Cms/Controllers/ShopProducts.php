@@ -229,7 +229,7 @@ class ShopProducts extends MasterLc
 		// 
 		$shop_aliquote_model = new ShopAliquoteModel();
 		// 
-		$list_qb = $shop_aliquote_model->select('val, nome')->asObject();
+		$list_qb = $shop_aliquote_model->select('id as val, nome')->asObject();
 		return $list_qb->findAll();
 	}
 	//--------------------------------------------------------------------
