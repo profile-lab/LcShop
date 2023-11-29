@@ -6,6 +6,7 @@ use Lc5\Data\Models\MasterModel;
 use Lc5\Data\Models\MediaModel;
 use LcShop\Data\Models\ShopProductsCategoriesModel;
 use LcShop\Data\Models\ShopAliquoteModel;
+use LcShop\Data\Models\ShopSettingsModel;
 
 class ShopProductsModel extends MasterModel
 {
@@ -375,7 +376,7 @@ class ShopProductsModel extends MasterModel
 		// 
 		if (isset($product->gallery_obj) && is_array($product->gallery_obj) && count($product->gallery_obj) > 1) {
 			// 
-		}else{
+		} else {
 			$product->gallery = $parent_prod->gallery;
 			$product->gallery_obj = $parent_prod->gallery_obj;
 		}
@@ -387,7 +388,7 @@ class ShopProductsModel extends MasterModel
 			$product->iva = $parent_prod->iva;
 			$product->promo_price = $parent_prod->promo_price;
 			$product->discount_perc = $parent_prod->discount_perc;
-			
+
 			//
 			$product->ali = $parent_prod->ali;
 			$product->aliquota_obj = $parent_prod->aliquota_obj;
@@ -408,7 +409,7 @@ class ShopProductsModel extends MasterModel
 		$models_list = [];
 		$modello_base = (object) [
 			'ali' => $parent_prod->ali,
-			'aliquota_obj' => $parent_prod->aliquota_obj, 
+			'aliquota_obj' => $parent_prod->aliquota_obj,
 			'aliquota_vat' => $parent_prod->aliquota_vat,
 			'alt_img_obj' => $parent_prod->alt_img_obj,
 			'alt_img_path' => $parent_prod->alt_img_path,
@@ -490,7 +491,16 @@ class ShopProductsModel extends MasterModel
 			$product->category_obj = null;
 		}
 
-
+		// GET SHOP SETTINGS
+		if (!isset($this->shop_settings)) {
+			$shop_settings_model = new ShopSettingsModel();
+			$this->shop_settings =  $shop_settings_model->asObject()->where('id_app', __web_app_id__)->first();
+		}
+		//
+		if(!$this->shop_settings->products_has_childs){
+			return;
+		}
+		
 		// // MODELLI 
 		$modelli_qb = $this->asObject()->where('parent', $product->id);
 		if ($select == 'min') {
@@ -567,7 +577,6 @@ class ShopProductsModel extends MasterModel
 						$item->aliquota_obj = $aliquota_obj;
 						$item->aliquota_vat = $aliquota_vat = $aliquota_obj->val;
 					}
-
 				}
 			}
 			$iva = number_format((($imponibile * $aliquota_vat) / 100), 2, '.', '');

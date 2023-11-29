@@ -31,17 +31,20 @@
         <div class="col-12 col-lg-9 scheda_body">
             <div class="first-row">
                 <div class="row">
+                    <?php if (!isset($entity->parent_entity)) { ?>
+                        <?= view('Lc5\Cms\Views\form-cmp/text', ['item' => ['label' => 'Prodotto', 'name' => 'titolo', 'value' => $entity->titolo, 'placeholder' => 'Nome prodotto']]) ?>
+                    <?php } ?>
                     <?php /*
                     
                     <?php if (!isset($entity->parent_entity)) { ?>
                         <?= view('Lc5\Cms\Views\form-cmp/text', ['item' => ['label' => 'Nome', 'name' => 'nome', 'value' => $entity->nome,  'placeholder' => 'Nome']]) ?>
-                        <?= view('Lc5\Cms\Views\form-cmp/text', ['item' => ['label' => 'Prodotto', 'name' => 'titolo', 'value' => $entity->titolo, 'placeholder' => 'Nome prodotto']]) ?>
                     <?php } ?>
-                    */ ?>
-                    <?php /*
                     <?= view('Lc5\Cms\Views\form-cmp/text', ['item' => ['label' => 'Sottotitolo', 'name' => 'sottotitolo', 'value' => $entity->sottotitolo, 'placeholder' => '']]) ?>
                     */ ?>
-                    <?= view('Lc5\Cms\Views\form-cmp/text', ['item' => ['label' => 'Modello', 'name' => 'modello', 'value' => $entity->modello, 'placeholder' => 'Nome modello']]) ?>
+                    <?php if ($current_shop_setting->products_has_childs == 1) { ?>
+                        <?= view('Lc5\Cms\Views\form-cmp/text', ['item' => ['label' => 'Modello', 'name' => 'modello', 'value' => $entity->modello, 'placeholder' => 'Nome modello']]) ?>
+                    <?php } ?>
+
                 </div>
                 <div class="row form-row row-colore">
                     <?= view('Lc5\Cms\Views\form-cmp/select-search', ['item' => ['label' => 'Tipo', 'input_class' => 'select-tags-colore', 'name' => 'colore', 'value' => (isset($entity->colore)) ? $entity->colore : null,  'sources' => $entity->variations_list]]) ?>
