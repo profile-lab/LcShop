@@ -11,7 +11,7 @@
             <?= view('Lc5\Cms\Views\layout/components/back-btn') ?>
             <div class="titoli_scheda">
                 <?php if ($entity->id) { ?>
-                    <h3><?= ($entity->modello) ? $entity->modello : $entity->nome ?></h3>
+                    <h3><?=  $entity->nome  ?><?= ($entity->modello) ? ' - '. $entity->modello : ''?></h3>
                 <?php } else { ?>
                     <h3>Crea nuovo prodotto</h3>
                 <?php } ?>
@@ -42,9 +42,9 @@
                     <?= view('Lc5\Cms\Views\form-cmp/text', ['item' => ['label' => 'Sottotitolo', 'name' => 'sottotitolo', 'value' => $entity->sottotitolo, 'placeholder' => '']]) ?>
                     */ ?>
                     <?php if ($current_shop_setting->products_has_childs == 1) { ?>
-                        <?= view('Lc5\Cms\Views\form-cmp/text', ['item' => ['label' => 'Modello', 'name' => 'modello', 'value' => $entity->modello, 'placeholder' => 'Nome modello']]) ?>
                     <?php } ?>
-
+                        
+                    <?= view('Lc5\Cms\Views\form-cmp/text', ['item' => ['label' => 'Modello', 'name' => 'modello', 'value' => $entity->modello, 'placeholder' => 'Nome modello']]) ?>
                 </div>
                 <div class="row form-row row-colore">
                     <?= view('Lc5\Cms\Views\form-cmp/select-search', ['item' => ['label' => 'Tipo', 'input_class' => 'select-tags-colore', 'name' => 'colore', 'value' => (isset($entity->colore)) ? $entity->colore : null,  'sources' => $entity->variations_list]]) ?>
