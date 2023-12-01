@@ -87,12 +87,18 @@ class ShopProducts extends MasterLc
 				];
 			} else {
 				$validate_rules = [
-					'nome' => ['label' => 'Nome', 'rules' => 'required'],
+					'titolo' => ['label' => 'Prodotto', 'rules' => 'required'],
 				];
 			}
 			// 
 			$is_falied = TRUE;
 			$curr_entity->fill($this->req->getPost());
+			if ($curr_entity->is_modello != TRUE) {
+				$curr_entity->nome = $curr_entity->titolo;
+				$curr_entity->status = 0;
+				$curr_entity->public = 0;
+			}
+
 			$curr_entity->tags = ($this->req->getPost('tags')) ? json_encode($this->req->getPost('tags')) : NULL;
 
 			// 
@@ -183,7 +189,7 @@ class ShopProducts extends MasterLc
 				if ($curr_entity->parent_entity) {
 					$this->fillEntityByParent($curr_entity);
 				} else if ($curr_entity->parent == 0) {
-					if (is_array($curr_entity->childs_entities)){
+					if (is_array($curr_entity->childs_entities)) {
 						$this->updateChildsEntity($curr_entity);
 					}
 				}
@@ -210,6 +216,21 @@ class ShopProducts extends MasterLc
 		return view('LcShop\Cms\Views/products/scheda', $this->lc_ui_date->toArray());
 	}
 
+	//--------------------------------------------------------------------
+	public function delete($id)
+	{
+
+		if (!$curr_entity = $this->shop_products_model->find($id)) {
+			throw \CodeIgniter\Exceptions\PageNotFoundException::forPageNotFound();
+		}
+
+
+
+		$this->shop_products_model->delete($curr_entity->id);
+		$this->lc_setErrorMess('Contenuto eliminato con successo', 'alert-warning');
+
+		return redirect()->route($this->route_prefix);
+	}
 
 	//--------------------------------------------------------------------
 	private function getListParents($exclude_id = null)
@@ -280,10 +301,10 @@ class ShopProducts extends MasterLc
 		$curr_entity->ali = $curr_entity->parent_entity->ali;
 		$curr_entity->fornitore = $curr_entity->parent_entity->fornitore;
 		$curr_entity->gruppo_merceologico = $curr_entity->parent_entity->gruppo_merceologico;
-		if(isset($curr_entity->id) && $curr_entity->id > 0){
+		if (isset($curr_entity->id) && $curr_entity->id > 0) {
 			// solo se già esite
-		}else{
-			if(trim($curr_entity->scheda_tecnica) != ''){
+		} else {
+			if (trim($curr_entity->scheda_tecnica) != '') {
 				$curr_entity->scheda_tecnica = $curr_entity->parent_entity->scheda_tecnica;
 			}
 		}
@@ -291,9 +312,9 @@ class ShopProducts extends MasterLc
 	//--------------------------------------------------------------------
 	private function updateChildsEntity($curr_entity)
 	{
-		if(is_iterable($curr_entity->childs_entities)){
-			foreach($curr_entity->childs_entities as $current_child){
-				$new_data= array();
+		if (is_iterable($curr_entity->childs_entities)) {
+			foreach ($curr_entity->childs_entities as $current_child) {
+				$new_data = array();
 				$new_data['guid'] = $curr_entity->guid . '-' . url_title($current_child->modello, '-', TRUE);
 				$new_data['status'] = $curr_entity->status;
 				$new_data['ordine'] = $curr_entity->ordine;
@@ -311,9 +332,7 @@ class ShopProducts extends MasterLc
 				$new_data['gruppo_merceologico'] = $curr_entity->gruppo_merceologico;
 				// 
 				$this->shop_products_model->update($current_child->id, $new_data);
-
 			}
 		}
-
 	}
 }
