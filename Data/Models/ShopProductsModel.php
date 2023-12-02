@@ -71,6 +71,8 @@ class ShopProductsModel extends MasterModel
 		'fornitore',
 		'gruppo_merceologico',
 
+		'peso_prodotto',
+
 	];
 
 	protected $beforeInsert         = ['beforeInsert'];

@@ -11,6 +11,20 @@ class Cart extends ShopMaster
     protected $cartTotalFormatted = 0;
     protected $referenze = 0;
     protected $referenze_totali  = 0;
+
+    protected $pesoTotaleGrammi = 0;
+    protected $pesoTotaleKg = 0;
+
+    protected $ivaTotal = 0;
+    protected $ivaTotalFormatted = 0;
+    protected $imponibileTotal = 0;
+    protected $imponibileTotalFormatted = 0;
+    protected $promoPriceTotal = 0;
+    protected $promoPriceTotalFormatted = 0;
+    protected $discountPercTotal = 0;
+    protected $discountPercTotalFormatted = 0;
+
+
     //--------------------------------------------------------------------
     public function __construct()
     {
@@ -117,7 +131,7 @@ class Cart extends ShopMaster
     //-------------------------------------------------
     public function getSiteCart()
     {
-        
+
         $processed_cart = [];
         $this->cartTotal = 0;
         $this->cartTotalFormatted = 0;
@@ -131,9 +145,12 @@ class Cart extends ShopMaster
                 foreach ($cart as $key => $qnt) {
                     $key_parameters = explode('_', $key);
                     if (isset($key_parameters[1])) {
-                        if ($prod = $shop_products_model->select(['id', 'nome', 'titolo', 'modello', 'giacenza', 'guid', 'price', 'promo_price', 'ali'])->asObject()->find($key_parameters[1])) {
+                        if ($prod = $shop_products_model->select(['id', 'nome', 'titolo', 'modello', 'giacenza', 'peso_prodotto', 'guid', 'price', 'promo_price', 'ali'])->asObject()->find($key_parameters[1])) {
                             $permalink = route_to(__locale_uri__ . 'web_shop_detail', $prod->guid);
-                            if (isset($key_parameters[2]) && $key_parameters[2] != $key_parameters[1] && $modello = $shop_products_model->select(['id', 'nome', 'titolo', 'modello', 'giacenza', 'guid', 'price', 'promo_price', 'ali'])->asObject()->find($key_parameters[2])) {
+                            if (
+                                isset($key_parameters[2]) && $key_parameters[2] != $key_parameters[1] &&
+                                $modello = $shop_products_model->select(['id', 'nome', 'titolo', 'modello', 'giacenza', 'peso_prodotto', 'guid', 'price', 'promo_price', 'ali'])->asObject()->find($key_parameters[2])
+                            ) {
                                 if ($modello->price < 0.01) {
                                     $modello->prezzo = $prod->prezzo;
                                 }
@@ -142,6 +159,9 @@ class Cart extends ShopMaster
                                 $modello = $prod;
                             }
                             $this->cartTotal += ($modello->prezzo * $qnt);
+                            $this->ivaTotal += ($modello->iva * $qnt);
+                            $this->pesoTotaleGrammi += ($modello->peso_prodotto * $qnt);
+                            $this->imponibileTotal += ($modello->imponibile * $qnt);
                             $this->referenze_totali += $qnt;
 
                             $processed_cart[$key] = (object) [
@@ -160,10 +180,29 @@ class Cart extends ShopMaster
             }
         }
         $this->cartTotalFormatted = number_format($this->cartTotal, 2, ',', '.');
+        $this->ivaTotalFormatted = number_format($this->ivaTotal, 2, ',', '.');
+        $this->imponibileTotalFormatted = number_format($this->imponibileTotal, 2, ',', '.');
+        $this->promoPriceTotalFormatted = number_format($this->promoPriceTotal, 2, ',', '.');
+        $this->discountPercTotalFormatted = number_format($this->discountPercTotal, 2, ',', '.');
+
+        $this->pesoTotaleKg = doubleval($this->pesoTotaleGrammi / 1000);
+
+
         return (object) [
             'products' => $processed_cart,
             'total' => $this->cartTotal,
             'total_formatted' => $this->cartTotalFormatted,
+            'peso_totale_grammi' => $this->pesoTotaleGrammi,
+            'peso_totale_kg' => $this->pesoTotaleKg,
+            'iva_total' => $this->ivaTotal,
+            'iva_total_formatted' => $this->ivaTotalFormatted,
+            'imponibile_total' => $this->imponibileTotal,
+            'imponibile_total_formatted' => $this->imponibileTotalFormatted,
+            'promo_total' => $this->promoPriceTotal,
+            'promo_total_formatted' => $this->promoPriceTotalFormatted,
+            // 'discountPerc_total' => $this->discountPercTotal,
+
+
             'referenze' => count($processed_cart),
             'referenze_totali' => $this->referenze_totali,
         ];

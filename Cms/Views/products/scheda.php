@@ -183,6 +183,10 @@
                             <?= view('Lc5\Cms\Views\form-cmp/number', ['item' => ['label' => 'Giacenza', 'name' => 'giacenza', 'value' => $entity->giacenza]]) ?>
                             <?= view('Lc5\Cms\Views\form-cmp/select', ['item' => ['label' => 'Unità di misura', 'name' => 'um', 'value' => $entity->um, 'sources' => $entity->um_list, 'no_empty' => TRUE]]) ?>
                         </div>
+                        <div class="row">
+
+                            <?= view('Lc5\Cms\Views\form-cmp/number', ['item' => ['label' => 'Peso prodotto (grammi)', 'name' => 'peso_prodotto', 'value' => $entity->peso_prodotto, 'placeholder' => 'Peso prodotto (grammi)', 'step' => '0.01', 'decimal' => 2]]) ?>
+                        </div>
 
 
 

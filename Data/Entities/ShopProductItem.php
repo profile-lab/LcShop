@@ -55,6 +55,8 @@ class ShopProductItem extends Entity
 		'sku' => null,
 		'fornitore' => null,
 		'gruppo_merceologico' => null,
+		
+		'peso_prodotto' => null,
 
 
 
