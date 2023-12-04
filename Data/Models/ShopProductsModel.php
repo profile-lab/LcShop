@@ -404,7 +404,7 @@ class ShopProductsModel extends MasterModel
 		// // MODELLI 
 		$modelli_qb = $this->asObject()->where('parent', $parent_prod->id);
 		if ($select == 'min') {
-			$modelli_qb->select(['id', 'nome', 'titolo', 'modello', 'giacenza', 'guid', 'price', 'promo_price', 'ali']);
+			$modelli_qb->select(['id', 'nome', 'titolo', 'modello', 'giacenza', 'guid', 'price', 'in_promo', 'promo_price', 'ali']);
 		}
 		$product->has_modelli = FALSE;
 		// 
@@ -432,6 +432,7 @@ class ShopProductsModel extends MasterModel
 			'giacenza' => $parent_prod->giacenza,
 
 			'price' => $parent_prod->price,
+			'in_promo' => $parent_prod->in_promo,
 			'iva' => $parent_prod->iva,
 			'promo_price' => $parent_prod->promo_price,
 			'discount_perc' => $parent_prod->discount_perc,
@@ -499,14 +500,14 @@ class ShopProductsModel extends MasterModel
 			$this->shop_settings =  $shop_settings_model->asObject()->where('id_app', __web_app_id__)->first();
 		}
 		//
-		if(!$this->shop_settings->products_has_childs){
+		if (!$this->shop_settings->products_has_childs) {
 			return;
 		}
-		
+
 		// // MODELLI 
 		$modelli_qb = $this->asObject()->where('parent', $product->id);
 		if ($select == 'min') {
-			$modelli_qb->select(['id', 'nome', 'titolo', 'modello', 'giacenza', 'guid', 'price', 'promo_price', 'ali']);
+			$modelli_qb->select(['id', 'nome', 'titolo', 'modello', 'giacenza', 'guid', 'price', 'in_promo', 'promo_price', 'ali', 'main_img_id']);
 		}
 		$product->has_modelli = FALSE;
 		// 
@@ -530,6 +531,7 @@ class ShopProductsModel extends MasterModel
 			'giacenza' => $product->giacenza,
 
 			'price' => $product->price,
+			'in_promo' => $product->in_promo,
 			'iva' => $product->iva,
 			'promo_price' => $product->promo_price,
 			'discount_perc' => $product->discount_perc,
@@ -537,6 +539,12 @@ class ShopProductsModel extends MasterModel
 			'permalink' => route_to(__locale_uri__ . 'web_shop_detail', $product->guid)
 
 		];
+
+
+
+
+		$media_model = new MediaModel();
+
 		$this->dettaglioPrezzi($modello_base);
 		$models_list[] = $modello_base;
 		// 
@@ -553,6 +561,23 @@ class ShopProductsModel extends MasterModel
 				// 
 				$modello->permalink = route_to(__locale_uri__ . 'web_shop_detail_model', $product->guid, $modello->id);
 				$modello->full_nome_prodotto = $modello->titolo . ' ' . $modello->modello;
+
+				if (isset($modello->main_img_id) && $modello->main_img_id > 0) {
+					if ($modello->main_img_obj = $media_model->find($modello->main_img_id)) {
+						$modello->main_img_path = $modello->main_img_obj->path;
+						$modello->main_img_is_image = $modello->main_img_obj->is_image;
+						$modello->main_img_type = $modello->main_img_obj->tipo_file;
+						if ($modello->main_img_obj->is_image) {
+							$modello->main_img_thumb = 'uploads/thumbs/' . $modello->main_img_obj->path;
+						} else {
+							if ($modello->main_img_obj->tipo_file == 'svg') {
+								$modello->main_img_thumb = ('uploads/' . $modello->main_img_obj->path);
+							} else {
+								$modello->main_img_thumb = $media_model->getThumbForType($modello->main_img_obj->tipo_file);
+							}
+						}
+					}
+				}
 
 				// 
 				$models_list[] = $modello;
@@ -589,7 +614,6 @@ class ShopProductsModel extends MasterModel
 			$item->iva_pieno = $iva;
 			$item->prezzo = number_format(($imponibile + $iva), 2, '.', '');
 			$item->prezzo_pieno = $item->prezzo;
-			$item->is_in_promo = FALSE;
 			// 
 			if (isset($this->shop_settings)) {
 				if ($this->shop_settings->discount_type == 'PRICE') {
@@ -600,7 +624,6 @@ class ShopProductsModel extends MasterModel
 						$item->imponibile = $imponibile;
 						$item->iva = $iva;
 						$item->prezzo = number_format(($imponibile + $iva), 2, '.', '');
-						$item->is_in_promo = TRUE;
 					}
 				} elseif ($this->shop_settings->discount_type == 'PERCENTAGE') {
 					$item->discount_perc;
@@ -613,7 +636,6 @@ class ShopProductsModel extends MasterModel
 			$item->iva_pieno_coin = '€ ' . number_format($item->iva_pieno, 2, ',', '.');
 			$item->prezzo_coin = '€ ' . number_format($item->prezzo, 2, ',', '.');
 			$item->prezzo_pieno_coin = '€ ' . number_format($item->prezzo_pieno, 2, ',', '.');
-			// $item->is_in_promo_coin = '€ ' . number_format($item->is_in_promo, 2, ',', '.');
 		}
 	}
 }
