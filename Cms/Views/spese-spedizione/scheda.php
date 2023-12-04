@@ -20,10 +20,12 @@
                 <div class="row form-row">
                     <?= view('Lc5\Cms\Views\form-cmp/number', ['item' => ['label' => 'Peso max (Kg)', 'name' => 'peso_max', 'value' => $entity->peso_max, 'placeholder' => 'Peso massimo (grammi)', 'step' => '0.01', 'decimal' => 2]]) ?>
                     <?= view('Lc5\Cms\Views\form-cmp/number', ['item' => ['label' => 'Prezzo Imponibile', 'name' => 'prezzo_imponibile', 'value' => $entity->prezzo_imponibile, 'placeholder' => 'Prezzo Imponibile', 'step' => '0.01', 'decimal' => 2]]) ?>
-                </div>
-                <div class="row form-row">
+               
+                    <?php /*
                     <?= view('Lc5\Cms\Views\form-cmp/text', ['item' => ['label' => 'Nazione', 'name' => 'nazione', 'value' => $entity->nazione, 'width' => 'col-md-12', 'placeholder' => 'Nazione']]) ?>
-                    <?= view('Lc5\Cms\Views\form-cmp/text', ['item' => ['label' => 'Consegna', 'name' => 'consegna', 'value' => $entity->consegna, 'width' => 'col-md-12', 'placeholder' => 'Consegna in']]) ?>
+                    */ ?>
+                    <?= view('Lc5\Cms\Views\form-cmp/select', ['item' => ['label' => 'Consegna in', 'name' => 'consegna', 'value' => $entity->consegna, 'width' => 'col-md-12', 'sources' => $spedizioni_per_list, 'no_empty' => true]]) ?>
+
                 </div>
                 <div class="row form-row">
                     <?= view('Lc5\Cms\Views\form-cmp/html-editor', ['item' => ['label' => 'Testo', 'name' => 'testo', 'value' => (isset($entity->testo)) ? $entity->testo : '', 'width' => 'col-md-12', 'placeholder' => '...']]) ?>

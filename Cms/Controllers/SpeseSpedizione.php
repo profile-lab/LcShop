@@ -16,6 +16,8 @@ class SpeseSpedizione extends MasterLc
 
     public function __construct()
     {
+        helper('lcshop');
+
         parent::__construct();
         // 
         $this->module_name = 'Spese Spedizione';
@@ -28,6 +30,13 @@ class SpeseSpedizione extends MasterLc
         $this->lc_ui_date->__set('currernt_module_action', 'shopsettings');
         $this->lc_ui_date->__set('currernt_module_tab', 'speesespedizione');
         $this->lc_ui_date->__set('shop_tools_tabs', LcShopConfigs::getShopToolsTabs());
+
+        $spedizioni_per_list_data = get_spedizioni_per();
+        $spedizioni_per_list = [];
+        foreach ($spedizioni_per_list_data as $key => $value) {
+            $spedizioni_per_list[$key] = (object) ['val' => $key, 'nome' => $value['nome']];
+        }
+        $this->lc_ui_date->__set('spedizioni_per_list', $spedizioni_per_list);
         // 
         $this->current_shop_setting  = $this->getShopSettings($this->getCurrApp());
         $this->lc_ui_date->__set('current_shop_setting', $this->current_shop_setting);
