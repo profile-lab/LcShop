@@ -5,7 +5,7 @@ namespace LcShop\Web\Controllers;
 use LcShop\Data\Models\ShopProductsModel;
 use LcShop\Data\Models\ShopSettingsModel;
 
-class Cart extends ShopMaster
+class Cart extends \App\Controllers\BaseController
 {
     protected $cartTotal = 0;
     protected $cartTotalFormatted = 0;
@@ -24,11 +24,17 @@ class Cart extends ShopMaster
     protected $discountPercTotal = 0;
     protected $discountPercTotalFormatted = 0;
 
+    protected $req;
+
 
     //--------------------------------------------------------------------
     public function __construct()
     {
-        parent::__construct();
+        $this->req = \Config\Services::request();
+
+        helper('lcshop');
+
+        // parent::__construct();
     }
     //--------------------------------------------------------------------
     public function checkCartAction() //($category_guid = null)
@@ -201,6 +207,8 @@ class Cart extends ShopMaster
             'promo_total' => $this->promoPriceTotal,
             'promo_total_formatted' => $this->promoPriceTotalFormatted,
             // 'discountPerc_total' => $this->discountPercTotal,
+
+            'regione' => get_regione_by_cap('9170') ,
 
 
             'referenze' => count($processed_cart),

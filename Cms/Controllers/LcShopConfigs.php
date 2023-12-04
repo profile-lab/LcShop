@@ -90,6 +90,11 @@ class LcShopConfigs
                 'module_tab' => 'shopproductstags',
             ],
             (object) [
+                'label' => 'Spese Spedizione',
+                'route' => site_url(route_to('lc_shop_spese_spedizione')),
+                'module_tab' => 'speesespedizione',
+            ],
+            (object) [
                 'label' => 'Aliquote Iva',
                 'route' => site_url(route_to('lc_shop_aliquote')),
                 'module_tab' => 'shopaliquote',
