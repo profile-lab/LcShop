@@ -4,6 +4,7 @@ namespace LcShop\Web\Controllers;
 
 use LcShop\Data\Models\ShopProductsModel;
 use LcShop\Data\Models\ShopSettingsModel;
+use LcShop\Data\Models\ShopSpeseSpedizionesModel;
 
 class Cart extends \App\Controllers\BaseController
 {
@@ -23,6 +24,8 @@ class Cart extends \App\Controllers\BaseController
     protected $promoPriceTotalFormatted = 0;
     protected $discountPercTotal = 0;
     protected $discountPercTotalFormatted = 0;
+    protected $speseSpedizioneTotal = 0;
+    protected $speseSpedizioneTotalFormatted = 0;
 
     protected $req;
 
@@ -138,6 +141,8 @@ class Cart extends \App\Controllers\BaseController
     public function getSiteCart()
     {
 
+        $spese_spedizione_model = new ShopSpeseSpedizionesModel();
+
         $processed_cart = [];
         $this->cartTotal = 0;
         $this->cartTotalFormatted = 0;
@@ -185,13 +190,24 @@ class Cart extends \App\Controllers\BaseController
                 }
             }
         }
+
+
+        $this->pesoTotaleKg = doubleval($this->pesoTotaleGrammi / 1000);
+        $speseDiSpediazione = $spese_spedizione_model->where('status', 1)->where('public', 1)->where('peso_max >=', $this->pesoTotaleKg)->orderBy('peso_max', 'ASC')->first();
+
+        if ($speseDiSpediazione) {
+            $this->speseSpedizioneTotal = $speseDiSpediazione->prezzo_imponibile;
+        } else {
+            $this->speseSpedizioneTotal = 0;
+        }
+
         $this->cartTotalFormatted = number_format($this->cartTotal, 2, ',', '.');
         $this->ivaTotalFormatted = number_format($this->ivaTotal, 2, ',', '.');
         $this->imponibileTotalFormatted = number_format($this->imponibileTotal, 2, ',', '.');
         $this->promoPriceTotalFormatted = number_format($this->promoPriceTotal, 2, ',', '.');
         $this->discountPercTotalFormatted = number_format($this->discountPercTotal, 2, ',', '.');
+        $this->speseSpedizioneTotalFormatted = number_format($this->speseSpedizioneTotal, 2, ',', '.');
 
-        $this->pesoTotaleKg = doubleval($this->pesoTotaleGrammi / 1000);
 
 
         return (object) [
@@ -209,6 +225,9 @@ class Cart extends \App\Controllers\BaseController
             // 'discountPerc_total' => $this->discountPercTotal,
 
             'regione' => get_regione_by_cap('9170') ,
+
+            'spese_spedizione' => $this->speseSpedizioneTotal,
+            'spese_spedizione_formatted' => $this->speseSpedizioneTotalFormatted,
 
 
             'referenze' => count($processed_cart),
