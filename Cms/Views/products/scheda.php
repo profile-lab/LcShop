@@ -11,7 +11,7 @@
             <?= view('Lc5\Cms\Views\layout/components/back-btn') ?>
             <div class="titoli_scheda">
                 <?php if ($entity->id) { ?>
-                    <h3><?=  $entity->nome  ?><?= ($entity->modello) ? ' - '. $entity->modello : ''?></h3>
+                    <h3><?= $entity->nome  ?><?= ($entity->modello) ? ' - ' . $entity->modello : '' ?></h3>
                 <?php } else { ?>
                     <h3>Crea nuovo prodotto</h3>
                 <?php } ?>
@@ -43,7 +43,7 @@
                     */ ?>
                     <?php if ($current_shop_setting->products_has_childs == 1) { ?>
                     <?php } ?>
-                        
+
                     <?= view('Lc5\Cms\Views\form-cmp/text', ['item' => ['label' => 'Modello', 'name' => 'modello', 'value' => $entity->modello, 'placeholder' => 'Nome modello']]) ?>
                 </div>
                 <div class="row form-row row-colore">
@@ -295,7 +295,12 @@
                         <div class="input-tool-item">
                             <label>Scorpora Iva</label>
                             <div class="input-tools-row input-tools-from">
-                                <input type="number" step="0.01" data-decimal="2" class="form-control scorpora_iva_from" placeholder="Prezzo Lordo">
+                                <label>Prezzo Lordo<br />
+                                    <input type="number" step="0.01" data-decimal="2" class="form-control scorpora_iva_from" placeholder="Prezzo Lordo">
+                                </label>
+                                <label>Aliquota Iva<br />
+                                    <input type="number" step="0.01" data-decimal="2" class="form-control scorpora_iva_ali" style="width: 80px;" placeholder="aliquota" value="22">
+                                </label>
                                 <button type="button" class="user_tool user_tool-scorpora"><span class="oi oi-calculator"></span></button>
                             </div>
                             <div class="input-tools-row input-tools-result">
@@ -307,7 +312,12 @@
                         <div class="input-tool-item">
                             <label>Calcola ivato</label>
                             <div class="input-tools-row input-tools-from">
-                                <input type="number" step="0.01" data-decimal="2" class="form-control calcola_ivato_from" placeholder="Prezzo Imponibile">
+                                <label>Prezzo Imponibile<br />
+                                    <input type="number" step="0.01" data-decimal="2" class="form-control calcola_ivato_from" placeholder="Prezzo Imponibile">
+                                </label>
+                                <label>Aliquota Iva<br />
+                                    <input type="number" step="0.01" data-decimal="2" class="form-control calcola_ivato_ali" style="width: 80px;" placeholder="aliquota" value="22">
+                                </label>
                                 <button type="button" class="user_tool user_tool-calcola_ivato"><span class="oi oi-calculator"></span></button>
                             </div>
                             <div class="input-tools-row input-tools-result">
@@ -432,9 +442,10 @@
     function calcolaScorporoDaInput(e) {
         e.preventDefault();
         var scorpora_iva_from = $('.scorpora_iva_from').val();
+        var scorpora_iva_ali = $('.scorpora_iva_ali').val();
         var scorpora_iva_result = $('.scorpora_iva_result');
         if (scorpora_iva_from) {
-            utilityIVA.scorporoIVA(scorpora_iva_from, 22, function(err, data) {
+            utilityIVA.scorporoIVA(scorpora_iva_from, Number(scorpora_iva_ali), function(err, data) {
                 const cImponibile = data.imponibile;
                 if (cImponibile) {
                     scorpora_iva_result.val(cImponibile.toFixed(2));
@@ -457,9 +468,10 @@
     function calcolaIvatoDaInput(e) {
         e.preventDefault();
         var calcola_ivato_from = $('.calcola_ivato_from').val();
+        var calcola_ivato_ali = $('.calcola_ivato_ali').val();
         var calcola_ivato_result = $('.calcola_ivato_result');
         if (calcola_ivato_from) {
-            utilityIVA.calcolaImportoIvato(calcola_ivato_from, 22, function(err, data) {
+            utilityIVA.calcolaImportoIvato(calcola_ivato_from, Number(calcola_ivato_ali), function(err, data) {
                 const cIvato = data.totale;
                 if (cIvato) {
                     calcola_ivato_result.val(cIvato.toFixed(2));
