@@ -24,6 +24,8 @@ class Cart extends \App\Controllers\BaseController
     protected $promoPriceTotalFormatted = 0;
     protected $discountPercTotal = 0;
     protected $discountPercTotalFormatted = 0;
+    protected $spedizioneCorrente = null;
+    protected $spedizioneName = 'Spese di spedizione';
     protected $speseSpedizioneTotal = 0;
     protected $speseSpedizioneTotalFormatted = 0;
 
@@ -141,7 +143,6 @@ class Cart extends \App\Controllers\BaseController
     public function getSiteCart()
     {
 
-        $spese_spedizione_model = new ShopSpeseSpedizionesModel();
 
         $processed_cart = [];
         $this->cartTotal = 0;
@@ -193,10 +194,10 @@ class Cart extends \App\Controllers\BaseController
 
 
         $this->pesoTotaleKg = doubleval($this->pesoTotaleGrammi / 1000);
-        $speseDiSpediazione = $spese_spedizione_model->where('status', 1)->where('public', 1)->where('peso_max >=', $this->pesoTotaleKg)->orderBy('peso_max', 'ASC')->first();
-
-        if ($speseDiSpediazione) {
-            $this->speseSpedizioneTotal = $speseDiSpediazione->prezzo_imponibile;
+        $this->spedizioneCorrente = $this->getSpedizione($this->pesoTotaleGrammi);
+        if ($this->spedizioneCorrente) {
+            $this->speseSpedizioneTotal = $this->spedizioneCorrente->prezzo;
+            $this->spedizioneName = ($this->spedizioneCorrente->titolo) ? $this->spedizioneCorrente->titolo: $this->spedizioneCorrente->nome;
         } else {
             $this->speseSpedizioneTotal = 0;
         }
@@ -224,15 +225,44 @@ class Cart extends \App\Controllers\BaseController
             'promo_total_formatted' => $this->promoPriceTotalFormatted,
             // 'discountPerc_total' => $this->discountPercTotal,
 
-            'regione' => get_regione_by_cap('9170') ,
+            'regione' => get_regione_by_cap('87018'),
 
+            'spedizione_corrente' => $this->spedizioneCorrente,
+            'spedizione_name' => $this->spedizioneName,
             'spese_spedizione' => $this->speseSpedizioneTotal,
-            'spese_spedizione_formatted' => $this->speseSpedizioneTotalFormatted,
+            'spese_spedizione_formatted' => ($this->speseSpedizioneTotal > 0) ? $this->speseSpedizioneTotalFormatted : 'Gratis',
 
 
             'referenze' => count($processed_cart),
             'referenze_totali' => $this->referenze_totali,
         ];
+    }
+
+    //-------------------------------------------------
+    public function getSpedizione($pesoTotaleGrammi = null, $cap = null,)
+    {
+        $spese_spedizione_model = new ShopSpeseSpedizionesModel();
+        $pesoTotaleKg = doubleval($pesoTotaleGrammi / 1000);
+        $spedizioneQb = $spese_spedizione_model->where('status', 1)->where('public', 1)->where('peso_max >=', $pesoTotaleKg);
+
+        if ($cap != null) {
+            $regione = get_regione_by_cap($cap);
+            $regione->nome;
+            $regione->key;
+            $regione->cap_min;
+            $regione->cap_max;
+            $regione->is_isole;
+            $regione->is_italy;
+        }else{
+            $spedizioneQb->where('is_default', 1);
+        }
+
+
+        $spedizioneCorrente =  $spedizioneQb->orderBy('peso_max', 'ASC')->first();
+        if ($spedizioneCorrente) {
+            return $spedizioneCorrente;
+        }
+        return false;
     }
 
 

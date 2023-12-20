@@ -11,9 +11,7 @@
 <section class="shop_carrello">
     <div class="myIn">
         <?php if (isset($site_cart)) { ?>
-            <?php
-            // d($site_cart);
-            ?>
+            
             <div class="cart-page">
                 <?php if (isset($site_cart->products) && is_iterable($site_cart->products) && count($site_cart->products) > 0) { ?>
                     <div class="cart-page-rows">
@@ -56,7 +54,14 @@
                                 <span class="cart-page-col-price-val"><?= $site_cart->peso_totale_kg ?> Kg</span>
                             </div>
                         </div>
-                       
+                        <div class="cart-page-row cart-page-row-totals">
+                            <div class="cart-page-col cart-page-col-name">
+                                Spese spedizione
+                            </div>
+                            <div class="cart-page-col cart-page-col-price">
+                                &euro; <span class="cart-page-col-price-val"><?= $site_cart->spese_spedizione_formatted ?></span>
+                            </div>
+                        </div>
                         <div class="cart-page-row cart-page-row-totals">
                             <div class="cart-page-col cart-page-col-name">
                                 Iva
@@ -72,20 +77,6 @@
                             <div class="cart-page-col cart-page-col-price">
                                 &euro; <span class="cart-page-col-price-val"><?= $site_cart->imponibile_total_formatted ?></span>
                             </div>
-                        </div>
-                        <div class="cart-page-row cart-page-row-totals">
-                            <div class="cart-page-col cart-page-col-name">
-                                <?= $site_cart->spedizione_name ?>
-                            </div>
-                            <?php if ($site_cart->spese_spedizione > 0) { ?>
-                            <div class="cart-page-col cart-page-col-price">
-                                &euro; <span class="cart-page-col-price-val"><?= $site_cart->spese_spedizione_formatted ?></span>
-                            </div>
-                            <?php } else { ?>
-                            <div class="cart-page-col cart-page-col-price cart-page-col-price-free">
-                                <span class="cart-page-col-price-val"><?= $site_cart->spese_spedizione_formatted ?></span>
-                            </div>
-                            <?php } ?>
                         </div>
                         <div class="cart-page-row cart-page-row-totals cart-page-row-total-cart">
                             <div class="cart-page-col cart-page-col-name">

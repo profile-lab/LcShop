@@ -133,9 +133,9 @@ class Shop extends \Lc5\Web\Controllers\MasterWeb
         $this->web_ui_date->entity_rows = $pages_entity_rows;
 
         //
-		if (appIsFile($this->base_view_filesystem . 'shop/archive.php')) {
-			return view($this->base_view_namespace . 'shop/archive', $this->web_ui_date->toArray());
-		}
+        if (appIsFile($this->base_view_filesystem . 'shop/archive.php')) {
+            return view($this->base_view_namespace . 'shop/archive', $this->web_ui_date->toArray());
+        }
         throw \CodeIgniter\Exceptions\FrameworkException::forInvalidFile('View file not found - shop/archive.php - ');
 
 
@@ -179,13 +179,46 @@ class Shop extends \Lc5\Web\Controllers\MasterWeb
         $this->web_ui_date->fill((array)$curr_entity);
         $this->web_ui_date->entity_rows = $pages_entity_rows;
 
-         //
-		if (appIsFile($this->base_view_filesystem . 'shop/detail.php')) {
-			return view($this->base_view_namespace . 'shop/detail', $this->web_ui_date->toArray());
-		}
+        //
+        if (appIsFile($this->base_view_filesystem . 'shop/detail.php')) {
+            return view($this->base_view_namespace . 'shop/detail', $this->web_ui_date->toArray());
+        }
         throw \CodeIgniter\Exceptions\FrameworkException::forInvalidFile('View file not found - shop/detail.php - ');
 
         // return view($this->base_view_namespace . 'shop/detail', $this->web_ui_date->toArray());
+    }
+
+    //--------------------------------------------------------------------
+    public function makeOrder()
+    {
+        if ($this->cart->checkCartAction()) {
+            return redirect()->to(site_url(uri_string()));
+        }
+        $pages_entity_rows = null;
+        $products_archive_qb = $this->shop_products_model->asObject();
+        $products_archive_qb->where('parent', 0);
+        // $products_archive_qb->where('(parent IS NULL OR parent <  1 )');
+
+        $pages_model = new PagesModel();
+        $pages_model->setForFrontemd();
+        if ($curr_entity = $pages_model->asObject()->orderBy('id', 'DESC')->where('guid', 'cart')->first()) {
+            $pages_entity_rows = $this->getEntityRows($curr_entity->id, 'pages');
+        } else {
+            $curr_entity = new stdClass();
+            $curr_entity->titolo = 'Ordina';
+            $curr_entity->guid = 'ordina';
+            $curr_entity->testo = '';
+            $curr_entity->seo_title = 'Concludi il tuo ordine';
+            $curr_entity->seo_description = 'Concludi il tuo ordine';
+        }
+
+        $this->web_ui_date->fill((array)$curr_entity);
+        $this->web_ui_date->entity_rows = $pages_entity_rows;
+        //
+        if (appIsFile($this->base_view_filesystem . 'shop/make-order.php')) {
+            return view($this->base_view_namespace . 'shop/make-order', $this->web_ui_date->toArray());
+        }
+        throw \CodeIgniter\Exceptions\FrameworkException::forInvalidFile('View file not found - shop/make-order.php - ');
     }
 
     //--------------------------------------------------------------------
@@ -238,87 +271,13 @@ class Shop extends \Lc5\Web\Controllers\MasterWeb
             $curr_entity->seo_title = 'Il tuo carrello';
             $curr_entity->seo_description = 'Il tuo carrello';
         }
-        
+
         $this->web_ui_date->fill((array)$curr_entity);
         $this->web_ui_date->entity_rows = $pages_entity_rows;
-        return view($this->base_view_namespace . 'shop/site-cart', $this->web_ui_date->toArray());
+        if (appIsFile($this->base_view_filesystem . 'shop/site-cart.php')) {
+            return view($this->base_view_namespace . 'shop/site-cart', $this->web_ui_date->toArray());
+        }
+        throw \CodeIgniter\Exceptions\FrameworkException::forInvalidFile('View file not found - shop/site-cart.php - ');
+    
     }
-
-
-    //--------------------------------------------------------------------
-    //--------------------------------------------------------------------
-    // ---- TOOLS ----
-    //--------------------------------------------------------------------
-    //--------------------------------------------------------------------
-
-
-    // //--------------------------------------------------------------------
-    // protected function getShopSettings()
-    // {
-    //     // 
-    //     $shop_settings_model = new ShopSettingsModel();
-    //     $shop_settings_model->setForFrontemd();
-    //     if (!$shop_settings_entity = $shop_settings_model->asObject()->where('id_app', __web_app_id__ )->first()) {
-    //         throw \CodeIgniter\Exceptions\PageNotFoundException::forPageNotFound();
-    //     }
-    //     // 
-    //     return $shop_settings_entity;
-    // }
-
-
-    // private function extendProduct(&$product, $select = null)
-    // {
-    //     if ($product->category > 0) {
-    //         $category_obj_qb = $this->shop_products_cat_model->asObject()->where('id', $product->category);
-    //         if ($select == 'min') {
-    //             $category_obj_qb->select(['id', 'nome', 'titolo', 'guid']);
-    //         }
-    //         if ($product->category_obj = $category_obj_qb->first()) {
-    //             $product->category_obj->permalink = route_to(__locale_uri__ . 'web_shop_category', $product->category_obj->guid);
-    //         }
-    //     } else {
-    //         $product->category_obj = null;
-    //     }
-    //     // // MODELLI 
-    //     $modelli_qb = $this->shop_products_model->asObject()->where('parent', $product->id);
-    //     if ($select == 'min') {
-    //         $modelli_qb->select(['id', 'nome', 'titolo','modello', 'giacenza', 'guid', 'price', 'ali']);
-    //     }
-    //     $product->has_modelli = FALSE;
-    //     // 
-    //     $models_list = [];
-    //     $modello_base = (object) [
-    //         'ali' => $product->ali,
-    //         'alt_img_obj' => $product->alt_img_obj,
-    //         'alt_img_path' => $product->alt_img_path,
-    //         'entity_free_values_object' => $product->entity_free_values_object,
-    //         'gallery_obj' => $product->gallery_obj,
-    //         'guid' => $product->guid,
-    //         'id' => $product->id,
-    //         'imponibile' => $product->imponibile,
-    //         'iva' => $product->iva,
-    //         'main_img_obj' => $product->main_img_obj,
-    //         'main_img_path' => $product->main_img_path,
-    //         'nome' => $product->nome,
-    //         'prezzo' => $product->prezzo,
-    //         'prezzo_pieno' => $product->prezzo_pieno,
-    //         'price' => $product->price,
-    //         'tags' => $product->tags,
-    //         'titolo' => $product->titolo,
-    //         'modello' => $product->modello,
-    //         'giacenza' => $product->giacenza,
-    //     ];
-    //     $models_list[] = $modello_base;
-    //     // 
-    //     if ($modelli = $modelli_qb->findAll()) {
-
-    //         foreach ($modelli as $modello) {
-    //             $models_list[] = $modello;
-    //         }
-    //         $product->has_modelli = TRUE;
-    //     }
-    //     $product->modelli = $models_list;
-    //     // // FINE MODELLI 
-    //     // 
-    // }
 }

@@ -12,6 +12,7 @@ if (!$req->isCLI()) {
 			$routes->match(['get', 'post'], '{locale}/shop/remove-cart-row/(:any)', '\LcShop\Web\Controllers\Shop::cartRemoveRow/$1', ['as' => $uri->getSegment(1) . 'web_shop_cart_remove_row']);
 			$routes->match(['get', 'post'], '{locale}/shop/increment-qnt/(:any)', '\LcShop\Web\Controllers\Shop::cartIncrementQnt/$1', ['as' => $uri->getSegment(1) . 'web_shop_cart_increment_qnt']);
 			$routes->match(['get', 'post'], '{locale}/shop/decrement-qnt/(:any)', '\LcShop\Web\Controllers\Shop::cartDecrementQnt/$1', ['as' => $uri->getSegment(1) . 'web_shop_cart_decrement_qnt']);
+			$routes->match(['get', 'post'], '{locale}/shop/make-order', '\LcShop\Web\Controllers\Shop::makeOrder', ['as' => $uri->getSegment(1) . 'web_shop_make_order']);
 			$routes->match(['get', 'post'], '{locale}/shop/cart', '\LcShop\Web\Controllers\Shop::carrello', ['as' => $uri->getSegment(1) . 'web_shop_cart']);
 			// 
 			$routes->match(['get', 'post'], '{locale}/shop/product/(:segment)/(:segment)', '\LcShop\Web\Controllers\Shop::detail/$1/$2', ['as' => $uri->getSegment(1) . 'web_shop_detail_model']);
@@ -29,6 +30,7 @@ $routes->match(['get', 'post'], 'shop/empty-cart', '\LcShop\Web\Controllers\Shop
 $routes->match(['get', 'post'], 'shop/remove-cart-row/(:any)', '\LcShop\Web\Controllers\Shop::cartRemoveRow/$1', ['as' => 'web_shop_cart_remove_row']);
 $routes->match(['get', 'post'], 'shop/increment-qnt/(:any)', '\LcShop\Web\Controllers\Shop::cartIncrementQnt/$1', ['as' => 'web_shop_cart_increment_qnt']);
 $routes->match(['get', 'post'], 'shop/decrement-qnt/(:any)', '\LcShop\Web\Controllers\Shop::cartDecrementQnt/$1', ['as' => 'web_shop_cart_decrement_qnt']);
+$routes->match(['get', 'post'], 'shop/ordina', '\LcShop\Web\Controllers\Shop::makeOrder', ['as' => 'web_shop_make_order']);
 $routes->match(['get', 'post'], 'shop/carrello', '\LcShop\Web\Controllers\Shop::carrello', ['as' => 'web_shop_cart']);
 // 
 $routes->match(['get', 'post'], 'shop/prodotto/(:segment)/(:segment)', '\LcShop\Web\Controllers\Shop::detail/$1/$2', ['as' => 'web_shop_detail_model']);
