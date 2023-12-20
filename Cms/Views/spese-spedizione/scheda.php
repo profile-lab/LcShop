@@ -20,6 +20,7 @@
                 <div class="row form-row">
                     <?= view('Lc5\Cms\Views\form-cmp/number', ['item' => ['label' => 'Peso max (Kg)', 'name' => 'peso_max', 'value' => $entity->peso_max, 'placeholder' => 'Peso massimo (grammi)', 'step' => '0.01', 'decimal' => 2]]) ?>
                     <?= view('Lc5\Cms\Views\form-cmp/number', ['item' => ['label' => 'Prezzo Imponibile', 'name' => 'prezzo_imponibile', 'value' => $entity->prezzo_imponibile, 'placeholder' => 'Prezzo Imponibile', 'step' => '0.01', 'decimal' => 2]]) ?>
+                    <?= view('Lc5\Cms\Views\form-cmp/number', ['item' => ['label' => 'Aliquota Iva', 'name' => 'prezzo_aliquota', 'value' => $entity->prezzo_aliquota, 'placeholder' => 'Iva %']]) ?>
                
                     <?php /*
                     <?= view('Lc5\Cms\Views\form-cmp/text', ['item' => ['label' => 'Nazione', 'name' => 'nazione', 'value' => $entity->nazione, 'width' => 'col-md-12', 'placeholder' => 'Nazione']]) ?>

@@ -21,6 +21,7 @@ class ShopSpeseSpedizionesModel extends MasterModel
 		'is_default', 
 		'peso_max', 
 		'prezzo_imponibile', 
+		'prezzo_aliquota', 
 		'post_type', 
 		'nazione', 
 		'is_free', 

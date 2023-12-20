@@ -13,6 +13,7 @@ class ShopSpeseSpedizione extends Entity
 		'is_default' => null, 
 		'peso_max' => null, 
 		'prezzo_imponibile' => null, 
+		'prezzo_aliquota' => 22, 
 		'post_type' => null, 
 		'nazione' => null, 
 		'is_free' => null, 
