@@ -1,5 +1,7 @@
 <?php
+
 namespace LcShop\Data\Models;
+
 use Lc5\Data\Models\MasterModel;
 
 class ShopSpeseSpedizionesModel extends MasterModel
@@ -13,27 +15,27 @@ class ShopSpeseSpedizionesModel extends MasterModel
 
 	protected $returnType           = 'LcShop\Data\Entities\ShopSpeseSpedizione';
 	protected $allowedFields = [
-		'id', 
-		'status', 
-		'id_app', 
-		'lang', 
-		'public', 
-		'is_default', 
-		'peso_max', 
-		'prezzo_imponibile', 
-		'prezzo_aliquota', 
-		'post_type', 
-		'nazione', 
-		'is_free', 
-		'default_nazione', 
-		'nome', 
-		'consegna', 
-		'guid', 
-		'titolo', 
-		'testo_breve', 
-		'testo', 
-		'main_img_id', 
-		'extra_field', 
+		'id',
+		'status',
+		'id_app',
+		'lang',
+		'public',
+		'is_default',
+		'peso_max',
+		'prezzo_imponibile',
+		'prezzo_aliquota',
+		'post_type',
+		'nazione',
+		'is_free',
+		'default_nazione',
+		'nome',
+		'consegna',
+		'guid',
+		'titolo',
+		'testo_breve',
+		'testo',
+		'main_img_id',
+		'extra_field',
 
 	];
 
@@ -75,8 +77,37 @@ class ShopSpeseSpedizionesModel extends MasterModel
 	//------------------------------------------------------------
 	private function extendData($item, $is_singleton = false)
 	{
+		// 		prezzo_imponibile
+		// prezzo_aliquota
 		if ($item) {
+			if (isset($item->prezzo_aliquota) && $item->prezzo_aliquota > 0) {
+				$imponibile = number_format($item->prezzo_imponibile, 2, '.', '');
+				$aliquota_vat = 22;
+				if (isset($item->prezzo_aliquota)) {
+					if ($item->prezzo_aliquota > 0) {
+						$aliquota_vat = $item->prezzo_aliquota;
+					}
+				}
+				$iva = number_format((($imponibile * $aliquota_vat) / 100), 2, '.', '');
+				// 
+				$item->prezzo_imponibile = $imponibile;
+				$item->iva = $iva;
+				$item->prezzo = number_format(($imponibile + $iva), 2, '.', '');
+				// 
+				$item->prezzo_imponibile_coin = '€ ' . number_format($item->prezzo_imponibile, 2, ',', '.');
+				$item->iva_coin = '€ ' . number_format($item->iva, 2, ',', '.');
+				$item->prezzo_coin = '€ ' . number_format($item->prezzo, 2, ',', '.');
+			} else {
+				$item->prezzo_imponibile = 0;
+				$item->iva = 0;
+				$item->prezzo = 0;
+				// 
+				$item->prezzo_imponibile_coin = '€ ' . number_format($item->prezzo_imponibile, 2, ',', '.');
+				$item->iva_coin = '€ ' . number_format($item->iva, 2, ',', '.');
+				$item->prezzo_coin = '€ ' . number_format($item->prezzo, 2, ',', '.');
+			}
 		}
+
 		return $item;
 	}
 
@@ -114,5 +145,4 @@ class ShopSpeseSpedizionesModel extends MasterModel
 
 		return $data;
 	}
-
 }
