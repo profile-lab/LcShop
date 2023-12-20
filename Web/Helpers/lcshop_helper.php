@@ -10,13 +10,14 @@ if (!function_exists('get_spedizioni_per')) {
      *  'key' => 'italia',
      *  'is_italy' => true,
      *  'is_isole' => false,
+     *  'is_default' => true,
      * }
      * ]
      */
     function get_spedizioni_per()
     {
         $spedizioni_per = [
-            'italia' => ['nome' => 'Italia', 'key' => 'italia', 'is_italy' => true,  'is_isole' => false],
+            'italia' => ['nome' => 'Italia', 'key' => 'italia', 'is_italy' => true,  'is_isole' => false, 'is_default' => true],
             'isole' => ['nome' => 'Isole', 'key' => 'isole', 'is_italy' => true, 'is_isole' => true],
             'estero' => ['nome' => 'Estero', 'key' => 'estero', 'is_italy' => false, 'is_isole' => false],
         ];
