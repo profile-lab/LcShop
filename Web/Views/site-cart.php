@@ -97,9 +97,9 @@
                         </div>
                     </div>
 
-                    <div class="cart-page-tools-rows">
-                        <a class="cart-page-tool-action" href="<?= route_to(__locale_uri__ . 'web_shop_cart_empty') ?>"><?= appLabel('Svuota carrello', $app->labels, true)  ?></a>
-                        <a class="cart-page-tool-action" href="<?= route_to(__locale_uri__ . 'web_shop_make_order') ?>"><?= appLabel('Procedi', $app->labels, true)  ?></a>
+                    <div class="shop-action-tools-rows">
+                        <a class="shop-action-tools-action" href="<?= route_to(__locale_uri__ . 'web_shop_cart_empty') ?>"><?= appLabel('Svuota carrello', $app->labels, true)  ?></a>
+                        <a class="shop-action-tools-action" href="<?= route_to(__locale_uri__ . 'web_shop_make_order') ?>"><?= appLabel('Procedi', $app->labels, true)  ?></a>
                     </div>
                 <?php } ?>
             </div>
