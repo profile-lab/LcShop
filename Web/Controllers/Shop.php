@@ -27,6 +27,7 @@ class Shop extends \Lc5\Web\Controllers\MasterWeb
     private $shop_products_sizes_model;
     // 
     private $cart;
+    private $appuser;
     private $categories;
     private $tags;
     private $variations;
@@ -55,6 +56,8 @@ class Shop extends \Lc5\Web\Controllers\MasterWeb
         $this->shop_products_sizes_model->setForFrontemd();
         // 
         $this->cart = Services::shopcart(); // new Cart();
+        $this->appuser = Services::appuser();
+
         // 
 
         // 
@@ -194,6 +197,51 @@ class Shop extends \Lc5\Web\Controllers\MasterWeb
         if ($this->cart->checkCartAction()) {
             return redirect()->to(site_url(uri_string()));
         }
+
+        $ship_data = $this->appuser->getAllUserData();
+
+        //
+        if (!$sess_order_data = session()->get('order_data')) {
+            $sess_order_data = [];
+        } else {
+            foreach ($sess_order_data as $key => $data) {
+                $ship_data->{$key} = $data;
+            }
+        }
+        // dd($ship_data);
+
+        if ($this->request->getPost()) {
+            if ($this->request->getPost('action') == 'login') {
+                if ($this->appuser->loginPostAction($this->request->getPost())) {
+                    // if ($get_redirect = $this->request->getGet('returnTo', false)) {
+                    //     return redirect()->to(urldecode($get_redirect));
+                    // } else {
+                    //     return redirect()->route('web_dashboard');
+                    // }
+                    return redirect()->route('web_shop_make_order');
+                } else {
+                    session()->setFlashdata('ui_mess', 'Nome utente o password errati');
+                    session()->setFlashdata('ui_mess_type', 'alert alert-danger');
+                }
+            }else{
+                if ($this->request->getPost('ship_send') == 'next') {
+                    $ship_data->ship_name = $this->request->getPost('ship_name');
+                    $ship_data->ship_surname = $this->request->getPost('ship_surname');
+                    $ship_data->ship_address = $this->request->getPost('ship_address');
+                    $ship_data->ship_city = $this->request->getPost('ship_city');
+                    $ship_data->ship_zip = $this->request->getPost('ship_zip');
+                    $ship_data->ship_phone = $this->request->getPost('ship_phone');
+                    $ship_data->ship_email = $this->request->getPost('ship_email');
+                    $ship_data->ship_infos = $this->request->getPost('ship_infos');
+                    $ship_data->save_in_user = $this->request->getPost('save_in_user');
+                    session()->set('order_data', $ship_data);
+                    return redirect()->route('web_shop_make_order');
+                }
+            }
+            
+        }
+
+        //
         $pages_entity_rows = null;
         $products_archive_qb = $this->shop_products_model->asObject();
         $products_archive_qb->where('parent', 0);
@@ -211,6 +259,8 @@ class Shop extends \Lc5\Web\Controllers\MasterWeb
             $curr_entity->seo_title = 'Concludi il tuo ordine';
             $curr_entity->seo_description = 'Concludi il tuo ordine';
         }
+        $curr_entity->ship_data = $ship_data;
+
 
         $this->web_ui_date->fill((array)$curr_entity);
         $this->web_ui_date->entity_rows = $pages_entity_rows;
@@ -278,6 +328,5 @@ class Shop extends \Lc5\Web\Controllers\MasterWeb
             return view($this->base_view_namespace . 'shop/site-cart', $this->web_ui_date->toArray());
         }
         throw \CodeIgniter\Exceptions\FrameworkException::forInvalidFile('View file not found - shop/site-cart.php - ');
-    
     }
 }
