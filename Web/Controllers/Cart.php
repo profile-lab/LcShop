@@ -26,6 +26,8 @@ class Cart extends \App\Controllers\BaseController
     protected $discountPercTotalFormatted = 0;
     protected $spedizioneCorrente = null;
     protected $spedizioneName = 'Spese di spedizione';
+    protected $speseSpedizioneImponibile = 0;
+    protected $speseSpedizioneImponibileFormatted = 0;
     protected $speseSpedizioneTotal = 0;
     protected $speseSpedizioneTotalFormatted = 0;
 
@@ -196,9 +198,11 @@ class Cart extends \App\Controllers\BaseController
         $this->pesoTotaleKg = doubleval($this->pesoTotaleGrammi / 1000);
         $this->spedizioneCorrente = $this->getSpedizione($this->pesoTotaleGrammi);
         if ($this->spedizioneCorrente) {
+            $this->speseSpedizioneImponibile = $this->spedizioneCorrente->prezzo_imponibile;
             $this->speseSpedizioneTotal = $this->spedizioneCorrente->prezzo;
             $this->spedizioneName = ($this->spedizioneCorrente->titolo) ? $this->spedizioneCorrente->titolo: $this->spedizioneCorrente->nome;
         } else {
+            $this->speseSpedizioneImponibile = 0;
             $this->speseSpedizioneTotal = 0;
         }
 
@@ -207,6 +211,7 @@ class Cart extends \App\Controllers\BaseController
         $this->imponibileTotalFormatted = number_format($this->imponibileTotal, 2, ',', '.');
         $this->promoPriceTotalFormatted = number_format($this->promoPriceTotal, 2, ',', '.');
         $this->discountPercTotalFormatted = number_format($this->discountPercTotal, 2, ',', '.');
+        $this->speseSpedizioneImponibileFormatted = number_format($this->speseSpedizioneImponibile, 2, ',', '.');
         $this->speseSpedizioneTotalFormatted = number_format($this->speseSpedizioneTotal, 2, ',', '.');
 
 
@@ -229,6 +234,8 @@ class Cart extends \App\Controllers\BaseController
 
             'spedizione_corrente' => $this->spedizioneCorrente,
             'spedizione_name' => $this->spedizioneName,
+            'spese_spedizione_imponibile' => $this->speseSpedizioneImponibile,
+            'spese_spedizione_imponibile_formatted' => ($this->speseSpedizioneImponibile > 0) ? $this->speseSpedizioneImponibileFormatted : 'Gratis',
             'spese_spedizione' => $this->speseSpedizioneTotal,
             'spese_spedizione_formatted' => ($this->speseSpedizioneTotal > 0) ? $this->speseSpedizioneTotalFormatted : 'Gratis',
 
