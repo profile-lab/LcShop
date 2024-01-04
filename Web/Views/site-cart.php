@@ -99,7 +99,7 @@
 
                     <div class="shop-action-tools-rows">
                         <a class="shop-action-tools-action" href="<?= route_to(__locale_uri__ . 'web_shop_cart_empty') ?>"><?= appLabel('Svuota carrello', $app->labels, true)  ?></a>
-                        <a class="shop-action-tools-action" href="<?= route_to(__locale_uri__ . 'web_shop_make_order') ?>"><?= appLabel('Procedi', $app->labels, true)  ?></a>
+                        <a class="shop-action-tools-action shop-action-tools-action-next" href="<?= route_to(__locale_uri__ . 'web_shop_make_order') ?>"><?= appLabel('Procedi', $app->labels, true)  ?></a>
                     </div>
                 <?php } ?>
             </div>
