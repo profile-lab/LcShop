@@ -56,7 +56,7 @@
                                 <span class="cart-page-col-price-val"><?= $site_cart->peso_totale_kg ?> Kg</span>
                             </div>
                         </div>
-                       
+
                         <div class="cart-page-row cart-page-row-totals">
                             <div class="cart-page-col cart-page-col-name">
                                 Iva
@@ -78,13 +78,13 @@
                                 <?= $site_cart->spedizione_name ?>
                             </div>
                             <?php if ($site_cart->spese_spedizione > 0) { ?>
-                            <div class="cart-page-col cart-page-col-price">
-                                &euro; <span class="cart-page-col-price-val"><?= $site_cart->spese_spedizione_formatted ?></span>
-                            </div>
+                                <div class="cart-page-col cart-page-col-price">
+                                    &euro; <span class="cart-page-col-price-val"><?= $site_cart->spese_spedizione_formatted ?></span>
+                                </div>
                             <?php } else { ?>
-                            <div class="cart-page-col cart-page-col-price cart-page-col-price-free">
-                                <span class="cart-page-col-price-val"><?= $site_cart->spese_spedizione_formatted ?></span>
-                            </div>
+                                <div class="cart-page-col cart-page-col-price cart-page-col-price-free">
+                                    <span class="cart-page-col-price-val"><?= $site_cart->spese_spedizione_formatted ?></span>
+                                </div>
                             <?php } ?>
                         </div>
                         <div class="cart-page-row cart-page-row-totals cart-page-row-total-cart">
@@ -92,7 +92,7 @@
                                 Totale
                             </div>
                             <div class="cart-page-col cart-page-col-price">
-                                &euro; <span class="cart-page-col-price-val"><?= $site_cart->total_formatted ?></span>
+                                &euro; <span class="cart-page-col-price-val"><?= $site_cart->pay_total_formatted ?></span>
                             </div>
                         </div>
                     </div>
@@ -104,7 +104,8 @@
                 <?php } ?>
             </div>
         <?php } else { ?>
-            <h3 class="cart-page-mess no_products">Non ci sono prodotti!</h3>
+            <h2 class="cart-page-mess">Il carrello è vuoto</h2>
+            <h4 class="cart-page-mess no_products">Non ci sono ancora prodotti nel tuo carrello.<br /><a href="<?= route_to(__locale_uri__ . 'web_shop_home') ?>">Vai allo shop</a> e scegli i prodotti che preferisci.</h4>
         <?php } ?>
     </div>
 </section>
