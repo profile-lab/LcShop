@@ -10,12 +10,8 @@
 </article>
 <section class="shop_carrello">
     <div class="myIn">
-        <?php if (isset($site_cart)) { ?>
-            <?php
-            // d($site_cart);
-            ?>
             <div class="cart-page">
-                <?php if (isset($site_cart->products) && is_iterable($site_cart->products) && count($site_cart->products) > 0) { ?>
+                <?php if (isset($site_cart) && isset($site_cart->products) && is_iterable($site_cart->products) && count($site_cart->products) > 0) { ?>
                     <div class="cart-page-rows">
                         <?php foreach ($site_cart->products as $cart_item) { ?>
                             <div class="cart-page-row">
@@ -31,8 +27,8 @@
                                     </span>
                                     <a class="cart-page-qnt-action" href="<?= route_to(__locale_uri__ . 'web_shop_cart_increment_qnt', $cart_item->row_key) ?>">+</a>
                                 </div>
-                                <div class="cart-page-col cart-page-col-price">&euro; <span class="cart-page-price-val"><?= $cart_item->prezzo_uni ?></span></div>
-                                <div class="cart-page-col cart-page-col-price">&euro; <span class="cart-page-price-val"><?= $cart_item->prezzo ?></span></div>
+                                <div class="cart-page-col cart-page-col-price">&euro; <span class="cart-page-price-val"><?= $cart_item->prezzo_uni_formatted ?></span></div>
+                                <div class="cart-page-col cart-page-col-price">&euro; <span class="cart-page-price-val"><?= $cart_item->prezzo_formatted ?></span></div>
                                 <div class="cart-page-col cart-page-col-action">
                                     <a class="cart-page-action" href="<?= route_to(__locale_uri__ . 'web_shop_cart_remove_row', $cart_item->row_key) ?>">&#10005;</a>
                                 </div>
@@ -101,12 +97,12 @@
                         <a class="shop-action-tools-action" href="<?= route_to(__locale_uri__ . 'web_shop_cart_empty') ?>"><?= appLabel('Svuota carrello', $app->labels, true)  ?></a>
                         <a class="shop-action-tools-action shop-action-tools-action-next" href="<?= route_to(__locale_uri__ . 'web_shop_make_order') ?>"><?= appLabel('Procedi', $app->labels, true)  ?></a>
                     </div>
+                <?php } else { ?>
+                    <h2 class="cart-page-mess">Il carrello è vuoto</h2>
+                    <h4 class="cart-page-mess no_products">Non ci sono ancora prodotti nel tuo carrello.<br /><a href="<?= route_to('web_shop_home') ?>">Vai allo shop</a> e scegli i prodotti che preferisci.</h4>
                 <?php } ?>
             </div>
-        <?php } else { ?>
-            <h2 class="cart-page-mess">Il carrello è vuoto</h2>
-            <h4 class="cart-page-mess no_products">Non ci sono ancora prodotti nel tuo carrello.<br /><a href="<?= route_to(__locale_uri__ . 'web_shop_home') ?>">Vai allo shop</a> e scegli i prodotti che preferisci.</h4>
-        <?php } ?>
+        
     </div>
 </section>
 <?= $this->endSection() ?>
