@@ -84,9 +84,59 @@ class Payment extends \Lc5\Web\Controllers\MasterWeb
       $curr_entity->seo_title = 'Concludi il tuo ordine';
       $curr_entity->seo_description = 'Concludi il tuo ordine';
     }
+
+
+
+    // $riepilogo_order_data->imponibile_total;
+		// $riepilogo_order_data->iva_total;
+		// $riepilogo_order_data->pay_total;
+		// $riepilogo_order_data->promo_total;
+		// $riepilogo_order_data->spese_spedizione;
+		// $riepilogo_order_data->spese_spedizione_imponibile;
+		// $riepilogo_order_data->total;
+		// $riepilogo_order_data->peso_totale_grammi;
+		// $riepilogo_order_data->peso_totale_kg;
+
+
+
+
+
+
+
+
+    $stripeOB = new \stdClass();
+		\Stripe\Stripe::setApiKey(env('custom.stripe_secret_key'));
+		$intent = \Stripe\PaymentIntent::create([
+			'amount' => $riepilogo_order_data->pay_total * 100,
+			'currency' => 'eur',
+			// Verify your integration in this guide by including this parameter
+			'metadata' => [
+				'order_id' => $riepilogo_order_data->id,
+				'order_type' => 'ORDER',
+			],
+			// 'payment_method_types' => ['card', 'klarna'],
+
+			'payment_method_types' => [
+				'card',
+				// 'klarna'
+			],
+		]);
+
+    $stripeOB->intent = $intent;
+		$stripeOB->current_pay_page = route_to('web_shop_pay_now', $riepilogo_order_data->id);
+		$stripeOB->ok_pay_page = route_to('web_shop_pay_completed', $riepilogo_order_data->id);
+
+    $order_stripe_pi_data = [
+			'stripe_pi' => $intent->id,
+		];
+		$this->shop_orders_model->update($riepilogo_order_data->id, $order_stripe_pi_data);
+
+
+
+   
+    $curr_entity->stripeOB = $stripeOB;
     $curr_entity->riepilogo_order_data = $riepilogo_order_data;
     $curr_entity->orders_items = $orders_items;
-
 
     $this->web_ui_date->fill((array)$curr_entity);
     $this->web_ui_date->entity_rows = $pages_entity_rows;
