@@ -21,6 +21,9 @@ Add LC5 psr4 namespace in App\Config\Autoload.php
                 'LcShop\Cms'   => ROOTPATH . 'LcShop/Cms',
                 'LcShop\Data'   => ROOTPATH . 'LcShop/Data',
                 'LcShop\Web'   => ROOTPATH . 'LcShop/Web',
+                // 
+                'Stripe'    => ROOTPATH . 'LcShop/Web/ThirdParty/stripe-php-13.18.0/lib',
+                //
         ];
 
 
