@@ -24,6 +24,7 @@ if (!$req->isCLI()) {
 }
 
 // $routes->match(['get', 'post'], '/payment-stripe-webhook', '\App\Controllers\App\Webhooks::paymentStripeWebhook', ['as' => 'payment_stripe_webhook']);
+$routes->match(['get', 'post'], '/payment-stripe-webhook', '\LcShop\Web\Controllers\Payment::orderPaymentStripeWebhook', ['as' => 'order_payment_stripe_webhook']);
 
 // 
 $routes->match(['get', 'post'], 'shop/empty-cart', '\LcShop\Web\Controllers\Shop::emptyCart', ['as' => 'web_shop_cart_empty']);

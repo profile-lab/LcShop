@@ -55,14 +55,13 @@ class Payment extends \Lc5\Web\Controllers\MasterWeb
   //--------------------------------------------------------------------
   public function payOrderNow($order_id)
   {
-    
+
 
     // $order_data = $this->getOrderData();
     // $all_user_data = $this->appuser->getAllUserData();
     $riepilogo_order_data =  $this->shop_orders_model->where('id', $order_id)->where('user_id', $this->appuser->getUserId())->first();
-    if(!$riepilogo_order_data){
+    if (!$riepilogo_order_data) {
       throw new \CodeIgniter\Exceptions\PageNotFoundException('Ordine non trovato');
-
     }
     $orders_items = $this->shop_orders_items_model->where('order_id', $riepilogo_order_data->id)->findAll();
 
@@ -87,53 +86,37 @@ class Payment extends \Lc5\Web\Controllers\MasterWeb
 
 
 
-    // $riepilogo_order_data->imponibile_total;
-		// $riepilogo_order_data->iva_total;
-		// $riepilogo_order_data->pay_total;
-		// $riepilogo_order_data->promo_total;
-		// $riepilogo_order_data->spese_spedizione;
-		// $riepilogo_order_data->spese_spedizione_imponibile;
-		// $riepilogo_order_data->total;
-		// $riepilogo_order_data->peso_totale_grammi;
-		// $riepilogo_order_data->peso_totale_kg;
-
-
-
-
-
-
-
 
     $stripeOB = new \stdClass();
-		\Stripe\Stripe::setApiKey(env('custom.stripe_secret_key'));
-		$intent = \Stripe\PaymentIntent::create([
-			'amount' => $riepilogo_order_data->pay_total * 100,
-			'currency' => 'eur',
-			// Verify your integration in this guide by including this parameter
-			'metadata' => [
-				'order_id' => $riepilogo_order_data->id,
-				'order_type' => 'ORDER',
-			],
-			// 'payment_method_types' => ['card', 'klarna'],
+    \Stripe\Stripe::setApiKey(env('custom.stripe_secret_key'));
+    $intent = \Stripe\PaymentIntent::create([
+      'amount' => $riepilogo_order_data->pay_total * 100,
+      'currency' => 'eur',
+      // Verify your integration in this guide by including this parameter
+      'metadata' => [
+        'order_id' => $riepilogo_order_data->id,
+        'order_type' => 'ORDER',
+      ],
+      // 'payment_method_types' => ['card', 'klarna'],
 
-			'payment_method_types' => [
-				'card',
-				// 'klarna'
-			],
-		]);
+      'payment_method_types' => [
+        'card',
+        // 'klarna'
+      ],
+    ]);
 
     $stripeOB->intent = $intent;
-		$stripeOB->current_pay_page = route_to('web_shop_pay_now', $riepilogo_order_data->id);
-		$stripeOB->ok_pay_page = route_to('web_shop_pay_completed', $riepilogo_order_data->id);
+    $stripeOB->current_pay_page = route_to('web_shop_pay_now', $riepilogo_order_data->id);
+    $stripeOB->ok_pay_page = route_to('web_shop_pay_completed', $riepilogo_order_data->id);
 
     $order_stripe_pi_data = [
-			'stripe_pi' => $intent->id,
-		];
-		$this->shop_orders_model->update($riepilogo_order_data->id, $order_stripe_pi_data);
+      'stripe_pi' => $intent->id,
+    ];
+    $this->shop_orders_model->update($riepilogo_order_data->id, $order_stripe_pi_data);
 
 
 
-   
+
     $curr_entity->stripeOB = $stripeOB;
     $curr_entity->riepilogo_order_data = $riepilogo_order_data;
     $curr_entity->orders_items = $orders_items;
@@ -146,7 +129,120 @@ class Payment extends \Lc5\Web\Controllers\MasterWeb
     }
     throw \CodeIgniter\Exceptions\FrameworkException::forInvalidFile('View file not found - shop/pay-order.php - ');
   }
-/*
+
+  //--------------------------------------------------------------------
+  public function orderPaymentStripeWebhook()
+  {
+    $fp = fopen(__DIR__ . '/stripe_log.txt', 'a+'); //opens file in append mode  
+    $payload = @file_get_contents('php://input');
+    $event = null;
+
+    echo $payload;
+    fwrite($fp, $payload);
+    fwrite($fp, '
+---------
+');
+    fclose($fp);
+
+
+    try {
+      $event = \Stripe\Event::constructFrom(
+        json_decode($payload, true)
+      );
+    } catch (\UnexpectedValueException $e) {
+      // Invalid payload
+      http_response_code(400);
+      exit();
+    }
+
+    $paymentIntent = $event->data->object; // contains a \Stripe\PaymentIntent
+    $pi_ID = $paymentIntent->id;
+    $pi_metadata = $paymentIntent->metadata;
+    $order_id = $pi_metadata->order_id;
+    $order_type = $pi_metadata->order_type;
+    // Handle the event
+    switch ($event->type) {
+      // case 'payment_intent.created':
+      //   break;
+      case 'payment_intent.succeeded':
+        $this->updateObjectOnDB_succeeded($order_type, $order_id, $pi_ID);
+        break;
+      case 'payment_intent.payment_failed':
+        $this->updateObjectOnDB_failed($order_type, $order_id, $pi_ID);
+        break;
+      case 'payment_intent.canceled':
+        $this->updateObjectOnDB_canceled($order_type, $order_id, $pi_ID);
+        break;
+      // case 'payment_method.attached':
+      //   break;
+      default:
+        http_response_code(400);
+        exit();
+    }
+
+    http_response_code(200);
+  }
+
+  //--------------------------------------------------------------------
+  private function updateObjectOnDB_succeeded($order_type, $order_id, $stripe_pi)
+  {
+
+
+    switch ($order_type) {
+      case 'ORDER':
+
+        $riepilogo_order_data =  $this->shop_orders_model->where('id', $order_id)->where('stripe_pi', $stripe_pi)->first();
+        if (!$riepilogo_order_data) {
+          throw new \CodeIgniter\Exceptions\PageNotFoundException('Ordine non trovato');
+        }
+
+        
+        $data = [
+          'payment_type' => 'STRIPE', 
+          'order_status' => 'ORDER', 
+          'payment_status' => 'COMPLETED', 
+          'last_status_change' => date('Y-m-d H:i:s'),
+          'payed_at' => date('Y-m-d H:i:s'),
+        ];
+        $this->shop_orders_model->update($riepilogo_order_data->id, $data);
+
+        // $corso_utente_entity = new CorsoVsUtente();
+        // $corso_utente_model = new CorsiVsUtentiModel();
+        // $corso_utente_entity->id_corso = $prodInPay->id_corso;
+        // $corso_utente_entity->id_utente = $prodInPay->id_user;
+        // $corso_utente_model->save($corso_utente_entity);
+
+
+        // //
+        // $users_model = new \Lc5\Data\Models\SiteUsersModel();
+
+        // $datiUser = $users_model
+        //   ->where('id', $prodInPay->id_user)
+        //   ->first();
+        // $dati_email = array('nome' => $datiUser->nome);
+        // $this->send_email_pagamento_ok($datiUser->email, $dati_email, 'pay_corso_ok');
+
+        break;
+        // 
+        // 
+
+    }
+  }
+
+  //--------------------------------------------------------------------
+  private function updateObjectOnDB_failed($order_type, $order_id)
+  {
+  }
+  //--------------------------------------------------------------------
+  private function updateObjectOnDB_canceled($order_type, $order_id)
+  {
+  }
+  //--------------------------------------------------------------------
+  //--------------------------------------------------------------------
+
+
+
+  /*
 <?php
 // webhook.php
 //
