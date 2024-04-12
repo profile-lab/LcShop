@@ -68,7 +68,9 @@ class Shop extends \Lc5\Web\Controllers\MasterWeb
         $this->shop_products_sizes_model->setForFrontemd();
         // 
         $this->shop_orders_model = new ShopOrdersModel();
+        $this->shop_orders_model->setForFrontemd();
         $this->shop_orders_items_model = new ShopOrdersItemsModel();
+        $this->shop_orders_items_model->setForFrontemd();
 
 
         // 
@@ -366,7 +368,7 @@ class Shop extends \Lc5\Web\Controllers\MasterWeb
                         foreach ($order_data->products as $product) {
                             $shop_order_item = new ShopOrdersItem();
                             $shop_order_item->fill((array)$product);
-                            $shop_order_item->order_id = $shop_order->id;
+                            $shop_order_item->order_id = $new_id;
                             $shop_order_item->user_id = $this->appuser->getUserId();
                             $this->shop_orders_items_model->save($shop_order_item);
                         }

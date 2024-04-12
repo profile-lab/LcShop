@@ -1,4 +1,103 @@
 <?php
+
+namespace LcShop\Web\Controllers;
+
+use Lc5\Data\Models\PagesModel;
+use LcShop\Data\Models\ShopProductsModel;
+use LcShop\Data\Models\ShopSettingsModel;
+
+// 
+use LcShop\Data\Models\ShopProductsCategoriesModel;
+use LcShop\Data\Models\ShopProductsTagsModel;
+use LcShop\Data\Models\ShopProductsVariationsModel;
+use LcShop\Data\Models\ShopProductsSizesModel;
+// 
+use LcShop\Data\Models\ShopOrdersModel;
+use LcShop\Data\Entities\ShopOrder;
+use LcShop\Data\Models\ShopOrdersItemsModel;
+use LcShop\Data\Entities\ShopOrdersItem;
+
+// use LcShop\Data\Models\ShopOrdersItemsModel;
+
+use Config\Services;
+
+use stdClass;
+
+class Payment extends \Lc5\Web\Controllers\MasterWeb
+{
+  private $shop_products_model;
+  private $shop_orders_model;
+  private $shop_orders_items_model;
+  private $shop_settings;
+  private $appuser;
+
+
+  //--------------------------------------------------------------------
+  public function __construct()
+  {
+    parent::__construct();
+    // 
+    $this->shop_settings = $this->getShopSettings(__web_app_id__);
+    // 
+    $this->shop_products_model = new ShopProductsModel();
+    $this->shop_products_model->setForFrontemd();
+    $this->shop_products_model->shop_settings = $this->shop_settings;
+    $this->shop_orders_model = new ShopOrdersModel();
+    $this->shop_orders_model->setForFrontemd();
+    $this->shop_orders_items_model = new ShopOrdersItemsModel();
+    $this->shop_orders_items_model->setForFrontemd();
+    // 
+    $this->appuser = Services::appuser();
+    // 
+    $this->web_ui_date->__set('request', $this->req);
+    // 
+  }
+  //--------------------------------------------------------------------
+  public function payOrderNow($order_id)
+  {
+    
+
+    // $order_data = $this->getOrderData();
+    // $all_user_data = $this->appuser->getAllUserData();
+    $order_data =  $this->shop_orders_model->where('id', $order_id)->where('user_id', $this->appuser->getUserId())->first();
+    if(!$order_data){
+      throw new \CodeIgniter\Exceptions\PageNotFoundException('Ordine non trovato');
+
+    }
+    $products = $this->shop_orders_items_model->where('order_id', $order_data->id)->findAll();
+    dd($products);
+
+    //
+    $pages_entity_rows = null;
+    $products_archive_qb = $this->shop_products_model->asObject();
+    $products_archive_qb->where('parent', 0);
+    // $products_archive_qb->where('(parent IS NULL OR parent <  1 )');
+
+    $pages_model = new PagesModel();
+    $pages_model->setForFrontemd();
+    if ($curr_entity = $pages_model->asObject()->orderBy('id', 'DESC')->where('guid', 'cart')->first()) {
+      $pages_entity_rows = $this->getEntityRows($curr_entity->id, 'pages');
+    } else {
+      $curr_entity = new stdClass();
+      $curr_entity->titolo = 'Ordina';
+      $curr_entity->guid = 'ordina';
+      $curr_entity->testo = '';
+      $curr_entity->seo_title = 'Concludi il tuo ordine';
+      $curr_entity->seo_description = 'Concludi il tuo ordine';
+    }
+    $curr_entity->order_data = $order_data;
+
+
+    $this->web_ui_date->fill((array)$curr_entity);
+    $this->web_ui_date->entity_rows = $pages_entity_rows;
+    //
+    if (appIsFile($this->base_view_filesystem . 'shop/pay-order.php')) {
+      return view($this->base_view_namespace . 'shop/pay-order', $this->web_ui_date->toArray());
+    }
+    throw \CodeIgniter\Exceptions\FrameworkException::forInvalidFile('View file not found - shop/pay-order.php - ');
+  }
+/*
+<?php
 // webhook.php
 //
 // Use this sample code to handle webhook events in your integration.
@@ -82,3 +181,5 @@ switch ($event->type) {
 }
 
 http_response_code(200);
+*/
+}
