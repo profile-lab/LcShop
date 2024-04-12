@@ -64,8 +64,7 @@ class Payment extends \Lc5\Web\Controllers\MasterWeb
       throw new \CodeIgniter\Exceptions\PageNotFoundException('Ordine non trovato');
 
     }
-    $products = $this->shop_orders_items_model->where('order_id', $order_data->id)->findAll();
-    dd($products);
+    $orders_items = $this->shop_orders_items_model->where('order_id', $order_data->id)->findAll();
 
     //
     $pages_entity_rows = null;
@@ -86,6 +85,7 @@ class Payment extends \Lc5\Web\Controllers\MasterWeb
       $curr_entity->seo_description = 'Concludi il tuo ordine';
     }
     $curr_entity->order_data = $order_data;
+    $curr_entity->orders_items = $orders_items;
 
 
     $this->web_ui_date->fill((array)$curr_entity);
