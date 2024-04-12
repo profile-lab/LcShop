@@ -109,48 +109,33 @@ class ShopOrdersModel extends MasterModel
 
 	private function extendData($item)
 	{
-
-
 		if (isset($item->imponibile_total) && $item->imponibile_total) {
 			$item->imponibile_total_formatted = number_format($item->imponibile_total, 2, ',', '.');
 		}
-
 		if (isset($item->iva_total) && $item->iva_total) {
 			$item->iva_total_formatted = number_format($item->iva_total, 2, ',', '.');
 		}
-
 		if (isset($item->pay_total) && $item->pay_total) {
 			$item->pay_total_formatted = number_format($item->pay_total, 2, ',', '.');
 		}
-
 		if (isset($item->promo_total) && $item->promo_total) {
 			$item->promo_total_formatted = number_format($item->promo_total, 2, ',', '.');
 		}
-
 		if (isset($item->spese_spedizione) && $item->spese_spedizione) {
 			$item->spese_spedizione_formatted = number_format($item->spese_spedizione, 2, ',', '.');
 		}
-
 		if (isset($item->spese_spedizione_imponibile) && $item->spese_spedizione_imponibile) {
 			$item->spese_spedizione_imponibile_formatted = number_format($item->spese_spedizione_imponibile, 2, ',', '.');
 		}
-
 		if (isset($item->total) && $item->total) {
 			$item->total_formatted = number_format($item->total, 2, ',', '.');
 		}
-
 		if (isset($item->peso_totale_grammi) && $item->peso_totale_grammi) {
 			$item->peso_totale_grammi_formatted = number_format($item->peso_totale_grammi, 2, ',', '.');
 		}
-
 		if (isset($item->peso_totale_kg) && $item->peso_totale_kg) {
 			$item->peso_totale_kg_formatted = number_format($item->peso_totale_kg, 2, ',', '.');
 		}
-
-
-
-		// if(isset($item->spese_spedizione) && $item->spese_spedizione){ $item->spese_spedizione_formatted = number_format($item->spese_spedizione, 2, ',', '.');}
-
 
 		return $item;
 	}
