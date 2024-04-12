@@ -59,12 +59,12 @@ class Payment extends \Lc5\Web\Controllers\MasterWeb
 
     // $order_data = $this->getOrderData();
     // $all_user_data = $this->appuser->getAllUserData();
-    $order_data =  $this->shop_orders_model->where('id', $order_id)->where('user_id', $this->appuser->getUserId())->first();
-    if(!$order_data){
+    $riepilogo_order_data =  $this->shop_orders_model->where('id', $order_id)->where('user_id', $this->appuser->getUserId())->first();
+    if(!$riepilogo_order_data){
       throw new \CodeIgniter\Exceptions\PageNotFoundException('Ordine non trovato');
 
     }
-    $orders_items = $this->shop_orders_items_model->where('order_id', $order_data->id)->findAll();
+    $orders_items = $this->shop_orders_items_model->where('order_id', $riepilogo_order_data->id)->findAll();
 
     //
     $pages_entity_rows = null;
@@ -84,7 +84,7 @@ class Payment extends \Lc5\Web\Controllers\MasterWeb
       $curr_entity->seo_title = 'Concludi il tuo ordine';
       $curr_entity->seo_description = 'Concludi il tuo ordine';
     }
-    $curr_entity->order_data = $order_data;
+    $curr_entity->riepilogo_order_data = $riepilogo_order_data;
     $curr_entity->orders_items = $orders_items;
 
 

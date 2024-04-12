@@ -208,12 +208,17 @@ class Cart extends \App\Controllers\BaseController
                             } else {
                                 $modello = $prod;
                             }
+                            // d($prod);
+                            // dd($modello);
                             $this->cartTotal += ($modello->prezzo * $qnt);
                             $this->ivaTotal += ($modello->iva * $qnt);
                             $this->pesoTotaleGrammi += ($modello->peso_prodotto * $qnt);
                             $this->imponibileTotal += ($modello->imponibile * $qnt);
                             $this->referenze_totali += $qnt;
 
+
+                            $prezzo_uni = $modello->prezzo;
+                            $totale_row = $prezzo_uni * $qnt;
                             $processed_cart[$key] = (object) [
                                 'id_prodotto' => $prod->id,
                                 'id_modello' => $modello->id,
@@ -224,8 +229,10 @@ class Cart extends \App\Controllers\BaseController
                                 'modello' => $modello->modello,
                                 'qnt' => $qnt,
                                 'reference_type' => $reference_type,
-                                'prezzo_uni' => number_format(($modello->prezzo), 2, ',', '.'),
-                                'prezzo' => number_format(($modello->prezzo * $qnt), 2, ',', '.')
+                                'prezzo_uni' => $prezzo_uni,
+                                'prezzo_uni_formatted' => number_format($prezzo_uni, 2, ',', '.'),
+                                'prezzo' => $totale_row,
+                                'prezzo_formatted' => number_format($totale_row, 2, ',', '.'),
                             ];
                         }
                     }
