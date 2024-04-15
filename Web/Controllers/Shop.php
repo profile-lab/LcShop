@@ -153,16 +153,13 @@ class Shop extends \Lc5\Web\Controllers\MasterWeb
         // dd($products_archive);
         $this->web_ui_date->fill((array)$curr_entity);
         $this->web_ui_date->entity_rows = $pages_entity_rows;
-
+        // 
+        return view(customOrDefaultViewFragment('shop/archive', 'LcShop'), $this->web_ui_date->toArray());
         //
-        if (appIsFile($this->base_view_filesystem . 'shop/archive.php')) {
-            return view($this->base_view_namespace . 'shop/archive', $this->web_ui_date->toArray());
-        }
-        throw \CodeIgniter\Exceptions\FrameworkException::forInvalidFile('View file not found - shop/archive.php - ');
-
-
-
-        // return view($this->base_view_namespace . 'shop/archive', $this->web_ui_date->toArray());
+        // if (appIsFile($this->base_view_filesystem . 'shop/archive.php')) {
+        //     return view($this->base_view_namespace . 'shop/archive', $this->web_ui_date->toArray());
+        // }
+        // throw \CodeIgniter\Exceptions\FrameworkException::forInvalidFile('View file not found - shop/archive.php - ');
     }
 
     //--------------------------------------------------------------------
@@ -200,14 +197,13 @@ class Shop extends \Lc5\Web\Controllers\MasterWeb
         // dd($curr_entity);
         $this->web_ui_date->fill((array)$curr_entity);
         $this->web_ui_date->entity_rows = $pages_entity_rows;
-
+        // 
+        return view(customOrDefaultViewFragment('shop/detail', 'LcShop'), $this->web_ui_date->toArray());
         //
-        if (appIsFile($this->base_view_filesystem . 'shop/detail.php')) {
-            return view($this->base_view_namespace . 'shop/detail', $this->web_ui_date->toArray());
-        }
-        throw \CodeIgniter\Exceptions\FrameworkException::forInvalidFile('View file not found - shop/detail.php - ');
-
-        // return view($this->base_view_namespace . 'shop/detail', $this->web_ui_date->toArray());
+        // if (appIsFile($this->base_view_filesystem . 'shop/detail.php')) {
+        //     return view($this->base_view_namespace . 'shop/detail', $this->web_ui_date->toArray());
+        // }
+        // throw \CodeIgniter\Exceptions\FrameworkException::forInvalidFile('View file not found - shop/detail.php - ');
     }
 
     //--------------------------------------------------------------------
@@ -294,11 +290,13 @@ class Shop extends \Lc5\Web\Controllers\MasterWeb
 
         $this->web_ui_date->fill((array)$curr_entity);
         $this->web_ui_date->entity_rows = $pages_entity_rows;
+        // 
+        return view(customOrDefaultViewFragment('shop/make-order', 'LcShop'), $this->web_ui_date->toArray());
         //
-        if (appIsFile($this->base_view_filesystem . 'shop/make-order.php')) {
-            return view($this->base_view_namespace . 'shop/make-order', $this->web_ui_date->toArray());
-        }
-        throw \CodeIgniter\Exceptions\FrameworkException::forInvalidFile('View file not found - shop/make-order.php - ');
+        // if (appIsFile($this->base_view_filesystem . 'shop/make-order.php')) {
+        //     return view($this->base_view_namespace . 'shop/make-order', $this->web_ui_date->toArray());
+        // }
+        // throw \CodeIgniter\Exceptions\FrameworkException::forInvalidFile('View file not found - shop/make-order.php - ');
     }
 
     //--------------------------------------------------------------------
@@ -408,11 +406,13 @@ class Shop extends \Lc5\Web\Controllers\MasterWeb
 
         $this->web_ui_date->fill((array)$curr_entity);
         $this->web_ui_date->entity_rows = $pages_entity_rows;
+        // 
+        return view(customOrDefaultViewFragment('shop/payment', 'LcShop'), $this->web_ui_date->toArray());
         //
-        if (appIsFile($this->base_view_filesystem . 'shop/payment.php')) {
-            return view($this->base_view_namespace . 'shop/payment', $this->web_ui_date->toArray());
-        }
-        throw \CodeIgniter\Exceptions\FrameworkException::forInvalidFile('View file not found - shop/payment.php - ');
+        // if (appIsFile($this->base_view_filesystem . 'shop/payment.php')) {
+        //     return view($this->base_view_namespace . 'shop/payment', $this->web_ui_date->toArray());
+        // }
+        // throw \CodeIgniter\Exceptions\FrameworkException::forInvalidFile('View file not found - shop/payment.php - ');
     }
     //--------------------------------------------------------------------
     private function getSessionOrderData()
@@ -526,9 +526,12 @@ class Shop extends \Lc5\Web\Controllers\MasterWeb
 
         $this->web_ui_date->fill((array)$curr_entity);
         $this->web_ui_date->entity_rows = $pages_entity_rows;
-        if (appIsFile($this->base_view_filesystem . 'shop/site-cart.php')) {
-            return view($this->base_view_namespace . 'shop/site-cart', $this->web_ui_date->toArray());
-        }
-        throw \CodeIgniter\Exceptions\FrameworkException::forInvalidFile('View file not found - shop/site-cart.php - ');
+        // 
+        return view(customOrDefaultViewFragment('shop/site-cart', 'LcShop'), $this->web_ui_date->toArray());
+        //
+        // if (appIsFile($this->base_view_filesystem . 'shop/site-cart.php')) {
+        //     return view($this->base_view_namespace . 'shop/site-cart', $this->web_ui_date->toArray());
+        // }
+        // throw \CodeIgniter\Exceptions\FrameworkException::forInvalidFile('View file not found - shop/site-cart.php - ');
     }
 }

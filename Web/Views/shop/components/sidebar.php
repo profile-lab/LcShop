@@ -1,7 +1,7 @@
 <aside class="sidebar shop_sidebar">
-    <?= view($base_view_folder . 'components/mini-cart') ?>
-    <h4>Categorie</h4>
-    <?php if (isset($categories) && is_array($categories)) { ?>
+    <?= view(customOrDefaultViewFragment('shop/components/mini-cart', 'LcShop')) ?>
+    <?php if (isset($categories) && is_array($categories) && count($categories) > 0) { ?>
+        <h4><?= appLabel('Categorie', $app->labels, true) ?></h4>
         <ul class="shop_category_list">
             <?php foreach ($categories as $category) { ?>
                 <li>

@@ -1,0 +1,3 @@
+<h2 class="cart-page-mess"><?= appLabel('Il carrello è vuoto', $app->labels, true) ?></h2>
+<h5 class="cart-page-mess no_products"><?= appLabel('Non ci sono ancora prodotti nel tuo carrello', $app->labels, true) ?>.</h5>
+<h6><a href="<?= route_to('web_shop_home') ?>"><?= appLabel('Vai allo shop', $app->labels, true) ?></a> <?= appLabel('e scegli i prodotti che preferisci', $app->labels, true) ?>.</h6>

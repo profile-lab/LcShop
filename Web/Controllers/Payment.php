@@ -77,8 +77,8 @@ class Payment extends \Lc5\Web\Controllers\MasterWeb
       $pages_entity_rows = $this->getEntityRows($curr_entity->id, 'pages');
     } else {
       $curr_entity = new stdClass();
-      $curr_entity->titolo = 'Ordina';
-      $curr_entity->guid = 'ordina';
+      $curr_entity->titolo = 'Completa l\'acquisto';
+      $curr_entity->guid = 'pay-order-now';
       $curr_entity->testo = '';
       $curr_entity->seo_title = 'Concludi il tuo ordine';
       $curr_entity->seo_description = 'Concludi il tuo ordine';
@@ -123,11 +123,13 @@ class Payment extends \Lc5\Web\Controllers\MasterWeb
 
     $this->web_ui_date->fill((array)$curr_entity);
     $this->web_ui_date->entity_rows = $pages_entity_rows;
+    // 
+    return view(customOrDefaultViewFragment('shop/pay-order', 'LcShop'), $this->web_ui_date->toArray());
     //
-    if (appIsFile($this->base_view_filesystem . 'shop/pay-order.php')) {
-      return view($this->base_view_namespace . 'shop/pay-order', $this->web_ui_date->toArray());
-    }
-    throw \CodeIgniter\Exceptions\FrameworkException::forInvalidFile('View file not found - shop/pay-order.php - ');
+    // if (appIsFile($this->base_view_filesystem . 'shop/pay-order.php')) {
+    //   return view($this->base_view_namespace . 'shop/pay-order', $this->web_ui_date->toArray());
+    // }
+    // throw \CodeIgniter\Exceptions\FrameworkException::forInvalidFile('View file not found - shop/pay-order.php - ');
   }
 
   //--------------------------------------------------------------------
