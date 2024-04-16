@@ -1,5 +1,6 @@
 <div id="payment-form-cnt">
     <h5><?= appLabel('Paga ora con carta di credito', $app->labels, true) ?></h5>
+    <h6><?= appLabel('Evasione dell\'ordine immediata', $app->labels, true) ?></h6>
     <form id="payment-form" class="stripe_form">
         <div class="group payment_form_field_cnt carta_nome_cnt">
             <label for="card_owner"><?= appLabel('Nome', $app->labels, true) ?> <?= appLabel('Cognome', $app->labels, true) ?></label>

@@ -1,5 +1,6 @@
 # Levelcomplete 5 Corebase Module
 
+### (Is required Lc5 submodule LcUsers)
 
 ## Install git submodule
 
@@ -31,15 +32,6 @@ Add LC5 psr4 namespace in App\Config\Autoload.php
 
 Add LcShop and Siteuser services in App\Config\Services.php
 
-
-        //--------------------------------------------------------------------
-        public static function users($getShared = true)
-        {
-                if ($getShared) {
-                        return static::getSharedInstance('users');
-                }
-                return new \Lc5\Web\Controllers\Users\UserTools();
-        }
 
         //--------------------------------------------------------------------
         public static function shopcart($getShared = true)
