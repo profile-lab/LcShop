@@ -1,7 +1,7 @@
-<?= $this->extend($base_view_folder . 'layout/body') ?>
+<?= $this->extend(customOrDefaultViewFragment('layout/body')) ?>
 <?= $this->section('content') ?>
 <article>
-    <header>
+    <section class="page-header shop-header">
         <div class="myIn">
             <hgroup>
                 <?= h1($full_nome_prodotto) ?>
@@ -9,7 +9,7 @@
             </hgroup>
             <?= (isset($category_obj) && $category_obj) ? '<a href="' . $category_obj->permalink . '">' . $category_obj->nome . '</a>' : '' ?>
         </div>
-    </header>
+    </section>
     <div class="myIn shop_flex">
         <div class="shop_content shop_content_detail <?= ($in_promo) ? ' is_in_promo' : '' ?>">
 

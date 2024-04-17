@@ -1,14 +1,14 @@
-<?= $this->extend($base_view_folder . 'layout/body') ?>
+<?= $this->extend(customOrDefaultViewFragment('layout/body')) ?>
 <?= $this->section('content') ?>
 <article>
     <?php if ($rows_code =  printPostRows($entity_rows)) { ?>
         <?= $rows_code ?>
     <?php } else { ?>
-        <header>
+        <section class="page-header shop-header">
             <div class="myIn">
                 <?= h1($titolo, 'shop_archive_title') ?>
             </div>
-        </header>
+        </section>
     <?php } ?>
 </article>
 <section class="shop_listing">
