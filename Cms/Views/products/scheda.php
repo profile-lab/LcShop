@@ -153,6 +153,11 @@
                         <div class="row">
                             <?= view('Lc5\Cms\Views\form-cmp/img-single', ['item' => ['label' => 'Copertina', 'name' => 'main_img_id', 'value' => $entity->main_img_id, 'src' => $entity->main_img_thumb]]) ?>
                         </div>
+                        <?php if (trim(env("custom.shop_products.has_alt_image")) && env("custom.shop_products.has_alt_image") == true) { ?>
+                            <div class="row">
+                                <?= view('Lc5\Cms\Views\form-cmp/img-single', ['item' => ['label' => 'Alternativa', 'name' => 'alt_img_id', 'value' => $entity->alt_img_id, 'src' => $entity->alt_img_thumb]]) ?>
+                            </div>
+                        <?php } ?>
                         <div class="row">
                             <hr />
                         </div>
