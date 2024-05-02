@@ -38,6 +38,7 @@ class Shop extends \Lc5\Web\Controllers\MasterWeb
     // private $shop_order;
     // private $shop_order_item;
     // 
+    private $shop_action;
     private $cart;
     private $appuser;
     private $categories;
@@ -74,6 +75,7 @@ class Shop extends \Lc5\Web\Controllers\MasterWeb
 
 
         // 
+        $this->shop_action = new ShopAction();
         $this->cart = Services::shopcart(); // new Cart();
         $this->appuser = Services::appuser();
 
@@ -127,7 +129,13 @@ class Shop extends \Lc5\Web\Controllers\MasterWeb
         } else {
             $pages_model = new PagesModel();
             $pages_model->setForFrontemd();
-            if ($curr_entity = $pages_model->asObject()->orderBy('id', 'DESC')->where('guid', 'shop')->first()) {
+
+            $shop_home_guid = 'shop';
+             if($setting_shophomepage_guid = trim($this->shop_settings->shop_home)){
+                $shop_home_guid = trim(str_replace(['/'], '', $setting_shophomepage_guid));
+             }
+
+            if ($curr_entity = $pages_model->asObject()->orderBy('id', 'DESC')->where('guid', $shop_home_guid)->first()) {
                 $pages_entity_rows = $this->getEntityRows($curr_entity->id, 'pages');
             } else {
                 $curr_entity = new stdClass();
@@ -138,19 +146,9 @@ class Shop extends \Lc5\Web\Controllers\MasterWeb
                 $curr_entity->seo_description = 'Naviga il nostro e-commerce e acquista i nostri prodotti';
             }
         }
-        if ($products_archive = $this->shop_products_model->asObject()->findAll()) {
-            foreach ($products_archive as $product) {
-                $product->abstract = word_limiter(strip_tags($product->testo), 20);
-                // $post->abstract = character_limiter(strip_tags( $post->testo ), 100);
-                $product->permalink = route_to(__locale_uri__ . 'web_shop_detail', $product->guid);
-                // 
-                $this->shop_products_model->extendProduct($product, 'min');
-                // $this->extendProduct($product, 'min');
-                // 
-            }
-            $curr_entity->products_archive  = $products_archive;
-        }
-        // dd($products_archive);
+        // 
+        $curr_entity->products_archive  = $this->shop_action->getShopProductsArchive();
+        // 
         $this->web_ui_date->fill((array)$curr_entity);
         $this->web_ui_date->entity_rows = $pages_entity_rows;
         // 
@@ -473,6 +471,8 @@ class Shop extends \Lc5\Web\Controllers\MasterWeb
 
         return $orderData;
     }
+   
+   
     //--------------------------------------------------------------------
     public function emptyCart()
     {
