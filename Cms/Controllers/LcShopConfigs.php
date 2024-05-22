@@ -35,6 +35,11 @@ class LcShopConfigs
                     'module_action' => 'shopproductscat',
                 ],
                 (object) [
+                    'label' => 'Ordini',
+                    'route' => 'lc_shop_orders',
+                    'module_action' => 'shoporders',
+                ],
+                (object) [
                     'label' => 'Settings',
                     'route' => 'lc_shop_settings',
                     // 'route' => site_url(route_to('lc_shop_settings')),

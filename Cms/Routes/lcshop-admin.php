@@ -54,6 +54,14 @@ if (env('custom.hide_lc_cms') === TRUE) {
 				$routes->match(['get', 'post'], 'newpost', 'ShopAliquote::newpost', ['as' => 'lc_shop_aliquote_new']);
 				$routes->get('', 'ShopAliquote::index', ['as' => 'lc_shop_aliquote']);
 			});
+			// 
+			$routes->group('ordini', function ($routes) {
+				$routes->get('delete/(:num)', 'ShopOrders::delete/$1', ['as' => 'lc_shop_orders_delete']);
+				$routes->match(['get', 'post'], 'edit/(:num)', 'ShopOrders::edit/$1', ['as' => 'lc_shop_orders_edit']);
+				$routes->match(['get', 'post'], 'newpost', 'ShopOrders::newpost', ['as' => 'lc_shop_orders_new']);
+				$routes->get('', 'ShopOrders::index', ['as' => 'lc_shop_orders']);
+			});
+			// 
 			$routes->match(['get', 'post'], 'settings', 'ShopSettings::edit', ['as' => 'lc_shop_settings']); //, ['filter' => 'noauth']
 
 		});
