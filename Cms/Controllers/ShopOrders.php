@@ -13,10 +13,10 @@ use Lc5\Cms\Controllers\MasterLc;
 
 class ShopOrders extends MasterLc
 {
-    protected $all_order_status = ['CART', 'ORDER', 'IN_PROGRESS', 'SHIPPED', 'IN_DELIVERY', 'DELIVERED', 'DELETED', 'DELETED_BY_USER', 'DELETED_BY_ADMIN'];
-    protected $all_payment_status = ['PENDING','COMPLETED','ERROR','FREE', 'REFUNDED', 'CANCELED'];
-    protected $all_payment_type = ['STRIPE','CASH','CC','BANK','PAYPAL','AT_DELIVERY','FREE'];
-    protected $all_spedizioni_type = ['COURIER','PICKUP','AT_DELIVERY','FREE'];
+    // protected $all_order_status = ['CART', 'ORDER', 'IN_PROGRESS', 'SHIPPED', 'IN_DELIVERY', 'DELIVERED', 'DELETED', 'DELETED_BY_USER', 'DELETED_BY_ADMIN'];
+    // protected $all_payment_status = ['PENDING','COMPLETED','ERROR','FREE', 'REFUNDED', 'CANCELED'];
+    // protected $all_payment_type = ['STRIPE','CASH','CC','BANK','PAYPAL','AT_DELIVERY','FREE'];
+    // protected $all_spedizioni_type = ['COURIER','PICKUP','AT_DELIVERY','FREE'];
     protected $all_users;
     protected $current_shop_setting;
     // private $post_attributes;
@@ -37,72 +37,18 @@ class ShopOrders extends MasterLc
         // 
         $this->current_shop_setting  = $this->getShopSettings($this->getCurrApp());
         $this->lc_ui_date->__set('current_shop_setting', $this->current_shop_setting);
+        //
+        $this->lc_ui_date->__set('all_order_status_list', $this->all_order_status);
+        $this->lc_ui_date->__set('all_order_status_labels', $this->all_order_status_labels);
         // 
-        $all_order_status_list = [];
-        foreach ($this->all_order_status as $value) {
-            $all_order_status_list[] = (object) ['val' => $value, 'nome' => $value];
-        }
-        $this->lc_ui_date->__set('all_order_status_list', $all_order_status_list);
+        $this->lc_ui_date->__set('all_payment_status_list', $this->all_payment_status);
+        $this->lc_ui_date->__set('all_payment_status_labels', $this->all_payment_status_labels);
         // 
-        $all_order_status_labels = [
-            'CART' => 'Carrello',
-            'ORDER' => 'Ordine',
-            'IN_PROGRESS' => 'In lavorazione',
-            'SHIPPED' => 'Spedito',
-            'IN_DELIVERY' => 'In consegna',
-            'DELIVERED' => 'Consegnato',
-            'DELETED' => 'Eliminato',
-            'DELETED_BY_USER' => 'Eliminato dall\'utente',
-            'DELETED_BY_ADMIN' => 'Eliminato dall\'admin',
-        ];
-        $this->lc_ui_date->__set('all_order_status_labels', $all_order_status_labels);
+        $this->lc_ui_date->__set('all_payment_type_list', $this->all_payment_type);
+        $this->lc_ui_date->__set('all_payment_type_labels', $this->all_payment_type_labels);
         // 
-        $all_payment_status_list = [];
-        foreach ($this->all_payment_status as $value) {
-            $all_payment_status_list[] = (object) ['val' => $value, 'nome' => $value];
-        }
-        $this->lc_ui_date->__set('all_payment_status_list', $all_payment_status_list);
-        // 
-        $all_payment_status_labels = [
-            'PENDING' => 'In attesa',
-            'COMPLETED' => 'Completato',
-            'ERROR' => 'Errore',
-            'FREE' => 'Gratis',
-            'REFUNDED' => 'Rimborsato',
-            'CANCELED' => 'Annullato',
-        ];
-        $this->lc_ui_date->__set('all_payment_status_labels', $all_payment_status_labels);
-        // 
-        $all_payment_type_list = [];
-        foreach ($this->all_payment_type as $value) {
-            $all_payment_type_list[] = (object) ['val' => $value, 'nome' => $value];
-        }
-        $this->lc_ui_date->__set('all_payment_type_list', $all_payment_type_list);
-        // 
-        $all_payment_type_labels = [
-            'STRIPE' => 'Stripe',
-            'CASH' => 'Contanti',
-            'CC' => 'Carta di credito',
-            'BANK' => 'Bonifico',
-            'PAYPAL' => 'Paypal',
-            'AT_DELIVERY' => 'Contrassegno',
-            'FREE' => 'Gratis',
-        ];
-        $this->lc_ui_date->__set('all_payment_type_labels', $all_payment_type_labels);
-        // 
-        $all_spedizioni_type_list = [];
-        foreach ($this->all_spedizioni_type as $value) {
-            $all_spedizioni_type_list[] = (object) ['val' => $value, 'nome' => $value];
-        }
-        $this->lc_ui_date->__set('all_spedizioni_type_list', $all_spedizioni_type_list);
-        // 
-        $all_spedizioni_type_labels = [
-            'COURIER' => 'Corriere',
-            'PICKUP' => 'Ritiro in sede',
-            'AT_DELIVERY' => 'Contrassegno',
-            'FREE' => 'Gratis',
-        ];
-        $this->lc_ui_date->__set('all_spedizioni_type_labels', $all_spedizioni_type_labels);
+        $this->lc_ui_date->__set('all_spedizioni_type_list', $this->all_spedizioni_type);
+        $this->lc_ui_date->__set('all_spedizioni_type_labels', $this->all_spedizioni_type_labels);
         // 
 
         // 

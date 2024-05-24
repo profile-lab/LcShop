@@ -41,3 +41,8 @@ $routes->match(['get', 'post'], 'shop/prodotto/(:segment)/(:segment)', '\LcShop\
 $routes->match(['get', 'post'], 'shop/prodotto/(:segment)', '\LcShop\Web\Controllers\Shop::detail/$1', ['as' => 'web_shop_detail']);
 $routes->match(['get', 'post'], 'shop/(:segment)', '\LcShop\Web\Controllers\Shop::index/$1', ['as' => 'web_shop_category']);
 $routes->match(['get', 'post'], 'shop', '\LcShop\Web\Controllers\Shop::index', ['as' => 'web_shop_home']);
+
+$routes->group('user', ['namespace' => '\LcUsers\Web\Controllers', 'filter' => 'appUserFilter'], function ($routes) {
+    $routes->match(['get','post'], 'orders/(:num)', 'User::shopOrderDett/$1', ['as' => 'web_user_order_dett']);
+    $routes->match(['get','post'], 'orders', 'User::shopOrders', ['as' => 'web_user_orders']);
+});

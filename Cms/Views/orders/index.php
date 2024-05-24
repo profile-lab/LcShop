@@ -3,9 +3,11 @@
 <div class="d-md-flex">
     <h1><?= $module_name ?></h1>
     <div class="d-flex align-items-center">
+        <?php /*
         <div>
             <a class="btn btn-primary" href="<?= site_url(route_to($route_prefix . '_new')) ?>"><span class="oi oi-plus mr-1"></span>Crea nuovo</a>
         </div>
+        */ ?>
     </div>
 </div>
 <?= user_mess($ui_mess, $ui_mess_type) ?>
