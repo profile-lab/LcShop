@@ -17,7 +17,7 @@ class ShopAction extends \App\Controllers\BaseController
         $shop_products_model = new ShopProductsModel();
         $shop_products_model->setForFrontemd();
 
-        if ($products_archive = $shop_products_model->asObject()->findAll()) {
+        if ($products_archive = $shop_products_model->where('parent <', 1)->asObject()->findAll()) {
             foreach ($products_archive as $product) {
                 $product->abstract = word_limiter(strip_tags($product->testo), 20);
                 $product->permalink = route_to(__locale_uri__ . 'web_shop_detail', $product->guid);
