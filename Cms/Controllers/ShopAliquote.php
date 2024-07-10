@@ -62,7 +62,7 @@ class ShopAliquote extends MasterLc
         $shop_products_tags_model = new CurrentModel();
         $curr_entity = new CurrentEntity();
         // 
-        if ($this->req->getMethod() == 'post') {
+        if ($this->req->getPost()) {
             $validate_rules = [
                 'nome' => ['label' => 'Nome', 'rules' => 'required'],
                 'val' => ['label' => 'Valore', 'rules' => 'required'],
@@ -93,7 +93,7 @@ class ShopAliquote extends MasterLc
             throw \CodeIgniter\Exceptions\PageNotFoundException::forPageNotFound();
         }
         // 
-        if ($this->req->getMethod() == 'post') {
+        if ($this->req->getPost()) {
             $validate_rules = [
                 'nome' => ['label' => 'Nome', 'rules' => 'required'],
                 'val' => ['label' => 'Valore', 'rules' => 'required'],

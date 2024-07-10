@@ -56,7 +56,7 @@ class ShopProductsVariations extends MasterLc
 		$shop_products_tags_model = new CurrentModel();
 		$curr_entity = new CurrentEntity();
 		// 
-		if ($this->req->getMethod() == 'post') {
+		if ($this->req->getPost()) {
 			$my_nome = $this->req->getPost('nome');
 			$my_val = url_title(trim($my_nome), '-', TRUE);
 			// 
@@ -88,7 +88,7 @@ class ShopProductsVariations extends MasterLc
 		$shop_products_tags_model = new CurrentModel();
 		$curr_entity = new CurrentEntity();
 		// 
-		if ($this->req->getMethod() == 'post') {
+		if ($this->req->getPost()) {
 			$validate_rules = [
 				'nome' => ['label' => 'Nome', 'rules' => 'required'],
 			];
@@ -134,7 +134,7 @@ class ShopProductsVariations extends MasterLc
 		// 
 		// dd($this->post_attributes); 
 		// 
-		if ($this->req->getMethod() == 'post') {
+		if ($this->req->getPost()) {
 			$validate_rules = [
 				'nome' => ['label' => 'Nome', 'rules' => 'required'],
 			];

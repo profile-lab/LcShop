@@ -47,7 +47,7 @@ class ShopProductsCategories extends MasterLc
 		$shop_product_cat_model = new ShopProductsCategoriesModel();
 		$curr_entity = new ShopProductsCategory();
 		// 
-		if ($this->req->getMethod() == 'post') {
+		if ($this->req->getPost()) {
 			$validate_rules = [
 				'nome' => ['label' => 'Nome', 'rules' => 'required'],
 				'titolo' => ['label' => 'Titolo', 'rules' => 'required'],
@@ -89,7 +89,7 @@ class ShopProductsCategories extends MasterLc
 
 
 		// 
-		if ($this->req->getMethod() == 'post') {
+		if ($this->req->getPost()) {
 			$validate_rules = [
 				'nome' => ['label' => 'Nome', 'rules' => 'required'],
 				'titolo' => ['label' => 'Titolo', 'rules' => 'required'],

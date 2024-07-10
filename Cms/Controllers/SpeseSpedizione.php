@@ -70,7 +70,7 @@ class SpeseSpedizione extends MasterLc
         $current_model = new CurrentModel();
         $curr_entity = new CurrentEntity();
         // 
-        if ($this->req->getMethod() == 'post') {
+        if ($this->req->getPost()) {
             $validate_rules = [
                 'nome' => ['label' => 'Nome', 'rules' => 'required'],
                 // 'val' => ['label' => 'Valore', 'rules' => 'required'],
@@ -101,7 +101,7 @@ class SpeseSpedizione extends MasterLc
             throw \CodeIgniter\Exceptions\PageNotFoundException::forPageNotFound();
         }
         // 
-        if ($this->req->getMethod() == 'post') {
+        if ($this->req->getPost()) {
             $validate_rules = [
                 'nome' => ['label' => 'Nome', 'rules' => 'required'],
                 // 'val' => ['label' => 'Valore', 'rules' => 'required'],

@@ -79,7 +79,7 @@ class ShopProducts extends MasterLc
 		$curr_entity->variations_list = $this->getListLikeTags($shop_products_variations_model);
 		$curr_entity->um_list = $this->getListUM();
 		// 
-		if ($this->req->getMethod() == 'post') {
+		if ($this->req->getPost()) {
 			// 
 			if ($curr_entity->is_modello == TRUE) {
 				$validate_rules = [
@@ -167,7 +167,7 @@ class ShopProducts extends MasterLc
 			$curr_entity->childs_entities = $this->shop_products_model->where('parent', $curr_entity->id)->findAll();
 		}
 		// 
-		if ($this->req->getMethod() == 'post') {
+		if ($this->req->getPost()) {
 			if ($curr_entity->is_modello == TRUE) {
 				$validate_rules = [
 					'modello' => ['label' => 'Modello', 'rules' => 'required'],

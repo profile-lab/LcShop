@@ -38,7 +38,7 @@ class ShopSettings extends MasterLc
 			throw \CodeIgniter\Exceptions\PageNotFoundException::forPageNotFound();
 		}
         // 
-        if ($this->req->getMethod() == 'post') {
+        if ($this->req->getPost()) {
             $validate_rules = [
                 'save' => ['label' => 'Save', 'rules' => 'required'],
                 // 'nome' => ['label' => 'Nome', 'rules' => 'required'],
