@@ -88,7 +88,7 @@ class Cart extends \App\Controllers\BaseController
 
 
         $site_cart_object->status = '201';
-        $site_cart_object->mess = 'Prodotto aggiunto al carrello<br /><a class="go_to_cart_in_mess" href="' . site_url(route_to('site_cart')) . '" title="Vai al carrello"><span class="menu-item-label">Vai al carrello</span><i class="fas fa-shopping-cart nav-link-icon"></i></a>';
+        $site_cart_object->mess = 'Prodotto aggiunto al carrello<br /><a class="go_to_cart_in_mess" href="' . site_url(route_to('web_shop_cart')) . '" title="Vai al carrello"><span class="menu-item-label">Vai al carrello</span><i class="fas fa-shopping-cart nav-link-icon"></i></a>';
         $site_cart_object->cart = $cart;
         $site_cart_object->referenze_totali = $referenze_totali;
         $site_cart_object->referenze = count($cart);
