@@ -159,3 +159,9 @@ Add getShopSettings method in App\Controllers\BaseController.php
                 ];
                 // 
         }
+
+## Site Header 
+
+### Add css Link Tag  App\Views\layout\components\header-tag.php
+
+        <link rel="stylesheet" href="<?= __base_assets_folder__.'lc-admin-assets/frontend/shop-fe-base.css' ?>" />
