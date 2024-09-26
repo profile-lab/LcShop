@@ -1,26 +1,36 @@
 <?= $this->extend(customOrDefaultViewFragment('layout/body')) ?>
 <?= $this->section('content') ?>
 <article>
+    <?= view(customOrDefaultViewFragment('shop/components/breadcrumb', 'LcShop')) ?>
+
+
+
+
     <?php if ($rows_code =  printPostRows($entity_rows)) { ?>
         <?= $rows_code ?>
     <?php } else { ?>
-        <section class="page-header shop-header">
+        <section class="lcshop-header">
             <div class="myIn">
-                <?= h1($titolo, 'shop_archive_title') ?>
+                <hgroup>
+                    <?= h1($titolo, 'lcshop-archive-title') ?>
+                    <?php if (isset($testo)) { ?>
+                        <?= txt($testo, 'lcshop-archive-text') ?>
+                    <?php } ?>
+                </hgroup>
             </div>
         </section>
     <?php } ?>
 </article>
-<section class="shop_listing">
-    <div class="myIn shop_flex">
-        <div class="shop_content shop_content_listing">
+<section class="lcshop-listing-cnt">
+    <div class="myIn lcshop-flex">
+        <?= view(customOrDefaultViewFragment('shop/components/sidebar', 'LcShop')) ?>
+        <div class="lcshop-content lcshop-listing">
             <?php if (isset($products_archive) && is_iterable($products_archive) && count($products_archive) > 0) { ?>
                 <?php foreach ($products_archive as $single) { ?>
                     <?= view(customOrDefaultViewFragment('shop/components/product-listing-card',  'LcShop'), ['single_items' => $single]) ?>
                 <?php } ?>
             <?php } ?>
         </div>
-        <?= view(customOrDefaultViewFragment('shop/components/sidebar', 'LcShop')) ?>
     </div>
 </section>
 <?= $this->endSection() ?>
@@ -52,7 +62,7 @@
     $(document).ready(function() {
         $('.sel_prod_model_id').on('change', function(e) {
             e.preventDefault();
-            const prod_id = $(this).closest('.shop_product_card').find('input[name="prod_id"]').val();
+            const prod_id = $(this).closest('.lcshop-card').find('input[name="prod_id"]').val();
             const prod_model_id = $(this).val();
             console.log('cambio', prod_id, prod_model_id);
             if (prod_id && prod_model_id) {
@@ -61,7 +71,7 @@
                     const model = prod.modelli.find(x => x.id == prod_model_id);
                     if (model) {
                         // console.log('trovato', model);
-                        const prod_card = $(this).closest('.shop_product_card');
+                        const prod_card = $(this).closest('.lcshop-card');
                         prod_card.removeClass('is_in_promo');
                         const shop_product_prices = prod_card.find('.shop_product_prices');
                         const agg_cart_cnt = prod_card.find('.agg_cart_cnt');

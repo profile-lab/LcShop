@@ -119,11 +119,14 @@ class Shop extends \Lc5\Web\Controllers\MasterWeb
         $pages_entity_rows = null;
         $products_archive_qb_category = null;
 
-        if ($category_guid != null) {
-
-            
+        $shop_page_type = 'shop';
+        $shop_category_guid = null;
+        
+        if ($category_guid != null) {   
             if ($curr_entity =  $this->shop_products_cat_model->where('guid', $category_guid)->asObject()->first()) {
                 $products_archive_qb_category =  $curr_entity->id;
+                $shop_page_type = 'shop_category';
+                $shop_category_guid = $category_guid;
             } else {
                 throw \CodeIgniter\Exceptions\PageNotFoundException::forPageNotFound();
             }
@@ -155,6 +158,9 @@ class Shop extends \Lc5\Web\Controllers\MasterWeb
         // 
         $this->web_ui_date->fill((array)$curr_entity);
         $this->web_ui_date->entity_rows = $pages_entity_rows;
+        // 
+        $this->web_ui_date->shop_page_type  = $shop_page_type;
+        $this->web_ui_date->shop_category_guid = $shop_category_guid;
         // 
         return view(customOrDefaultViewFragment('shop/archive', 'LcShop'), $this->web_ui_date->toArray());
         //

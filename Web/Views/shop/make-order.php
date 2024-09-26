@@ -8,7 +8,7 @@
     </header>
 </article>
 <section class="shop_carrello">
-    <div class="myIn shop_flex">
+    <div class="myIn lcshop-flex">
         <div class="make-order-page">
             <?php if (isset($site_cart) && isset($site_cart->products) && is_iterable($site_cart->products) && count($site_cart->products) > 0) { ?>
                 <div class="make-order-page-content">
