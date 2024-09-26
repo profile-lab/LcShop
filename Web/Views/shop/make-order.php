@@ -1,12 +1,16 @@
 <?= $this->extend(customOrDefaultViewFragment('layout/body')) ?>
 <?= $this->section('content') ?>
 <article>
-    <header>
+    <?= view(customOrDefaultViewFragment('shop/components/breadcrumb', 'LcShop')) ?>
+    <section class="lcshop-header">
         <div class="myIn">
-            <?= h1($titolo, 'shop_archive_title') ?>
+            <hgroup>
+                <?= h1($titolo) ?>
+            </hgroup>
         </div>
-    </header>
+    </section>
 </article>
+
 <section class="shop_carrello">
     <div class="myIn lcshop-flex">
         <div class="make-order-page">
@@ -112,9 +116,11 @@
                 <?= view(customOrDefaultViewFragment('shop/components/no-products-message', 'LcShop')) ?>
             <?php } ?>
         </div>
+        <?php /*
         <aside class="sidebar shop_sidebar">
             <?= view(customOrDefaultViewFragment('shop/components/order-summary', 'LcShop')) ?>
         </aside>
+        */ ?>
     </div>
 </section>
 <?= $this->endSection() ?>
