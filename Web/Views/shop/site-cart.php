@@ -1,13 +1,20 @@
 <?= $this->extend(customOrDefaultViewFragment('layout/body')) ?>
 <?= $this->section('content') ?>
+
 <article>
-    <header>
+    <?= view(customOrDefaultViewFragment('shop/components/breadcrumb', 'LcShop')) ?>
+    <section class="lcshop-header">
         <div class="myIn">
-            <?= h1($titolo, 'shop_archive_title') ?>
+
+            <hgroup>
+                <?= h1($titolo) ?>
+            </hgroup>
         </div>
-    </header>
+    </section>
 </article>
-<section class="shop_carrello">
+
+
+<section class="lcshop-carrello">
     <div class="myIn">
         <div class="cart-page">
             <?php if (isset($site_cart) && isset($site_cart->products) && is_iterable($site_cart->products) && count($site_cart->products) > 0) { ?>
@@ -15,9 +22,12 @@
                     <?php foreach ($site_cart->products as $cart_item) { ?>
                         <div class="cart-page-row">
                             <div class="cart-page-col cart-page-col-name">
-                                <a href="<?= $cart_item->permalink ?>">
-                                    <?= $cart_item->full_nome_prodotto ?>
+                                <a class="cart-page-name" href="<?= $cart_item->permalink ?>">
+                                    <?= $cart_item->nome ?>
                                 </a>
+                                <div class="cart-page-fullname">
+                                    <?= $cart_item->full_nome_prodotto ?>
+                                </div>
                             </div>
                             <div class="cart-page-col cart-page-col-qnt">
                                 <a class="cart-page-qnt-action" href="<?= route_to(__locale_uri__ . 'web_shop_cart_decrement_qnt', $cart_item->row_key) ?>">-</a>
@@ -34,60 +44,66 @@
                         </div>
                     <?php } ?>
                 </div>
-                <div class="cart-page-totals-rows">
-                    <div class="cart-page-row cart-page-row-totals">
-                        <div class="cart-page-col cart-page-col-name">
-                            <?= appLabel('Totale prodotti', $app->labels, true) ?>
-                        </div>
-                        <div class="cart-page-col cart-page-col-price">
-                            &euro; <span class="cart-page-col-price-val"><?= $site_cart->total_formatted ?></span>
-                        </div>
-                    </div>
-                    <div class="cart-page-row cart-page-row-totals">
-                        <div class="cart-page-col cart-page-col-name">
-                            <?= appLabel('Peso', $app->labels, true) ?>
-                        </div>
-                        <div class="cart-page-col cart-page-col-kg">
-                            <span class="cart-page-col-price-val"><?= $site_cart->peso_totale_kg ?> Kg</span>
-                        </div>
-                    </div>
+                <div class="cart-page-totals">
 
-                    <div class="cart-page-row cart-page-row-totals">
-                        <div class="cart-page-col cart-page-col-name">
-                            <?= appLabel('Iva', $app->labels, true) ?>
-                        </div>
-                        <div class="cart-page-col cart-page-col-price">
-                            &euro; <span class="cart-page-col-price-val"><?= $site_cart->iva_total_formatted ?></span>
-                        </div>
-                    </div>
-                    <div class="cart-page-row cart-page-row-totals">
-                        <div class="cart-page-col cart-page-col-name">
-                            <?= appLabel('Imponibile', $app->labels, true) ?>
-                        </div>
-                        <div class="cart-page-col cart-page-col-price">
-                            &euro; <span class="cart-page-col-price-val"><?= $site_cart->imponibile_total_formatted ?></span>
-                        </div>
-                    </div>
-                    <div class="cart-page-row cart-page-row-totals">
-                        <div class="cart-page-col cart-page-col-name">
-                            <?= $site_cart->spedizione_name ?>
-                        </div>
-                        <?php if ($site_cart->spese_spedizione > 0) { ?>
+                    <div class="cart-page-totals-rows">
+                        <div class="cart-page-totals-row">
+                            <div class="cart-page-col cart-page-col-name">
+                                <?= appLabel('Totale prodotti', $app->labels, true) ?>
+                            </div>
                             <div class="cart-page-col cart-page-col-price">
-                                &euro; <span class="cart-page-col-price-val"><?= $site_cart->spese_spedizione_formatted ?></span>
+                                &euro; <span class="cart-page-col-price-val"><?= $site_cart->total_formatted ?></span>
                             </div>
-                        <?php } else { ?>
-                            <div class="cart-page-col cart-page-col-price cart-page-col-price-free">
-                                <span class="cart-page-col-price-val"><?= $site_cart->spese_spedizione_formatted ?></span>
-                            </div>
-                        <?php } ?>
-                    </div>
-                    <div class="cart-page-row cart-page-row-totals cart-page-row-total-cart">
-                        <div class="cart-page-col cart-page-col-name">
-                            <?= appLabel('Totale', $app->labels, true) ?>
                         </div>
-                        <div class="cart-page-col cart-page-col-price">
-                            &euro; <span class="cart-page-col-price-val"><?= $site_cart->pay_total_formatted ?></span>
+
+                        <?php /*
+                        <div class="cart-page-totals-row">
+                            <div class="cart-page-col cart-page-col-name">
+                                <?= appLabel('Peso', $app->labels, true) ?>
+                            </div>
+                            <div class="cart-page-col cart-page-col-kg">
+                                <span class="cart-page-col-price-val"><?= $site_cart->peso_totale_kg ?> Kg</span>
+                            </div>
+                        </div>
+                        */ ?>
+    
+                        <div class="cart-page-totals-row">
+                            <div class="cart-page-col cart-page-col-name">
+                                <?= appLabel('Imponibile', $app->labels, true) ?>
+                            </div>
+                            <div class="cart-page-col cart-page-col-price">
+                                &euro; <span class="cart-page-col-price-val"><?= $site_cart->imponibile_total_formatted ?></span>
+                            </div>
+                        </div>
+                        <div class="cart-page-totals-row">
+                            <div class="cart-page-col cart-page-col-name">
+                                <?= appLabel('Iva', $app->labels, true) ?>
+                            </div>
+                            <div class="cart-page-col cart-page-col-price">
+                                &euro; <span class="cart-page-col-price-val"><?= $site_cart->iva_total_formatted ?></span>
+                            </div>
+                        </div>
+                        <div class="cart-page-totals-row">
+                            <div class="cart-page-col cart-page-col-name">
+                                <?= $site_cart->spedizione_name ?>
+                            </div>
+                            <?php if ($site_cart->spese_spedizione > 0) { ?>
+                                <div class="cart-page-col cart-page-col-price">
+                                    &euro; <span class="cart-page-col-price-val"><?= $site_cart->spese_spedizione_formatted ?></span>
+                                </div>
+                            <?php } else { ?>
+                                <div class="cart-page-col cart-page-col-price cart-page-col-price-free">
+                                    <span class="cart-page-col-price-val"><?= $site_cart->spese_spedizione_formatted ?></span>
+                                </div>
+                            <?php } ?>
+                        </div>
+                        <div class="cart-page-totals-row cart-page-totals-row-totale">
+                            <div class="cart-page-col cart-page-col-name">
+                                <?= appLabel('Totale', $app->labels, true) ?>
+                            </div>
+                            <div class="cart-page-col cart-page-col-price">
+                                &euro; <span class="cart-page-col-price-val"><?= $site_cart->pay_total_formatted ?></span>
+                            </div>
                         </div>
                     </div>
                 </div>

@@ -14,10 +14,9 @@
     </section>
     <div class="myIn lcshop-flex">
         <div class="lcshop-scheda">
-
             <?php /*
-        <?= view(customOrDefaultViewFragment('shop/components/sidebar', 'LcShop')) ?>
-        */ ?>
+            <?= view(customOrDefaultViewFragment('shop/components/sidebar', 'LcShop')) ?>
+            */ ?>
             <div class="lcshop-content lcshop-detail <?= ($in_promo) ? ' is_in_promo' : '' ?>">
                 <div class="lcshop-detail-medias">
                     <?php if (isset($gallery_obj) && count($gallery_obj) > 0) { ?>
