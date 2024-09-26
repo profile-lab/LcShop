@@ -12,12 +12,16 @@ class ShopAction extends \App\Controllers\BaseController
 {
 
     //--------------------------------------------------------------------
-    public function getShopProductsArchive()
+    public function getShopProductsArchive($category_id = null)
     {
         $shop_products_model = new ShopProductsModel();
         $shop_products_model->setForFrontemd();
+        $products_archive_qb = $shop_products_model->where('parent <', 1)->asObject();
 
-        if ($products_archive = $shop_products_model->where('parent <', 1)->asObject()->findAll()) {
+        if ($category_id) {
+            $products_archive_qb->where('category', $category_id);
+        }
+        if ($products_archive = $products_archive_qb->paginate(20)) { //findAll()) {
             foreach ($products_archive as $product) {
                 $product->abstract = word_limiter(strip_tags($product->testo), 20);
                 $product->permalink = route_to(__locale_uri__ . 'web_shop_detail', $product->guid);
@@ -25,7 +29,11 @@ class ShopAction extends \App\Controllers\BaseController
                 $shop_products_model->extendProduct($product, 'min');
                 // 
             }
-            return $products_archive;
+            $return = (object) [
+                'products_archive' => $products_archive,
+                'pager' => $shop_products_model->pager,
+            ];
+            return $return;
         }
         return null;
     }
@@ -79,16 +87,17 @@ class ShopAction extends \App\Controllers\BaseController
         return null;
     }
     //--------------------------------------------------------------------
-    protected function getShopOrderItems($id_order){
+    protected function getShopOrderItems($id_order)
+    {
         $shop_orders_items_model = new ShopOrdersItemsModel();
         $shop_orders_items_model->where('order_id', $id_order);
         $shop_orders_items_model->orderBy('created_at', 'DESC');
         if ($shop_order_items = $shop_orders_items_model->asObject()->findAll()) {
             foreach ($shop_order_items as $item) {
-                if($item->id_modello){
+                if ($item->id_modello) {
 
                     $item->product = $this->getProduct($item->id_modello);
-                }else{
+                } else {
                     $item->product = $this->getProduct($item->id_prodotto);
                 }
             }
@@ -97,7 +106,8 @@ class ShopAction extends \App\Controllers\BaseController
         return null;
     }
     //--------------------------------------------------------------------
-    protected function getProduct($product_id){
+    protected function getProduct($product_id)
+    {
         $shop_products_model = new ShopProductsModel();
         $shop_products_model->where('id', $product_id);
         if ($product = $shop_products_model->asObject()->first()) {

@@ -112,17 +112,18 @@ class Shop extends \Lc5\Web\Controllers\MasterWeb
     //--------------------------------------------------------------------
     public function index($category_guid = null)
     {
-
+       
         if ($this->cart->checkCartAction()) {
             return redirect()->to(site_url(uri_string()));
         }
         $pages_entity_rows = null;
-        $products_archive_qb = $this->shop_products_model->asObject();
-        $products_archive_qb->where('parent', 0);
-        // $products_archive_qb->where('(parent IS NULL OR parent <  1 )');
+        $products_archive_qb_category = null;
+
         if ($category_guid != null) {
+
+            
             if ($curr_entity =  $this->shop_products_cat_model->where('guid', $category_guid)->asObject()->first()) {
-                $products_archive_qb->where('category', $curr_entity->id);
+                $products_archive_qb_category =  $curr_entity->id;
             } else {
                 throw \CodeIgniter\Exceptions\PageNotFoundException::forPageNotFound();
             }
@@ -147,7 +148,10 @@ class Shop extends \Lc5\Web\Controllers\MasterWeb
             }
         }
         // 
-        $curr_entity->products_archive  = $this->shop_action->getShopProductsArchive();
+        $productsArchive = $this->shop_action->getShopProductsArchive($products_archive_qb_category);
+        $curr_entity->products_archive  = $productsArchive->products_archive;
+        $curr_entity->pager  = $productsArchive->pager;
+        
         // 
         $this->web_ui_date->fill((array)$curr_entity);
         $this->web_ui_date->entity_rows = $pages_entity_rows;
