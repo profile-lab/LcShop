@@ -12,8 +12,13 @@ class ShopAction extends \App\Controllers\BaseController
 {
 
     //--------------------------------------------------------------------
-    public function getShopProductsArchive($category_id = null)
+    public function getShopProductsArchive($category_id = null, $pagination_limit = null)
     {
+
+        $select_limit = 24;
+        $select_limit = (env('custom.shop_pagination_limit')) ? env('custom.shop_pagination_limit') : $select_limit;
+        $select_limit = $pagination_limit ? $pagination_limit : $select_limit;
+
         $shop_products_model = new ShopProductsModel();
         $shop_products_model->setForFrontemd();
         $products_archive_qb = $shop_products_model->where('parent <', 1)->asObject();
@@ -21,7 +26,8 @@ class ShopAction extends \App\Controllers\BaseController
         if ($category_id) {
             $products_archive_qb->where('category', $category_id);
         }
-        if ($products_archive = $products_archive_qb->paginate(20)) { //findAll()) {
+
+        if ($products_archive = $products_archive_qb->paginate(($select_limit))) { //findAll()) {
             foreach ($products_archive as $product) {
                 $product->abstract = word_limiter(strip_tags($product->testo), 20);
                 $product->permalink = route_to(__locale_uri__ . 'web_shop_detail', $product->guid);
