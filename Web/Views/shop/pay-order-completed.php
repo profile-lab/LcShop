@@ -25,9 +25,6 @@
                     <p><?= appLabel('Non esitare a contattarci in caso di problemi o richieste.', $app->labels, true) ?></p>
                 </div>
             <?php } ?>
-            <aside class="sidebar shop_sidebar">
-                <?= view(customOrDefaultViewFragment('shop/components/order-summary', 'LcShop')) ?>
-            </aside>
         <?php } else { ?>
             <?= view(customOrDefaultViewFragment('shop/components/no-products-message', 'LcShop')) ?>
         <?php } ?>

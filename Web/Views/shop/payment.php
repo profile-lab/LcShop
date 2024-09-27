@@ -124,8 +124,9 @@
                 <?= view(customOrDefaultViewFragment('shop/components/no-products-message', 'LcShop')) ?>
             <?php } ?>
         </div>
-        <aside class="sidebar shop_sidebar">
-            <?= view(customOrDefaultViewFragment('shop/components/order-summary', 'LcShop')) ?>
+        <aside class="sidebar lcshop-riepilogo-sidebar">
+            <h6>Riepilogo Carrello</h6>
+            <?= view(customOrDefaultViewFragment('shop/components/cart-totals', 'LcShop')) ?>
         </aside>
     </div>
 </section>

@@ -38,9 +38,6 @@
                     </div>
                 </div>
             <?php } ?>
-            <aside class="sidebar shop_sidebar">
-                <?= view(customOrDefaultViewFragment('shop/components/order-summary', 'LcShop')) ?>
-            </aside>
         <?php } else { ?>
             <?= view(customOrDefaultViewFragment('shop/components/no-products-message', 'LcShop')) ?>
         <?php } ?>
