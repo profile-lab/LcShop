@@ -11,7 +11,7 @@
     </section>
 </article>
 
-<section class="shop_carrello">
+<section class="lcshop-carrello">
     <div class="myIn lcshop-flex">
         <div class="make-order-page">
             <?php if (isset($site_cart) && isset($site_cart->products) && is_iterable($site_cart->products) && count($site_cart->products) > 0) { ?>

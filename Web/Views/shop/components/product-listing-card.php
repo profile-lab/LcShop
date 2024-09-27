@@ -26,6 +26,7 @@
 			</div>
 			<?= (isset($single_items->permalink) && $single_items->permalink != null) ? '</a>' : '' ?>
 			<input type="hidden" name="prod_id" value="<?= $single_items->id ?>">
+			<?php /*
 			<!-- MODELLI -->
 			<?php if (isset($single_items->modelli) && is_array($single_items->modelli)) { ?>
 				<?php if (count($single_items->modelli) > 1) { ?>
@@ -40,6 +41,8 @@
 			<?php } else { ?>
 				<input type="hidden" name="prod_model_id" value="<?= $single_items->id ?>" />
 			<?php } ?>
+			*/ ?>
+			<input type="hidden" name="prod_model_id" value="<?= $single_items->id ?>" />
 			<?= view(customOrDefaultViewFragment('shop/components/add_to_cart_component',  'LcShop'), ['giacenza' => $single_items->giacenza]) ?>
 			<div class="product_giac_mess <?= (intval($single_items->giacenza) > 0) ? 'available' : 'unavailable'  ?>">
 				<div class="prodotto_esaurito prodotto_esaurito_detail">Prodotto esaurito</div>
