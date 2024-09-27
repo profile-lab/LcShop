@@ -1,7 +1,7 @@
 <div class="agg_cart_cnt <?= (intval($giacenza) > 0) ? 'available' : 'unavailable'  ?>">
     <div class="qty">
         <button type="button" class="less" onclick="const input = this.parentNode.querySelector('.qty_input'); input.value = Math.max(parseInt(input.value) - 1, 1); return;" value="-1">-</button>
-        <input class="qty_input" name="prod_qty" type="number" min="1" max="<?= ($giacenza) ? $giacenza : 10 ?>" step="1" value="1" \>
+        <input class="qty_input" name="prod_qty" type="number" min="1" max="<?= ($giacenza) ? $giacenza : 10 ?>" step="1" value="1" />
         <button type="button" class="more" onclick="const input = this.parentNode.querySelector('.qty_input'); input.value = Math.min(parseInt(input.value) + 1, parseInt(input.max )); return;" value="+1">+</button>
     </div>
     <button type="submit" name="cart_action" value="ADD" class="cart_in">

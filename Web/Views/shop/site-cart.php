@@ -18,6 +18,19 @@
     <div class="myIn">
         <div class="cart-page">
             <?php if (isset($site_cart) && isset($site_cart->products) && is_iterable($site_cart->products) && count($site_cart->products) > 0) { ?>
+                <div class="cart-page-row cart-page-row-header">
+                    <div class="cart-page-col cart-page-col-name">
+                        <b>Prodotto</b>
+                    </div>
+                    <div class="cart-page-col cart-page-col-qnt">
+                        <b>Quantità</b>
+                    </div>
+                    <div class="cart-page-col cart-page-col-price">Prezzo</div>
+                    <div class="cart-page-col cart-page-col-price">Totale</div>
+                    <div class="cart-page-col cart-page-col-action">
+                        
+                    </div>
+                </div>
                 <div class="cart-page-rows">
                     <?php foreach ($site_cart->products as $cart_item) { ?>
                         <div class="cart-page-row">
@@ -66,7 +79,7 @@
                             </div>
                         </div>
                         */ ?>
-    
+
                         <div class="cart-page-totals-row">
                             <div class="cart-page-col cart-page-col-name">
                                 <?= appLabel('Imponibile', $app->labels, true) ?>
