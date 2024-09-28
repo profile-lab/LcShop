@@ -112,7 +112,7 @@ class Shop extends \Lc5\Web\Controllers\MasterWeb
     //--------------------------------------------------------------------
     public function index($category_guid = null)
     {
-       
+
         if ($this->cart->checkCartAction()) {
             return redirect()->to(site_url(uri_string()));
         }
@@ -121,8 +121,8 @@ class Shop extends \Lc5\Web\Controllers\MasterWeb
 
         $shop_page_type = 'shop';
         $shop_category_guid = null;
-        
-        if ($category_guid != null) {   
+
+        if ($category_guid != null) {
             if ($curr_entity =  $this->shop_products_cat_model->where('guid', $category_guid)->asObject()->first()) {
                 $products_archive_qb_category =  $curr_entity->id;
                 $shop_page_type = 'shop_category';
@@ -135,9 +135,9 @@ class Shop extends \Lc5\Web\Controllers\MasterWeb
             $pages_model->setForFrontemd();
 
             $shop_home_guid = 'shop';
-             if($setting_shophomepage_guid = trim($this->shop_settings->shop_home)){
+            if ($setting_shophomepage_guid = trim($this->shop_settings->shop_home)) {
                 $shop_home_guid = trim(str_replace(['/'], '', $setting_shophomepage_guid));
-             }
+            }
 
             if ($curr_entity = $pages_model->asObject()->orderBy('id', 'DESC')->where('guid', $shop_home_guid)->first()) {
                 $pages_entity_rows = $this->getEntityRows($curr_entity->id, 'pages');
@@ -154,7 +154,7 @@ class Shop extends \Lc5\Web\Controllers\MasterWeb
         $productsArchive = $this->shop_action->getShopProductsArchive($products_archive_qb_category);
         $curr_entity->products_archive  = $productsArchive->products_archive;
         $curr_entity->pager  = $productsArchive->pager;
-        
+
         // 
         $this->web_ui_date->fill((array)$curr_entity);
         $this->web_ui_date->entity_rows = $pages_entity_rows;
@@ -256,21 +256,41 @@ class Shop extends \Lc5\Web\Controllers\MasterWeb
                 }
             } else {
                 if ($this->request->getPost('ship_send') == 'next') {
-                    // 
-                    $order_data->ship_name = $this->request->getPost('ship_name');
-                    $order_data->ship_surname = $this->request->getPost('ship_surname');
-                    $order_data->ship_country = $this->request->getPost('ship_country');
-                    $order_data->ship_district = $this->request->getPost('ship_district');
-                    $order_data->ship_city = $this->request->getPost('ship_city');
-                    $order_data->ship_zip = $this->request->getPost('ship_zip');
-                    $order_data->ship_address = $this->request->getPost('ship_address');
-                    $order_data->ship_address_number = $this->request->getPost('ship_address_number');
-                    $order_data->ship_phone = $this->request->getPost('ship_phone');
-                    $order_data->ship_email = $this->request->getPost('ship_email');
-                    $order_data->ship_infos = $this->request->getPost('ship_infos');
-                    // 
-                    session()->set('order_data', $order_data);
-                    return redirect()->route('web_shop_payment');
+
+                    $validate_rules = [
+                        'ship_name' => ['label' => 'Nome', 'rules' => 'required'],
+                        'ship_surname' => ['label' => 'Cognome', 'rules' => 'required'],
+                        'ship_district' => ['label' => 'Provincia', 'rules' => 'required'],
+                        'ship_city' => ['label' => 'Città', 'rules' => 'required'],
+                        'ship_zip' => ['label' => 'Cap', 'rules' => 'required'],
+                        'ship_address' => ['label' => 'Indirizzo', 'rules' => 'required'],
+                        'ship_address_number' => ['label' => 'Civico', 'rules' => 'required'],
+                        'ship_phone' => ['label' => 'Telefono', 'rules' => 'required'],
+                        'ship_email' => ['label' => 'Email', 'rules' => 'required|valid_email'],
+
+                    ];
+
+                    if ($this->validate($validate_rules)) {
+
+                        // 
+                        $order_data->ship_name = $this->request->getPost('ship_name');
+                        $order_data->ship_surname = $this->request->getPost('ship_surname');
+                        $order_data->ship_country = $this->request->getPost('ship_country');
+                        $order_data->ship_district = $this->request->getPost('ship_district');
+                        $order_data->ship_city = $this->request->getPost('ship_city');
+                        $order_data->ship_zip = $this->request->getPost('ship_zip');
+                        $order_data->ship_address = $this->request->getPost('ship_address');
+                        $order_data->ship_address_number = $this->request->getPost('ship_address_number');
+                        $order_data->ship_phone = $this->request->getPost('ship_phone');
+                        $order_data->ship_email = $this->request->getPost('ship_email');
+                        $order_data->ship_infos = $this->request->getPost('ship_infos');
+                        // 
+                        session()->set('order_data', $order_data);
+                        return redirect()->route('web_shop_payment');
+                    } else {
+                        session()->setFlashdata('ui_mess', $this->validator->getErrors());
+                        session()->setFlashdata('ui_mess_type', 'alert alert-danger');
+                    }
                 }
             }
         }
@@ -347,40 +367,60 @@ class Shop extends \Lc5\Web\Controllers\MasterWeb
                 }
             } else {
                 if ($this->request->getPost('pay_send') == 'next') {
-                    // 
-                    $order_data->pay_name = $this->request->getPost('pay_name');
-                    $order_data->pay_surname = $this->request->getPost('pay_surname');
-                    $order_data->pay_country = $this->request->getPost('pay_country');
-                    $order_data->pay_district = $this->request->getPost('pay_district');
-                    $order_data->pay_city = $this->request->getPost('pay_city');
-                    $order_data->pay_zip = $this->request->getPost('pay_zip');
-                    $order_data->pay_address = $this->request->getPost('pay_address');
-                    $order_data->pay_address_number = $this->request->getPost('pay_address_number');
-                    $order_data->pay_phone = $this->request->getPost('pay_phone');
-                    $order_data->pay_email = $this->request->getPost('pay_email');
-                    $order_data->pay_infos = $this->request->getPost('pay_infos');
-                    // 
-                    session()->set('order_data', $order_data);
+                    $validate_rules = [
+                        'pay_name' => ['label' => 'Nome', 'rules' => 'required'],
+                        'pay_surname' => ['label' => 'Cognome', 'rules' => 'required'],
+                        'pay_district' => ['label' => 'Provincia', 'rules' => 'required'],
+                        'pay_city' => ['label' => 'Città', 'rules' => 'required'],
+                        'pay_zip' => ['label' => 'Cap', 'rules' => 'required'],
+                        'pay_address' => ['label' => 'Indirizzo', 'rules' => 'required'],
+                        'pay_address_number' => ['label' => 'Civico', 'rules' => 'required'],
+                        'pay_phone' => ['label' => 'Telefono', 'rules' => 'required'],
+                        'pay_email' => ['label' => 'Email', 'rules' => 'required|valid_email'],
 
-                    $shop_order = new ShopOrder();
-                    $shop_order->fill((array)$order_data);
-                    $shop_order->user_id = $this->appuser->getUserId();
-                    $this->shop_orders_model->save($shop_order);
+                    ];
 
-                    // 
-                    $new_id = $this->shop_orders_model->getInsertID();
-                    // 
-                    if (is_array($order_data->products)) {
-                        foreach ($order_data->products as $product) {
-                            $shop_order_item = new ShopOrdersItem();
-                            $shop_order_item->fill((array)$product);
-                            $shop_order_item->order_id = $new_id;
-                            $shop_order_item->user_id = $this->appuser->getUserId();
-                            $this->shop_orders_items_model->save($shop_order_item);
+                    if ($this->validate($validate_rules)) {
+                        // 
+                        $order_data->pay_name = $this->request->getPost('pay_name');
+                        $order_data->pay_surname = $this->request->getPost('pay_surname');
+                        $order_data->pay_fiscal = $this->request->getPost('pay_fiscal');
+                        $order_data->pay_vat = $this->request->getPost('pay_vat');
+                        $order_data->pay_country = $this->request->getPost('pay_country');
+                        $order_data->pay_district = $this->request->getPost('pay_district');
+                        $order_data->pay_city = $this->request->getPost('pay_city');
+                        $order_data->pay_zip = $this->request->getPost('pay_zip');
+                        $order_data->pay_address = $this->request->getPost('pay_address');
+                        $order_data->pay_address_number = $this->request->getPost('pay_address_number');
+                        $order_data->pay_phone = $this->request->getPost('pay_phone');
+                        $order_data->pay_email = $this->request->getPost('pay_email');
+                        $order_data->pay_infos = $this->request->getPost('pay_infos');
+                        // 
+                        session()->set('order_data', $order_data);
+
+                        $shop_order = new ShopOrder();
+                        $shop_order->fill((array)$order_data);
+                        $shop_order->user_id = $this->appuser->getUserId();
+                        $this->shop_orders_model->save($shop_order);
+
+                        // 
+                        $new_id = $this->shop_orders_model->getInsertID();
+                        // 
+                        if (is_array($order_data->products)) {
+                            foreach ($order_data->products as $product) {
+                                $shop_order_item = new ShopOrdersItem();
+                                $shop_order_item->fill((array)$product);
+                                $shop_order_item->order_id = $new_id;
+                                $shop_order_item->user_id = $this->appuser->getUserId();
+                                $this->shop_orders_items_model->save($shop_order_item);
+                            }
                         }
+                        $this->cart->svuotaCarrello();
+                        return redirect()->route('web_shop_pay_now', [$new_id]);
+                    } else {
+                        session()->setFlashdata('ui_mess', $this->validator->getErrors());
+                        session()->setFlashdata('ui_mess_type', 'alert alert-danger');
                     }
-                    $this->cart->svuotaCarrello();
-                    return redirect()->route('web_shop_pay_now', [$new_id]);
 
                     // $shop_order_item = new ShopOrdersItem();
                     // $this->shop_orders_items_model->save($shop_order_item);
@@ -481,8 +521,8 @@ class Shop extends \Lc5\Web\Controllers\MasterWeb
 
         return $orderData;
     }
-   
-   
+
+
     //--------------------------------------------------------------------
     public function emptyCart()
     {

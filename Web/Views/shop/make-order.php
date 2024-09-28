@@ -6,6 +6,8 @@
         <div class="myIn">
             <hgroup>
                 <?= h1($titolo) ?>
+                <h4><?= appLabel('Spedizione', $app->labels, true) ?></h4>
+                <h5><?= appLabel('Inserisci i dati di spedizione del tuo ordine', $app->labels, true) ?></h5>
             </hgroup>
         </div>
     </section>
@@ -20,10 +22,7 @@
                         <?= getServerMessage() ?>
                         <div class="make-order-page-main">
                             <form method="POST" class="form_spedizione_cnt">
-                                <header class="sped_type">
-                                    <h4><?= appLabel('Spedizione', $app->labels, true) ?></h4>
-                                    <h5><?= appLabel('Inserisci i dati di spedizione del tuo ordine', $app->labels, true) ?></h5>
-                                </header>
+                               
                                 <div class="form_spedizione">
                                     <?= user_mess($ui_mess, $ui_mess_type) ?>
                                     <div class="form-row">
