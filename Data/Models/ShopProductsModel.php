@@ -512,7 +512,8 @@ class ShopProductsModel extends MasterModel
 		// GET SHOP SETTINGS
 		if (!isset($this->shop_settings)) {
 			$shop_settings_model = new ShopSettingsModel();
-			$this->shop_settings =  $shop_settings_model->asObject()->where('id_app', __web_app_id__)->first();
+			$curr_app = defined('__web_app_id__') ? __web_app_id__ : session()->get('curr_lc_app');
+			$this->shop_settings =  $shop_settings_model->asObject()->where('id_app', $curr_app)->first();
 		}
 		//
 		if (!$this->shop_settings->products_has_childs) {
@@ -633,7 +634,8 @@ class ShopProductsModel extends MasterModel
 			// GET SHOP SETTINGS
 			if (!isset($this->shop_settings)) {
 				$shop_settings_model = new ShopSettingsModel();
-				$this->shop_settings =  $shop_settings_model->asObject()->where('id_app', __web_app_id__)->first();
+				$curr_app = defined('__web_app_id__') ? __web_app_id__ : session()->get('curr_lc_app');
+				$this->shop_settings =  $shop_settings_model->asObject()->where('id_app', $curr_app)->first();
 			}
 			if (isset($this->shop_settings)) {
 				if ($this->shop_settings->discount_type == 'PRICE') {
