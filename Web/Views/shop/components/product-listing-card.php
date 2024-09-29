@@ -6,22 +6,41 @@
 			<?= single_img($single_items->main_img_path, 'thumbs', 'shop_product_thumb', 'Immagine ' . $single_items->titolo) ?>
 
 			<div class="lcshop-card-dettagli">
-				<div class="lcshop-card_dettagli-txts">
-					<?= h5($single_items->titolo) ?>
+				<div class="lcshop-card-dettagli-txts">
+					<?= h5($single_items->titolo, 'lcshop-card-dettagli-titolo') ?>
+					<?= (isset($single_items->modello) && trim($single_items->modello) != '') ? '<div class="lcshop-card-dettagli-nodello">' . $single_items->modello . '</div>' : '' ?>
 				</div>
-				<div class="shop_product_prices">
-					<?php if ($single_items->in_promo) { ?>
-						<div class="price price_promo">
-							<span class="price_coin"><?= $single_items->prezzo_coin ?></span><span class="price_spacer">/</span><span class="price_um"><?= $single_items->um ?></span>
-						</div>
-						<div class="price price_nosale">
-							<span class="price_coin"><?= $single_items->prezzo_pieno_coin ?></span><span class="price_spacer">/</span><span class="price_um"><?= $single_items->um ?></span>
-						</div>
-					<?php } else { ?>
-						<div class="price">
-							<span class="price_coin"><?= $single_items->prezzo_coin ?></span><span class="price_spacer">/</span><span class="price_um"><?= $single_items->um ?></span>
-						</div>
-					<?php } ?>
+				<div class="lcshop-card-infos">
+					<div class="lcshop-card-dati">
+
+
+						<?php if (isset($single_items->misura_obj) && $single_items->misura_obj != null && isset($single_items->misura_obj->nome)) { ?>
+							<div class="lcshop-card-dati-item lcshop-card-dati-item-misura">
+								<span class="lcshop-card-dati-item-label"><?= langLabel('Misura') ?></span>
+								<span class="lcshop-card-dati-item-val"><?= $single_items->misura_obj->nome ?></span>
+							</div>
+						<?php } ?>
+						<?php if (isset($single_items->colore_obj) && $single_items->colore_obj != null && isset($single_items->colore_obj->nome)) { ?>
+							<div class="lcshop-card-dati-item lcshop-card-dati-item-color">
+								<span class="lcshop-card-dati-item-label"><?= langLabel('Colore') ?></span>
+								<span class="lcshop-card-dati-item-val"><?= $single_items->colore_obj->nome ?></span>
+							</div>
+						<?php } ?>
+					</div>
+					<div class="lcshop-prices">
+						<?php if ($single_items->in_promo) { ?>
+							<div class="price price_promo">
+								<span class="price_coin"><?= $single_items->prezzo_coin ?></span><span class="price_spacer">/</span><span class="price_um"><?= $single_items->um ?></span>
+							</div>
+							<div class="price price_nosale">
+								<span class="price_coin"><?= $single_items->prezzo_pieno_coin ?></span><span class="price_spacer">/</span><span class="price_um"><?= $single_items->um ?></span>
+							</div>
+						<?php } else { ?>
+							<div class="price">
+								<span class="price_coin"><?= $single_items->prezzo_coin ?></span><span class="price_spacer">/</span><span class="price_um"><?= $single_items->um ?></span>
+							</div>
+						<?php } ?>
+					</div>
 				</div>
 			</div>
 			<?= (isset($single_items->permalink) && $single_items->permalink != null) ? '</a>' : '' ?>
@@ -58,11 +77,11 @@
 			<?= (isset($single_items->permalink) && $single_items->permalink != null) ? '<a href="' . $single_items->permalink . '" title="' . $single_items->titolo . '" class="shop_product_link" >' : '' ?>
 			<?= single_img($single_items->main_img_path, 'thumbs', 'shop_product_thumb', 'Immagine ' . $single_items->titolo) ?>
 
-			<div class="shop_product_card_dettagli">
-				<div class="shop_product_card_dettagli_txts">
+			<div class="shop_product_card-dettagli">
+				<div class="shop_product_card-dettagli_txts">
 					<?= h5($single_items->titolo) ?>
 				</div>
-				<div class="shop_product_prices">
+				<div class="lcshop-prices">
 					<?php if ($single_items->in_promo) { ?>
 						<div class="price price_promo">
 							<span class="price_coin"><?= $single_items->prezzo_coin ?></span><span class="price_spacer">/</span><span class="price_um"><?= $single_items->um ?></span>

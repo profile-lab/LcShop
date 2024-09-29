@@ -12,6 +12,8 @@ class ShopProductsModel extends MasterModel
 {
 
 	public $shop_settings = null;
+	public $misure_model = null;
+	public $variation_model = null;
 
 	protected $table                = 'shop_products';
 	protected $primaryKey           = 'id';
@@ -217,6 +219,19 @@ class ShopProductsModel extends MasterModel
 				$item->tags = [];
 			}
 			// 
+			if (isset($item->misura ) && $item->misura && trim($item->misura)) {
+				if(!$this->misure_model){
+					$this->misure_model = new ShopProductsSizesModel();
+				}
+				$item->misura_obj = $this->misure_model->asObject()->where('val', $item->misura)->first(); 
+			}
+			if (isset($item->colore) && $item->colore && trim($item->colore)) {
+				if(!$this->variation_model){
+					$this->variation_model = new ShopProductsVariationsModel();
+				}
+				$item->colore_obj = $this->variation_model->asObject()->where('val', $item->colore)->first(); 
+
+			}
 			// if (isset($item->misura ) && $item->misura && trim($item->misura) && isJson($item->misura)) {
 			// 	$item->misura = json_decode($item->misura);
 			// } else {
@@ -615,6 +630,11 @@ class ShopProductsModel extends MasterModel
 			$item->prezzo = number_format(($imponibile + $iva), 2, '.', '');
 			$item->prezzo_pieno = $item->prezzo;
 			// 
+			// GET SHOP SETTINGS
+			if (!isset($this->shop_settings)) {
+				$shop_settings_model = new ShopSettingsModel();
+				$this->shop_settings =  $shop_settings_model->asObject()->where('id_app', __web_app_id__)->first();
+			}
 			if (isset($this->shop_settings)) {
 				if ($this->shop_settings->discount_type == 'PRICE') {
 					if (isset($item->promo_price) && $item->promo_price > 0) {

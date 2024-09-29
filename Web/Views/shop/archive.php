@@ -32,6 +32,12 @@
             <?php } ?>
         </div>
     </div>
+    <?php if( $pager ) { ?>
+        <div class="myIn lcshop-pager">
+            <?= $pager->links() ?>
+        </div>
+    
+    <?php } ?>
 </section>
 <?= $this->endSection() ?>
 <?= $this->section('footer_script') ?>
@@ -73,7 +79,7 @@
                         // console.log('trovato', model);
                         const prod_card = $(this).closest('.lcshop-card');
                         prod_card.removeClass('is_in_promo');
-                        const shop_product_prices = prod_card.find('.shop_product_prices');
+                        const lcshop-prices = prod_card.find('.lcshop-prices');
                         const agg_cart_cnt = prod_card.find('.agg_cart_cnt');
                         const product_giac_mess = prod_card.find('.product_giac_mess');
                         product_giac_mess.html('');
@@ -87,15 +93,15 @@
                             price_promo.append('<span class="price_coin">' + model.prezzo_coin + '</span><span class="price_spacer">/</span><span class="price_um">' + model.um + '</span>');
                             const price_nosale = $('<div class="price price_nosale" />');
                             price_nosale.append('<span class="price_coin">' + model.prezzo_pieno_coin + '</span><span class="price_spacer">/</span><span class="price_um">' + model.um + '</span>');
-                            shop_product_prices.html('');
-                            shop_product_prices.append(price_promo);
-                            shop_product_prices.append(price_nosale);
+                            lcshop-prices.html('');
+                            lcshop-prices.append(price_promo);
+                            lcshop-prices.append(price_nosale);
                         } else {
                             prod_card.removeClass('is_in_promo');
                             const price_full = $('<div class="price" />');
                             price_full.append('<span class="price_coin">' + model.prezzo_coin + '</span><span class="price_spacer">/</span><span class="price_um">' + model.um + '</span>');
-                            shop_product_prices.html('');
-                            shop_product_prices.append(price_full);
+                            lcshop-prices.html('');
+                            lcshop-prices.append(price_full);
                         }
 
                         if (model.giacenza > 0) {
