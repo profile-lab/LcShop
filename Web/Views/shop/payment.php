@@ -104,19 +104,15 @@
                                     */ ?>
                                 </div>
                                 <div class="shop-action-tools-rows">
-                                    <a class="shop-action-tools-action  shop-action-tools-action-prev" href="<?= route_to(__locale_uri__ . 'web_shop_make_order') ?>"><?= appLabel('Spedizione', $app->labels, true) ?></a>
-                                    <button type="submit" name="pay_send" value="next" class="shop-action-tools-action shop-action-tools-action-next"><?= appLabel('Vai al Pagamento', $app->labels, true) ?></button>
+                                    <a class="button   lcshop-button-prev" href="<?= route_to(__locale_uri__ . 'web_shop_make_order') ?>"><?= appLabel('Spedizione', $app->labels, true) ?></a>
+                                    <button type="submit" name="pay_send" value="next" class=" lcshop-button-next"><?= appLabel('Vai al Pagamento', $app->labels, true) ?></button>
                                 </div>
                             </form>
                         </div>
                     <?php } else { ?>
                         <div class="make-order-page-main">
-                            <div class="login-signup-form-cnt shop-login-form-cnt">
-                                <?= view(customOrDefaultViewFragment('users/components/login-form', 'LcUsers')) ?>
-                            </div>
-                            <div class="login-signup-form-cnt shop-login-altenative">
-                                <?= view(customOrDefaultViewFragment('users/components/signup-login-alternative', 'LcUsers')) ?>
-                            </div>
+                            <?= view(customOrDefaultViewFragment('users/components/login-form', 'LcUsers')) ?>
+                            <?= view(customOrDefaultViewFragment('users/components/signup-login-alternative', 'LcUsers')) ?>
                         </div>
                     <?php } ?>
                 </div>

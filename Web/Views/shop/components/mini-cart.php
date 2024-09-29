@@ -46,7 +46,7 @@
                     </div>
                     */ ?>
                     <div class="lcshop-minicart-row action-cnt">
-                        <a href="<?= route_to(__locale_uri__ . 'web_shop_cart') ?>" class="lcshop-cart-action"><?= appLabel('Vai al Carrello', $app->labels, true) ?></a>
+                        <a href="<?= route_to(__locale_uri__ . 'web_shop_cart') ?>" class="button lcshop-button"><?= appLabel('Vai al Carrello', $app->labels, true) ?></a>
                     </div>
                 <?php } else { ?>
                     <div class="lcshop-minicart-mess no_products"><?= appLabel('Non ci sono prodotti', $app->labels, true) ?></div>

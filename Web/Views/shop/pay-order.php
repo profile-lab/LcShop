@@ -27,12 +27,8 @@
                             </div>
                         <?php } else { ?>
                             <div class="make-order-page-main">
-                                <div class="login-signup-form-cnt shop-login-form-cnt">
-                                    <?= view(customOrDefaultViewFragment('users/components/login-form', 'LcUsers')) ?>
-                                </div>
-                                <div class="login-signup-form-cnt shop-login-altenative">
-                                    <?= view(customOrDefaultViewFragment('users/components/signup-login-alternative', 'LcUsers')) ?>
-                                </div>
+                                <?= view(customOrDefaultViewFragment('users/components/login-form', 'LcUsers')) ?>
+                                <?= view(customOrDefaultViewFragment('users/components/signup-login-alternative', 'LcUsers')) ?>
                             </div>
                         <?php } ?>
                     </div>
