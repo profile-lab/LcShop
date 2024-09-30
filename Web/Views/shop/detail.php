@@ -40,6 +40,20 @@
                                 </ul>
                             </div>
                         <?php } ?>
+                        <div class="lcshop-dati">
+                            <?php if (isset($misura_obj) && $misura_obj != null && isset($misura_obj->nome)) { ?>
+                                <div class="lcshop-dati-item lcshop-dati-item-misura">
+                                    <span class="lcshop-dati-item-label"><?= langLabel('Misura') ?>: </span>
+                                    <span class="lcshop-dati-item-val"><?= $misura_obj->nome ?></span>
+                                </div>
+                            <?php } ?>
+                            <?php if (isset($colore_obj) && $colore_obj != null && isset($colore_obj->nome)) { ?>
+                                <div class="lcshop-dati-item lcshop-dati-item-color">
+                                    <span class="lcshop-dati-item-label"><?= langLabel('Colore') ?>: </span>
+                                    <span class="lcshop-dati-item-val"><?= $colore_obj->nome ?></span>
+                                </div>
+                            <?php } ?>
+                        </div>
                         <?= txt($testo, 'description', 'div', null, null, false) ?>
                     </div>
                     <div class="lcshop-detail-tools">
