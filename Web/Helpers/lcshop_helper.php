@@ -109,3 +109,31 @@ if (!function_exists('get_regione_by_cap')) {
         return false;
     }
 }
+//--------------------------------------------------
+if (!function_exists('getShopEviProducts')) {
+
+
+    function getShopEviProducts($_ref_row, $limit = 4)
+    {
+        if ($_ref_row->component_params && trim($_ref_row->component_params) != '' && is_numeric(trim($_ref_row->component_params))) {
+            $count_params = intval(trim($_ref_row->component_params));
+            if ($count_params > 0) {
+                $limit = $count_params;
+            }
+        }
+        $shop_products_model = new \LcShop\Data\Models\ShopProductsModel();
+        $shop_products_model->setForFrontemd();
+        $qb_prodotti = $shop_products_model->asObject();
+        if (
+            $pages_archive = $qb_prodotti->orderBy('is_evi', 'ASC')
+            ->orderBy('id', 'RANDOM')
+            ->findAll($limit)
+        ) {
+            foreach ($pages_archive as $key => $single) {
+                $single->permalink = route_to(__locale_uri__ . 'web_shop_detail', $single->guid);
+            }
+            return $pages_archive;
+        }
+        return FALSE;
+    }
+}
