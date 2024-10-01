@@ -419,7 +419,7 @@ class ShopProductsModel extends MasterModel
 		// // MODELLI 
 		$modelli_qb = $this->asObject()->where('parent', $parent_prod->id);
 		if ($select == 'min') {
-			$modelli_qb->select(['id', 'nome', 'titolo', 'modello', 'giacenza', 'guid', 'price', 'in_promo', 'promo_price', 'ali']);
+			$modelli_qb->select(['id', 'nome', 'titolo', 'modello', 'giacenza', 'guid', 'price', 'in_promo', 'promo_price', 'ali', 'main_img_id']);
 		}
 		$product->has_modelli = FALSE;
 		// 

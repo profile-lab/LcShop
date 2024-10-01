@@ -28,13 +28,20 @@
                 <section class="lcshop-detail-main">
                     <div class="lcshop-detail-txts">
                         <?php if (isset($modelli) && is_array($modelli) && count($modelli) > 1) { ?>
-                            <div class="lcshop-varianti-tit"><?= appLabel('Varianti Prodotto', $app->labels, true)  ?></div>
+                            <div class="lcshop-varianti-tit"><?= appLabel('Seleziona il modello', $app->labels, true)  ?></div>
                             <div class="lcshop-varianti-cnt">
-                                <div class="lcshop-varianti-current"><?= $full_nome_prodotto ?></div>
+                                <div class="lcshop-varianti-current">
+                                    <div class="lcshop-varianti-img"><?= single_img($main_img_path, '') ?></div>
+                                    <div class="lcshop-varianti-name"><?= $modello ?></div>
+                                </div>
+
                                 <ul class="lcshop-varianti-list">
                                     <?php foreach ($modelli as $modello) { ?>
                                         <li class="<?= ($id == $modello->id) ? 'current' : '' ?>">
-                                            <a href="<?= $modello->permalink ?>"><?= $modello->full_nome_prodotto ?></a>
+                                            <a class="lcshop-varianti-list-item" href="<?= $modello->permalink ?>">
+                                                <div class="lcshop-varianti-list-item-img"><?= single_img($modello->main_img_path, '') ?></div>
+                                                <div class="lcshop-varianti-list-item-name"><?= $modello->modello ?></div>
+                                            </a>
                                         </li>
                                     <?php } ?>
                                 </ul>
