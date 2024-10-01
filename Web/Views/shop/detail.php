@@ -33,6 +33,13 @@
                                 <div class="lcshop-varianti-current">
                                     <div class="lcshop-varianti-img"><?= single_img($main_img_path, '') ?></div>
                                     <div class="lcshop-varianti-name"><?= $modello ?></div>
+                                    <div class="lcshop-varianti-open-sub">
+                                        <span class="ico-accordion">
+                                            <svg xmlns="http://www.w3.org/2000/svg" height="24" viewBox="0 -960 960 960" width="24">
+                                                <path d="m256-424-56-56 280-280 280 280-56 56-224-223-224 223Z" />
+                                            </svg>
+                                        </span>
+                                    </div>
                                 </div>
 
                                 <ul class="lcshop-varianti-list">
