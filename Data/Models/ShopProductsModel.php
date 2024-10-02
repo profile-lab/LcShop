@@ -7,12 +7,14 @@ use Lc5\Data\Models\MediaModel;
 use LcShop\Data\Models\ShopProductsCategoriesModel;
 use LcShop\Data\Models\ShopAliquoteModel;
 use LcShop\Data\Models\ShopSettingsModel;
+use LcShop\Web\Controllers\Shop;
 
 class ShopProductsModel extends MasterModel
 {
 
 	public $shop_settings = null;
 	public $misure_model = null;
+	public $categories_model = null;
 	public $variation_model = null;
 
 	protected $table                = 'shop_products';
@@ -219,19 +221,36 @@ class ShopProductsModel extends MasterModel
 				$item->tags = [];
 			}
 			// 
+			if (isset($item->category ) && $item->category && $item->category > 0) {
+				$item->category_obj = null;
+				if(!$this->categories_model){
+					$this->categories_model = new ShopProductsCategoriesModel();
+				}
+					$category_obj_qb = $this->categories_model->asObject()->where('id', $item->category);
+						$category_obj_qb->select(['id', 'nome', 'titolo', 'guid']);
+					if($category_obj_res = $category_obj_qb->first()){
+						$item->category_obj = $category_obj_res;
+					}
+				
+		
+				// $item->misura_obj = $this->misure_model->asObject()->where('val', $item->misura)->first(); 
+			}
+			// 
 			if (isset($item->misura ) && $item->misura && trim($item->misura)) {
 				if(!$this->misure_model){
 					$this->misure_model = new ShopProductsSizesModel();
 				}
 				$item->misura_obj = $this->misure_model->asObject()->where('val', $item->misura)->first(); 
 			}
+			// 
 			if (isset($item->colore) && $item->colore && trim($item->colore)) {
 				if(!$this->variation_model){
 					$this->variation_model = new ShopProductsVariationsModel();
 				}
 				$item->colore_obj = $this->variation_model->asObject()->where('val', $item->colore)->first(); 
-
 			}
+
+
 			// if (isset($item->misura ) && $item->misura && trim($item->misura) && isJson($item->misura)) {
 			// 	$item->misura = json_decode($item->misura);
 			// } else {
