@@ -3,7 +3,7 @@
 $req = \Config\Services::request();
 if (!$req->isCLI()) {
 	$uri = $req->getUri();
-	$supportedLocales = config(App::class)->{'supportedLocales'};
+    $supportedLocales = config("APP")->{'supportedLocales'};
 	$supportedLocalesWithoutDefault = array_diff($supportedLocales, array($req->getDefaultLocale()));
 	if (in_array($uri->getSegment(1), $supportedLocalesWithoutDefault)) {
 		// 

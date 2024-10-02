@@ -77,9 +77,10 @@
         font-size: 15px;
         font-weight: 400;
         width: 100%;
-        height: 40px;
+        /* height: 40px; */
         line-height: 38px;
         outline: none;
+        font-weight: 700;
     }
 
     .stripe_pay_mess {

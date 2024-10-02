@@ -82,7 +82,6 @@
                                             <input type="text" name="ship_infos" value="<?= getReq('ship_infos') ?: $order_data->ship_infos ?>" placeholder="<?= appLabel('Interno, scala, citofono', $app->labels, true) ?>..." />
                                         </div>
                                     </div>
-                                    <?php /*
                                     <div class="form-row">
                                         <div class="form-field">
                                             <label class="check-label">
@@ -91,12 +90,16 @@
                                             </label>
                                         </div>
                                     </div>
+                                    <?php /*
                                     
                                     */ ?>
                                 </div>
                                 <div class="shop-action-tools-rows">
                                     <a class="button lcshop-button  lcshop-button-prev" href="<?= route_to(__locale_uri__ . 'web_shop_cart') ?>"><?= appLabel('Torna al carrello', $app->labels, true) ?></a>
-                                    <button type="submit" name="ship_send" value="next" class="lcshop-button lcshop-button-next"><?= appLabel('Fatturazione', $app->labels, true) ?> </button>
+                                    <div class="shop-action-tools-group">
+                                        <button type="submit" name="ship_send" value="next" class="lcshop-button lcshop-button-alternative"><?= appLabel('Richiedi Fattura', $app->labels, true) ?> </button>
+                                        <button type="submit" name="ship_send" value="order" class="lcshop-button lcshop-button-next"><?= appLabel('Concludi ordine', $app->labels, true) ?> </button>
+                                    </div>
                                 </div>
                             </form>
                         </div>

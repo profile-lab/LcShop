@@ -225,8 +225,6 @@ class Shop extends \Lc5\Web\Controllers\MasterWeb
         $order_data = $this->getSessionOrderData();
         $all_user_data = $this->appuser->getAllUserData();
 
-
-
         if ($sess_order_data = session()->get('order_data')) {
             $order_data->ship_name = $this->request->getPost('ship_name') ? $this->request->getPost('ship_name') : (isset($sess_order_data->ship_name) ? $sess_order_data->ship_name : '');
             $order_data->ship_surname = $this->request->getPost('ship_surname') ? $this->request->getPost('ship_surname') : (isset($sess_order_data->ship_surname) ? $sess_order_data->ship_surname : '');
@@ -239,6 +237,18 @@ class Shop extends \Lc5\Web\Controllers\MasterWeb
             $order_data->ship_phone = $this->request->getPost('ship_phone') ? $this->request->getPost('ship_phone') : (isset($sess_order_data->ship_phone) ? $sess_order_data->ship_phone : '');
             $order_data->ship_email = $this->request->getPost('ship_email') ? $this->request->getPost('ship_email') : (isset($sess_order_data->ship_email) ? $sess_order_data->ship_email : '');
             $order_data->ship_infos = $this->request->getPost('ship_infos') ? $this->request->getPost('ship_infos') : (isset($sess_order_data->ship_infos) ? $sess_order_data->ship_infos : '');
+        // }else{
+        //     d('qq   ');
+        //     $order_data->ship_name = $all_user_data->name;
+        //     $order_data->ship_surname = $all_user_data->surname;
+        //     $order_data->ship_country = $all_user_data->country;
+        //     $order_data->ship_district = $all_user_data->district;
+        //     $order_data->ship_city = $all_user_data->city;
+        //     $order_data->ship_zip = $all_user_data->cap;
+        //     $order_data->ship_address = $all_user_data->address;
+        //     $order_data->ship_address_number = $all_user_data->street_number;
+        //     $order_data->ship_phone = $all_user_data->tel_num;
+        //     // $order_data->ship_email = $all_user_data->email;
         }
 
         if ($this->request->getPost()) {
@@ -255,7 +265,7 @@ class Shop extends \Lc5\Web\Controllers\MasterWeb
                     session()->setFlashdata('ui_mess_type', 'alert alert-danger');
                 }
             } else {
-                if ($this->request->getPost('ship_send') == 'next') {
+                if ($this->request->getPost('ship_send') == 'next' || $this->request->getPost('ship_send') == 'order') {
 
                     $validate_rules = [
                         'ship_name' => ['label' => 'Nome', 'rules' => 'required'],
@@ -265,7 +275,7 @@ class Shop extends \Lc5\Web\Controllers\MasterWeb
                         'ship_zip' => ['label' => 'Cap', 'rules' => 'required'],
                         'ship_address' => ['label' => 'Indirizzo', 'rules' => 'required'],
                         'ship_address_number' => ['label' => 'Civico', 'rules' => 'required'],
-                        'ship_phone' => ['label' => 'Telefono', 'rules' => 'required'],
+                        // 'ship_phone' => ['label' => 'Telefono', 'rules' => 'required'],
                         'ship_email' => ['label' => 'Email', 'rules' => 'required|valid_email'],
 
                     ];
@@ -285,8 +295,58 @@ class Shop extends \Lc5\Web\Controllers\MasterWeb
                         $order_data->ship_email = $this->request->getPost('ship_email');
                         $order_data->ship_infos = $this->request->getPost('ship_infos');
                         // 
-                        session()->set('order_data', $order_data);
-                        return redirect()->route('web_shop_payment');
+                        if($this->request->getPost('save_in_user')){
+                            $new_user_data = [
+                                'country' => $this->request->getPost('ship_country'),
+                                'district' => $this->request->getPost('ship_district'),
+                                'city' => $this->request->getPost('ship_city'),
+                                'cap' => $this->request->getPost('ship_zip'),
+                                'address' => $this->request->getPost('ship_address'),
+                                'street_number' => $this->request->getPost('ship_address_number'),
+                                'tel_num' => $this->request->getPost('ship_phone'),
+                            ];
+                            $this->appuser->updateUserData($new_user_data);
+                        }
+
+                        if ($this->request->getPost('ship_send') == 'order') {
+                            // COMPILO I DATI DI FATTURAZIONE BASE PER ORDINE
+
+                            $order_data->pay_name = $this->request->getPost('ship_name');
+                            $order_data->pay_surname = $this->request->getPost('ship_surname');
+                            $order_data->pay_country = $this->request->getPost('ship_country');
+                            $order_data->pay_district = $this->request->getPost('ship_district');
+                            $order_data->pay_city = $this->request->getPost('ship_city');
+                            $order_data->pay_zip = $this->request->getPost('ship_zip');
+                            $order_data->pay_phone = $this->request->getPost('ship_phone');
+                            $order_data->pay_email = $this->request->getPost('ship_email');
+                            // 
+                            session()->set('order_data', $order_data);
+
+                            $shop_order = new ShopOrder();
+                            $shop_order->fill((array)$order_data);
+                            $shop_order->user_id = $this->appuser->getUserId();
+                            $this->shop_orders_model->save($shop_order);
+
+                            // 
+                            $new_id = $this->shop_orders_model->getInsertID();
+                            // 
+                            if (is_array($order_data->products)) {
+                                foreach ($order_data->products as $product) {
+                                    $shop_order_item = new ShopOrdersItem();
+                                    $shop_order_item->fill((array)$product);
+                                    $shop_order_item->order_id = $new_id;
+                                    $shop_order_item->user_id = $this->appuser->getUserId();
+                                    $this->shop_orders_items_model->save($shop_order_item);
+                                }
+                            }
+                            $this->cart->svuotaCarrello();
+                            // VAI AL PAGAMENTO
+                            return redirect()->route('web_shop_pay_now', [$new_id]);
+                        } else {
+                            // VAI AI DATI DI FATURAZIONE
+                            session()->set('order_data', $order_data);
+                            return redirect()->route('web_shop_payment');
+                        }
                     } else {
                         session()->setFlashdata('ui_mess', $this->validator->getErrors());
                         session()->setFlashdata('ui_mess_type', 'alert alert-danger');
