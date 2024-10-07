@@ -413,8 +413,10 @@ class ShopProductsModel extends MasterModel
 		if (isset($product->gallery_obj) && is_array($product->gallery_obj) && count($product->gallery_obj) > 1) {
 			// 
 		} else {
-			$product->gallery = $parent_prod->gallery;
-			$product->gallery_obj = $parent_prod->gallery_obj;
+			if (isset($parent_prod->gallery_obj) && is_array($parent_prod->gallery_obj) && count($parent_prod->gallery_obj) > 1) {
+				$product->gallery = $parent_prod->gallery;
+				$product->gallery_obj = $parent_prod->gallery_obj;
+			}
 		}
 		// 
 		// 
