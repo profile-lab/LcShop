@@ -3,7 +3,7 @@
 		<form method="post" name="add_to_cart_form">
 
 			<?= (isset($single_items->permalink) && $single_items->permalink != null) ? '<a href="' . $single_items->permalink . '" title="' . $single_items->titolo . '" class="shop_product_link" >' : '' ?>
-			<?= single_img($single_items->main_img_path, 'thumbs', 'shop_product_thumb', 'Immagine ' . $single_items->titolo) ?>
+			<?= single_img($single_items->main_img_path, 'thumb-prodotto', 'shop_product_thumb', 'Immagine ' . $single_items->titolo) ?>
 
 			<div class="lcshop-card-dettagli">
 				<div class="lcshop-card-dettagli-txts">
