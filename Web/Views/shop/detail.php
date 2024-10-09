@@ -20,9 +20,9 @@
             <div class="lcshop-content lcshop-detail <?= ($in_promo) ? ' is_in_promo' : '' ?>">
                 <div class="lcshop-detail-medias">
                     <?php if (isset($gallery_obj) && count($gallery_obj) > 0) { ?>
-                        <?= view(customOrDefaultViewFragment('components/slider'), ['gallery_obj' => $gallery_obj, 'format_folder' => '']) ?>
+                        <?= view(customOrDefaultViewFragment('components/slider'), ['gallery_obj' => $gallery_obj, 'format_folder' => 'square']) ?>
                     <?php } else { ?>
-                        <?= single_img($main_img_path, '') ?>
+                        <?= single_img($main_img_path, 'square') ?>
                     <?php } ?>
                 </div>
                 <section class="lcshop-detail-main">
