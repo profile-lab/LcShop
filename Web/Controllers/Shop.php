@@ -152,7 +152,11 @@ class Shop extends \Lc5\Web\Controllers\MasterWeb
         }
         // 
         $productsArchive = $this->shop_action->getShopProductsArchive($products_archive_qb_category);
-        $curr_entity->products_archive  = $productsArchive->products_archive;
+        if($productsArchive){
+            $curr_entity->products_archive  = $productsArchive->products_archive;
+        }else{
+            $curr_entity->products_archive  = [];
+        }
         $curr_entity->pager  = $productsArchive->pager;
 
         // 
