@@ -42,7 +42,7 @@ class ShopProducts extends MasterLc
 	public function index()
 	{
 		// 
-		$list = $this->shop_products_model->where('parent', 0)->findAll();
+		$list = $this->shop_products_model->where('parent', 0)->orderBy('id', 'DESC')->findAll();
 		$this->lc_ui_date->list = $list;
 		// 
 		return view('LcShop\Cms\Views/products/index', $this->lc_ui_date->toArray());
@@ -78,6 +78,8 @@ class ShopProducts extends MasterLc
 		$shop_products_variations_model = new ShopProductsVariationsModel();
 		$curr_entity->variations_list = $this->getListLikeTags($shop_products_variations_model);
 		$curr_entity->um_list = $this->getListUM();
+		$curr_entity->public = 1;
+		$curr_entity->status = 1;
 		// 
 		if ($this->req->getPost()) {
 			// 
@@ -95,8 +97,8 @@ class ShopProducts extends MasterLc
 			$curr_entity->fill($this->req->getPost());
 			if ($curr_entity->is_modello != TRUE) {
 				$curr_entity->nome = $curr_entity->titolo;
-				$curr_entity->status = 0;
-				$curr_entity->public = 0;
+				// $curr_entity->status = 0;
+				// $curr_entity->public = 0;
 			}
 
 			$curr_entity->tags = ($this->req->getPost('tags')) ? json_encode($this->req->getPost('tags')) : NULL;
@@ -110,7 +112,6 @@ class ShopProducts extends MasterLc
 
 
 			if ($this->validate($validate_rules)) {
-				$curr_entity->status = 1;
 
 				// dd($curr_entity);
 				$this->shop_products_model->save($curr_entity);
@@ -179,9 +180,22 @@ class ShopProducts extends MasterLc
 			}
 			$is_falied = TRUE;
 			$curr_entity->fill($this->req->getPost());
+			if ($curr_entity->created_at == $curr_entity->updated_at) {
+				$curr_entity->public = 1;
+			}
 			// dd($curr_entity);
 			if ($this->validate($validate_rules)) {
-				$curr_entity->status = 1;
+				// $curr_entity->status = 1;
+				if ($curr_entity->created_at == $curr_entity->updated_at) {
+					$curr_entity->status = 1;
+				}
+				// $curr_entity->public = $this->req->getPost('public') ? 1 : 0 ;
+				if ($this->req->getPost('public')) {
+					$curr_entity->status = 1;
+					$curr_entity->public = 1;
+				} else {
+					$curr_entity->public = 0;
+				}
 				$curr_entity->tags = ($this->req->getPost('tags')) ? json_encode($this->req->getPost('tags')) : NULL;
 
 				// 
@@ -289,7 +303,7 @@ class ShopProducts extends MasterLc
 	{
 		$curr_entity->status = $curr_entity->parent_entity->status;
 		$curr_entity->ordine = $curr_entity->parent_entity->ordine;
-		$curr_entity->public = $curr_entity->parent_entity->public;
+		// $curr_entity->public = $curr_entity->parent_entity->public;
 		$curr_entity->product_type = $curr_entity->parent_entity->product_type;
 		$curr_entity->category = $curr_entity->parent_entity->category;
 		$curr_entity->multi_categories = $curr_entity->parent_entity->multi_categories;
@@ -318,7 +332,7 @@ class ShopProducts extends MasterLc
 				$new_data['guid'] = $curr_entity->guid . '-' . url_title($current_child->modello, '-', TRUE);
 				$new_data['status'] = $curr_entity->status;
 				$new_data['ordine'] = $curr_entity->ordine;
-				$new_data['public'] = $curr_entity->public;
+				// $new_data['public'] = $curr_entity->public;
 				$new_data['product_type'] = $curr_entity->product_type;
 				$new_data['category'] = $curr_entity->category;
 				$new_data['multi_categories'] = $curr_entity->multi_categories;

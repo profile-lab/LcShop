@@ -91,6 +91,10 @@ class ShopProductsModel extends MasterModel
 	protected function beforeFind(array $data)
 	{
 		$this->checkAppAndLang();
+		if($this->is_for_frontend == true){
+			$this->where('status !=', 0);
+			$this->where('public', 1);
+		}
 	}
 	protected function afterFind(array $data)
 	{
@@ -543,8 +547,12 @@ class ShopProductsModel extends MasterModel
 
 		// // MODELLI 
 		$modelli_qb = $this->asObject()->where('parent', $product->id);
+		if($this->is_for_frontend == true){
+			$modelli_qb->where('status !=', 0);
+			$modelli_qb->where('public', 1);
+		}
 		if ($select == 'min') {
-			$modelli_qb->select(['id', 'nome', 'titolo', 'modello', 'giacenza', 'guid', 'price', 'in_promo', 'promo_price', 'ali', 'main_img_id']);
+			$modelli_qb->select(['id', 'nome', 'titolo', 'modello','status', 'public', 'giacenza', 'guid', 'price', 'in_promo', 'promo_price', 'ali', 'main_img_id']);
 		}
 		$product->has_modelli = FALSE;
 		// 
@@ -586,7 +594,6 @@ class ShopProductsModel extends MasterModel
 		$models_list[] = $modello_base;
 		// 
 		if ($modelli = $modelli_qb->findAll()) {
-
 			foreach ($modelli as $modello) {
 				if ($modello->price < 0.01) {
 					$modello->price = $modello_base->price;
