@@ -154,10 +154,10 @@ class Shop extends \Lc5\Web\Controllers\MasterWeb
         $productsArchive = $this->shop_action->getShopProductsArchive($products_archive_qb_category);
         if($productsArchive){
             $curr_entity->products_archive  = $productsArchive->products_archive;
+            $curr_entity->pager  = $productsArchive->pager;
         }else{
             $curr_entity->products_archive  = [];
         }
-        $curr_entity->pager  = $productsArchive->pager;
 
         // 
         $this->web_ui_date->fill((array)$curr_entity);
