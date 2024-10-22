@@ -32,7 +32,7 @@
             <?php } ?>
         </div>
     </div>
-    <?php if( $pager && $pager->getPageCount() > 1) { ?>
+    <?php if( isset($pager) && $pager!=null  && $pager->getPageCount() > 1) { ?>
         <div class="myIn lcshop-pager">
             <?= $pager->links() ?>
         </div>
