@@ -27,6 +27,12 @@ class ShopAction extends \App\Controllers\BaseController
             $products_archive_qb->where('category', $category_id);
         }
 
+		$req = \Config\Services::request();
+
+        if($req->getGet('s')){
+            $products_archive_qb->like('nome', $req->getGet('s'));
+        }
+
         if ($products_archive = $products_archive_qb->paginate(($select_limit))) { //findAll()) {
             foreach ($products_archive as $product) {
                 $product->abstract = word_limiter(strip_tags($product->testo), 20);
