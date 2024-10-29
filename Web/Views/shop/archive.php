@@ -13,6 +13,9 @@
             <div class="myIn">
                 <hgroup>
                     <?= h1($titolo, 'lcshop-archive-title') ?>
+                    <?php if ($request->getGet('s') != '') { ?>
+                        <h4>Stai cercando "<?= $request->getGet('s') ?>"</h4>
+                    <?php } ?>
                     <?php if (isset($testo)) { ?>
                         <?= txt($testo, 'lcshop-archive-text') ?>
                     <?php } ?>
@@ -24,19 +27,27 @@
 <section class="lcshop-listing-cnt">
     <div class="myIn lcshop-flex">
         <?= view(customOrDefaultViewFragment('shop/components/sidebar', 'LcShop')) ?>
-        <div class="lcshop-content lcshop-listing">
-            <?php if (isset($products_archive) && is_iterable($products_archive) && count($products_archive) > 0) { ?>
+        <?php if (isset($products_archive) && is_iterable($products_archive) && count($products_archive) > 0) { ?>
+            <div class="lcshop-content lcshop-listing">
                 <?php foreach ($products_archive as $single) { ?>
                     <?= view(customOrDefaultViewFragment('shop/components/product-listing-card',  'LcShop'), ['single_items' => $single]) ?>
                 <?php } ?>
-            <?php } ?>
-        </div>
+            </div>
+        <?php } else { ?>
+            <div class="lcshop-no-products">
+                <?php if ($request->getGet('s') != '') { ?>
+                    <h5>Nessun prodotto trovato per la ricerca "<?= $request->getGet('s') ?>"</h5>
+                <?php } else { ?>
+                    <h5>Nessun prodotto trovato</h5>
+                <?php } ?>
+            </div>
+        <?php } ?>
     </div>
-    <?php if( isset($pager) && $pager!=null  && $pager->getPageCount() > 1) { ?>
+    <?php if (isset($pager) && $pager != null  && $pager->getPageCount() > 1) { ?>
         <div class="myIn lcshop-pager">
             <?= $pager->links() ?>
         </div>
-    
+
     <?php } ?>
 </section>
 <?= $this->endSection() ?>

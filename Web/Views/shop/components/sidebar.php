@@ -1,4 +1,5 @@
 <aside class="lcshop-sidebar">
+    <?= view(customOrDefaultViewFragment('shop/components/searchbar', 'LcShop')) ?>
     <?= view(customOrDefaultViewFragment('shop/components/mini-cart', 'LcShop')) ?>
     <?php if (isset($categories) && is_array($categories) && count($categories) > 0) { ?>
         <div class="lcshop-category-list-cnt">
