@@ -26,6 +26,7 @@ if (!$req->isCLI()) {
 // $routes->match(['get', 'post'], '/payment-stripe-webhook', '\App\Controllers\App\Webhooks::paymentStripeWebhook', ['as' => 'payment_stripe_webhook']);
 $routes->match(['get', 'post'], '/payment-stripe-webhook', '\LcShop\Web\Controllers\Payment::orderPaymentStripeWebhook', ['as' => 'order_payment_stripe_webhook']);
 
+$routes->match(['get', 'post'], 'shop/google-merchants-feed', '\LcShop\Web\Controllers\Shop::googleMerchantsFeed', ['as' => 'web_shop_google_merchants_feed']);
 // 
 $routes->match(['get', 'post'], 'shop/empty-cart', '\LcShop\Web\Controllers\Shop::emptyCart', ['as' => 'web_shop_cart_empty']);
 $routes->match(['get', 'post'], 'shop/remove-cart-row/(:any)', '\LcShop\Web\Controllers\Shop::cartRemoveRow/$1', ['as' => 'web_shop_cart_remove_row']);

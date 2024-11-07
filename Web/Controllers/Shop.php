@@ -110,6 +110,74 @@ class Shop extends \Lc5\Web\Controllers\MasterWeb
 
 
     //--------------------------------------------------------------------
+    public function googleMerchantsFeed()
+    {
+
+       
+        $this->response
+            ->setHeader('Content-Type', 'application/rss+xml')
+            ->setHeader('Encode', 'UTF-8')
+            ->setHeader('Content-Disposition', 'attachment; filename="google-merchants-feed.xml"')
+            ->setHeader('Content-Transfer-Encoding', 'binary');
+
+        $siteUrl = site_url();
+
+
+        // 
+        $productsArchive = $this->shop_action->getShopProductsArchive(null, 1000);
+        if ($productsArchive) {
+            $prodotti  = $productsArchive->products_archive;
+       
+            // echo '<pre>';
+            // print_r($prodotti);
+            // echo '</pre>';
+            // die();
+    
+            echo '<?xml version="1.0"?>
+<rss xmlns:g="http://base.google.com/ns/1.0" version="2.0">
+<channel>
+<title>' . $siteUrl . ' Google Merchants Feed</title>
+<link>' . $siteUrl . '</link>
+<description>Google Merchants Feed</description>';
+    
+            foreach ($prodotti as $prodotto) {
+                echo '
+    <item>
+        <g:id>SHOP_' . $prodotto->id . '</g:id>
+        <g:title>' . $prodotto->nome . '</g:title>
+        <g:description><![CDATA['.strip_tags($prodotto->testo).']]></g:description>
+        <g:link>' . $siteUrl . '' . $prodotto->permalink . '</g:link> <g:image_link>' . $siteUrl . '' . $prodotto->main_img_thumb . '</g:image_link> 
+        <g:condition>new</g:condition>
+        <g:availability>in_stock</g:availability>
+        <g:price>'.$prodotto->prezzo.' EUR</g:price>
+    </item>
+    ';
+            }
+            echo '
+    </channel>
+    </rss>';
+        }
+
+        // if($productsArchive){
+        //     $curr_entity->products_archive  = $productsArchive->products_archive;
+        //     $curr_entity->pager  = $productsArchive->pager;
+        // }else{
+        //     $curr_entity->products_archive  = [];
+        // }
+
+        // // 
+        // $this->web_ui_date->fill((array)$curr_entity);
+        // $this->web_ui_date->entity_rows = $pages_entity_rows;
+        // // 
+        // $this->web_ui_date->shop_page_type  = $shop_page_type;
+        // $this->web_ui_date->shop_category_guid = $shop_category_guid;
+        // // 
+        // return view(customOrDefaultViewFragment('shop/archive', 'LcShop'), $this->web_ui_date->toArray());
+        //
+
+    }
+
+    //--------------------------------------------------------------------
     public function index($category_guid = null)
     {
 
@@ -152,10 +220,10 @@ class Shop extends \Lc5\Web\Controllers\MasterWeb
         }
         // 
         $productsArchive = $this->shop_action->getShopProductsArchive($products_archive_qb_category);
-        if($productsArchive){
+        if ($productsArchive) {
             $curr_entity->products_archive  = $productsArchive->products_archive;
             $curr_entity->pager  = $productsArchive->pager;
-        }else{
+        } else {
             $curr_entity->products_archive  = [];
         }
 
@@ -241,18 +309,18 @@ class Shop extends \Lc5\Web\Controllers\MasterWeb
             $order_data->ship_phone = $this->request->getPost('ship_phone') ? $this->request->getPost('ship_phone') : (isset($sess_order_data->ship_phone) ? $sess_order_data->ship_phone : '');
             $order_data->ship_email = $this->request->getPost('ship_email') ? $this->request->getPost('ship_email') : (isset($sess_order_data->ship_email) ? $sess_order_data->ship_email : '');
             $order_data->ship_infos = $this->request->getPost('ship_infos') ? $this->request->getPost('ship_infos') : (isset($sess_order_data->ship_infos) ? $sess_order_data->ship_infos : '');
-        // }else{
-        //     d('qq   ');
-        //     $order_data->ship_name = $all_user_data->name;
-        //     $order_data->ship_surname = $all_user_data->surname;
-        //     $order_data->ship_country = $all_user_data->country;
-        //     $order_data->ship_district = $all_user_data->district;
-        //     $order_data->ship_city = $all_user_data->city;
-        //     $order_data->ship_zip = $all_user_data->cap;
-        //     $order_data->ship_address = $all_user_data->address;
-        //     $order_data->ship_address_number = $all_user_data->street_number;
-        //     $order_data->ship_phone = $all_user_data->tel_num;
-        //     // $order_data->ship_email = $all_user_data->email;
+            // }else{
+            //     d('qq   ');
+            //     $order_data->ship_name = $all_user_data->name;
+            //     $order_data->ship_surname = $all_user_data->surname;
+            //     $order_data->ship_country = $all_user_data->country;
+            //     $order_data->ship_district = $all_user_data->district;
+            //     $order_data->ship_city = $all_user_data->city;
+            //     $order_data->ship_zip = $all_user_data->cap;
+            //     $order_data->ship_address = $all_user_data->address;
+            //     $order_data->ship_address_number = $all_user_data->street_number;
+            //     $order_data->ship_phone = $all_user_data->tel_num;
+            //     // $order_data->ship_email = $all_user_data->email;
         }
 
         if ($this->request->getPost()) {
@@ -299,7 +367,7 @@ class Shop extends \Lc5\Web\Controllers\MasterWeb
                         $order_data->ship_email = $this->request->getPost('ship_email');
                         $order_data->ship_infos = $this->request->getPost('ship_infos');
                         // 
-                        if($this->request->getPost('save_in_user')){
+                        if ($this->request->getPost('save_in_user')) {
                             $new_user_data = [
                                 'country' => $this->request->getPost('ship_country'),
                                 'district' => $this->request->getPost('ship_district'),
