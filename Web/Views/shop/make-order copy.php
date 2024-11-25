@@ -6,23 +6,19 @@
         <div class="myIn">
             <hgroup>
                 <?= h1($titolo) ?>
-
+                <h4><?= appLabel('Spedizione', $app->labels, true) ?></h4>
+                <h5><?= appLabel('Inserisci i dati di spedizione del tuo ordine', $app->labels, true) ?></h5>
             </hgroup>
         </div>
     </section>
 </article>
 
 <section class="lcshop-carrello">
-    <?php if ($app_user_data) { ?>
-        <div class="myIn lcshop-flex">
-            <div class="make-order-page">
-                <?php if (isset($site_cart) && isset($site_cart->products) && is_iterable($site_cart->products) && count($site_cart->products) > 0) { ?>
-                    <div class="make-order-page-content">
-
-                        <hgroup>
-                            <h4><?= appLabel('Spedizione', $app->labels, true) ?></h4>
-                            <h5><?= appLabel('Inserisci i dati di spedizione del tuo ordine', $app->labels, true) ?></h5>
-                        </hgroup>
+    <div class="myIn lcshop-flex">
+        <div class="make-order-page">
+            <?php if (isset($site_cart) && isset($site_cart->products) && is_iterable($site_cart->products) && count($site_cart->products) > 0) { ?>
+                <div class="make-order-page-content">
+                    <?php if ($app_user_data) { ?>
                         <?= getServerMessage() ?>
                         <div class="make-order-page-main">
                             <form method="POST" class="form_spedizione_cnt">
@@ -107,22 +103,27 @@
                                 </div>
                             </form>
                         </div>
-
-                    </div>
-                <?php } else { ?>
-                    <?= view(customOrDefaultViewFragment('shop/components/no-products-message', 'LcShop')) ?>
-                <?php } ?>
-            </div>
-            <aside class="sidebar lcshop-riepilogo-sidebar">
-                <h6>Riepilogo Carrello</h6>
-                <?= view(customOrDefaultViewFragment('shop/components/cart-totals', 'LcShop')) ?>
-            </aside>
+                    <?php } else { ?>
+                        <div class="make-order-page-main">
+                            <?= view(customOrDefaultViewFragment('users/components/login-form', 'LcUsers')) ?>
+                            <?= view(customOrDefaultViewFragment('users/components/signup-login-alternative', 'LcUsers')) ?>
+                        </div>
+                    <?php } ?>
+                </div>
+            <?php } else { ?>
+                <?= view(customOrDefaultViewFragment('shop/components/no-products-message', 'LcShop')) ?>
+            <?php } ?>
         </div>
-    <?php } else { ?>
-        <div class="myIn lcshop-flex">
-            <?= view(customOrDefaultViewFragment('shop/components/user-required', 'LcShop')) ?>
-        </div>
-    <?php } ?>
+        <aside class="sidebar lcshop-riepilogo-sidebar">
+            <h6>Riepilogo Carrello</h6>
+            <?= view(customOrDefaultViewFragment('shop/components/cart-totals', 'LcShop')) ?>
+        </aside>
+        <?php /*
+        <aside class="sidebar shop_sidebar">
+            <?= view(customOrDefaultViewFragment('shop/components/order-summary', 'LcShop')) ?>
+        </aside>
+        */ ?>
+    </div>
 </section>
 <?= $this->endSection() ?>
 <?= $this->section('footer_script') ?>

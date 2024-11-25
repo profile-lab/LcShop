@@ -28,7 +28,7 @@ if (isset($current_orders_list) && is_array($current_orders_list) && count($curr
                     <div>€ <?= $order->pay_total_formatted ?></div>
                     <div class="lcuser_orders_list_row_actions">
                         <?php if ($order->payment_status != 'COMPLETED') { ?>
-                            <a href="<?= route_to('web_shop_pay_now', $order->id) ?>" class="button button-min">Paga</a>
+                            <a href="<?= route_to('web_shop_pay_on_stripe_app', $order->id) ?>" class="button button-min">Paga</a>
                         <?php } ?>
                         <a href="<?= route_to('web_user_order_dett', $order->id) ?>" class="button button-min">Dettagli</a>
                     </div>

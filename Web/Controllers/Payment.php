@@ -23,6 +23,7 @@ use Config\Services;
 use CodeIgniter\Email\Email;
 
 use stdClass;
+use Stripe\LineItem;
 
 class Payment extends \Lc5\Web\Controllers\MasterWeb
 {
@@ -52,6 +53,40 @@ class Payment extends \Lc5\Web\Controllers\MasterWeb
 		// 
 		$this->web_ui_date->__set('request', $this->req);
 		// 
+	}
+	//--------------------------------------------------------------------
+	public function payOrderCanceled($order_id)
+	{
+		$riepilogo_order_data =  $this->shop_orders_model->where('id', $order_id)->where('user_id', $this->appuser->getUserId())->first();
+		if (!$riepilogo_order_data) {
+			throw new \CodeIgniter\Exceptions\PageNotFoundException('Ordine non trovato');
+		}
+		$orders_items = $this->shop_orders_items_model->where('order_id', $riepilogo_order_data->id)->findAll();
+		//
+		$pages_entity_rows = null;
+		$products_archive_qb = $this->shop_products_model->asObject();
+		$products_archive_qb->where('parent', 0);
+		// $products_archive_qb->where('(parent IS NULL OR parent <  1 )');
+
+		$pages_model = new PagesModel();
+		$pages_model->setForFrontemd();
+		if ($curr_entity = $pages_model->asObject()->orderBy('id', 'DESC')->where('guid', 'pay-order-completed')->first()) {
+			$pages_entity_rows = $this->getEntityRows($curr_entity->id, 'pages');
+		} else {
+			$curr_entity = new stdClass();
+			$curr_entity->titolo = 'Pagamento annullato';
+			$curr_entity->guid = 'pay-order-canceled';
+			$curr_entity->testo = '';
+			$curr_entity->seo_title = 'Pagamento annullato';
+			$curr_entity->seo_description = 'Pagamento annullato';
+		}
+		$curr_entity->riepilogo_order_data = $riepilogo_order_data;
+		$curr_entity->orders_items = $orders_items;
+		$this->web_ui_date->fill((array)$curr_entity);
+		$this->web_ui_date->entity_rows = $pages_entity_rows;
+
+
+		return view(customOrDefaultViewFragment('shop/pay-order-canceled', 'LcShop'), $this->web_ui_date->toArray());
 	}
 	//--------------------------------------------------------------------
 	public function payOrderCompleted($order_id)
@@ -86,7 +121,137 @@ class Payment extends \Lc5\Web\Controllers\MasterWeb
 
 
 		return view(customOrDefaultViewFragment('shop/pay-order-completed', 'LcShop'), $this->web_ui_date->toArray());
+	}
+	//--------------------------------------------------------------------
+	private function crateStripeWebhook($stripeClient)
+	{
+		$currentSiteUrl = site_url();
+		if (strpos($currentSiteUrl, 'https://') !== false) {
+			$webhook = $stripeClient->webhookEndpoints->create([
+				'url' => site_url(route_to('order_payment_stripe_webhook')),
+				'description' => 'Webhook per i pagamenti degli ordini',
+				'enabled_events' => [
+					'payment_intent.succeeded',
+					'payment_intent.payment_failed',
+					'payment_intent.canceled',
+					'checkout.session.completed',
+				],
+			]);
+		}
+		// else{
+		// 	dd('Non è possibile creare un webhook su un sito non in https');
+		// }
+	}
+	//--------------------------------------------------------------------
+	private function checkStripeWebhookExistOrCreate()
+	{
+		$stripe = new \Stripe\StripeClient(env('custom.stripe_secret_key'));
+		$webhooks = $stripe->webhookEndpoints->all();
+		if (isset($webhooks['data'])) {
+			$webhooksData = $webhooks['data'];
+			if (count($webhooksData) > 0) {
+				return true;
+			}
+		}
+		$this->crateStripeWebhook($stripe);
+		// echo '<pre>';
+		// print_r($webhooks);
+		// echo '</pre>';
+		// die();
+		// dd($webhooks);
+	}
+	//--------------------------------------------------------------------
+	public function payOrderOnStripeApp($order_id)
+	{
+		$this->checkStripeWebhookExistOrCreate();
+		// $order_data = $this->getOrderData();
+		// $all_user_data = $this->appuser->getAllUserData();
+		$riepilogo_order_data =  $this->shop_orders_model->where('id', $order_id)->where('user_id', $this->appuser->getUserId())->first();
+		if (!$riepilogo_order_data) {
+			throw new \CodeIgniter\Exceptions\PageNotFoundException('Ordine non trovato');
+		}
+		$orders_items = $this->shop_orders_items_model->where('order_id', $riepilogo_order_data->id)->findAll();
 
+		//
+		$pages_entity_rows = null;
+		$products_archive_qb = $this->shop_products_model->asObject();
+		$products_archive_qb->where('parent', 0);
+		// $products_archive_qb->where('(parent IS NULL OR parent <  1 )');
+
+
+		$checkout_line_items = [];
+		foreach ($orders_items as $orders_item) {
+			$checkout_line_items[] = [
+				'price_data' => [
+					'currency' => 'eur',
+					'product_data' => [
+						'name' => $orders_item->full_nome_prodotto,
+					],
+					'unit_amount' => $orders_item->prezzo * 100,
+				],
+				'quantity' => intval($orders_item->qnt),
+			];
+		}
+
+		// dd($checkout_line_items);
+
+		\Stripe\Stripe::setApiKey(env('custom.stripe_secret_key'));
+		$checkout_session = \Stripe\Checkout\Session::create(
+			[
+				'mode' => 'payment',
+				'payment_method_types' => ['card'],
+				'line_items' => $checkout_line_items,
+				'success_url' => site_url(route_to('web_shop_pay_completed', $riepilogo_order_data->id)),
+				'cancel_url' => site_url(route_to('web_shop_pay_canceled', $riepilogo_order_data->id)),
+			]
+		);
+
+		$order_stripe_session_data = [
+			'stripe_pi' => $checkout_session->id,
+		];
+		$this->shop_orders_model->update($riepilogo_order_data->id, $order_stripe_session_data);
+
+
+		header("Location: " . $checkout_session->url);
+		exit;
+
+		// echo '<pre>';
+		// print_r($checkout_session);
+		// echo '</pre>';
+		// die();
+
+		// dd($checkout_session);
+
+
+		// $checkout_session = \Stripe\PaymentIntent::create([
+		// 	'amount' => $riepilogo_order_data->pay_total * 100,
+		// 	'currency' => 'eur',
+		// 	// Verify your integration in this guide by including this parameter
+		// 	'metadata' => [
+		// 		'order_id' => $riepilogo_order_data->id,
+		// 		'order_type' => 'ORDER',
+		// 	],
+		// 	// 'payment_method_types' => ['card', 'klarna'],
+
+		// 	'payment_method_types' => [
+		// 		'card',
+		// 		// 'klarna'
+		// 	],
+		// ]);
+
+
+		// $pages_model = new PagesModel();
+		// $pages_model->setForFrontemd();
+		// if ($curr_entity = $pages_model->asObject()->orderBy('id', 'DESC')->where('guid', 'pay-order-now')->first()) {
+		// 	$pages_entity_rows = $this->getEntityRows($curr_entity->id, 'pages');
+		// } else {
+		// 	$curr_entity = new stdClass();
+		// 	$curr_entity->titolo = 'Completa l\'acquisto';
+		// 	$curr_entity->guid = 'pay-order-now';
+		// 	$curr_entity->testo = '';
+		// 	$curr_entity->seo_title = 'Concludi il tuo ordine';
+		// 	$curr_entity->seo_description = 'Concludi il tuo ordine';
+		// }
 	}
 	//--------------------------------------------------------------------
 	public function payOrderNow($order_id)
@@ -196,26 +361,33 @@ class Payment extends \Lc5\Web\Controllers\MasterWeb
 		$paymentIntent = $event->data->object; // contains a \Stripe\PaymentIntent
 		$pi_ID = $paymentIntent->id;
 		$pi_metadata = $paymentIntent->metadata;
-		$order_id = $pi_metadata->order_id;
-		$order_type = $pi_metadata->order_type;
-		// Handle the event
-		switch ($event->type) {
-				// case 'payment_intent.created':
-				//   break;
-			case 'payment_intent.succeeded':
-				$this->updateObjectOnDB_succeeded($order_type, $order_id, $pi_ID);
-				break;
-			case 'payment_intent.payment_failed':
-				$this->updateObjectOnDB_failed($order_type, $order_id, $pi_ID);
-				break;
-			case 'payment_intent.canceled':
-				$this->updateObjectOnDB_canceled($order_type, $order_id, $pi_ID);
-				break;
-				// case 'payment_method.attached':
-				//   break;
-			default:
-				http_response_code(400);
-				exit();
+		if (isset($pi_metadata->order_id) && isset($pi_metadata->order_type)) {
+			$order_id = $pi_metadata->order_id;
+			$order_type = $pi_metadata->order_type;
+
+			// Handle the event
+			switch ($event->type) {
+					// case 'payment_intent.created':
+					//   break;
+				case 'payment_intent.succeeded':
+					$this->updateObjectOnDB_succeeded($order_type, $order_id, $pi_ID);
+					break;
+				case 'payment_intent.payment_failed':
+					$this->updateObjectOnDB_failed($order_type, $order_id, $pi_ID);
+					break;
+				case 'payment_intent.canceled':
+					$this->updateObjectOnDB_canceled($order_type, $order_id, $pi_ID);
+					break;
+					// case 'payment_method.attached':
+					//   break;
+				default:
+					http_response_code(400);
+					exit();
+			}
+		} else {
+			if ($event->type == 'checkout.session.completed') {
+				$this->updateObjectOnDB_succeeded('CART', null, $pi_ID);
+			}
 		}
 
 		http_response_code(200);
@@ -225,16 +397,21 @@ class Payment extends \Lc5\Web\Controllers\MasterWeb
 	private function updateObjectOnDB_succeeded($order_type, $order_id, $stripe_pi)
 	{
 
+		if ($order_id == null && trim($stripe_pi)) {
+			$riepilogo_order_data =  $this->shop_orders_model->where('stripe_pi', $stripe_pi)->first();
+			if (!$riepilogo_order_data) {
+				throw new \CodeIgniter\Exceptions\PageNotFoundException('Ordine non trovato');
+			}
+		} else {
+			$riepilogo_order_data =  $this->shop_orders_model->where('id', $order_id)->where('stripe_pi', $stripe_pi)->first();
+			if (!$riepilogo_order_data) {
+				throw new \CodeIgniter\Exceptions\PageNotFoundException('Ordine non trovato');
+			}
+		}
 
 		switch ($order_type) {
 			case 'ORDER':
-
-				$riepilogo_order_data =  $this->shop_orders_model->where('id', $order_id)->where('stripe_pi', $stripe_pi)->first();
-				if (!$riepilogo_order_data) {
-					throw new \CodeIgniter\Exceptions\PageNotFoundException('Ordine non trovato');
-				}
-
-
+			case 'CART':
 				$data = [
 					'payment_type' => 'STRIPE',
 					'order_status' => 'ORDER',
@@ -269,15 +446,10 @@ class Payment extends \Lc5\Web\Controllers\MasterWeb
 								'qnt_scaricate' => 1
 							];
 							$this->shop_orders_items_model->update($orders_item->id, $dataUpdateOrderItem);
-
 						}
 					}
 				}
 				$ripilogo_products .= '</table>';
-
-
-
-
 				// //
 				$users_model = new \LcUsers\Data\Models\AppUsersDatasModel();
 
@@ -285,17 +457,17 @@ class Payment extends \Lc5\Web\Controllers\MasterWeb
 					->where('id', $riepilogo_order_data->user_id)
 					->first();
 				$dati_email = array(
-					'name' => $datiUser->name, 
-					'surname' => $datiUser->surname, 
-					'email' => $datiUser->email, 
-					'order_id' => $riepilogo_order_data->id, 
-					'order_total' => $riepilogo_order_data->pay_total, 
+					'name' => $datiUser->name,
+					'surname' => $datiUser->surname,
+					'email' => $datiUser->email,
+					'order_id' => $riepilogo_order_data->id,
+					'order_total' => $riepilogo_order_data->pay_total,
 					'ripilogo_products' => $ripilogo_products
 				);
 				$email_subject = 'Il tuo ordine ' . '=?UTF-8?B?' . base64_encode(env('custom.app_name')) . '?=';
 				$this->send_email_pagamento_ok($datiUser->email, $dati_email, $email_subject, 'pay_cart_ok');
 				$toAddress = env('custom.default_to_address');
-				if(trim($toAddress) != ''){
+				if (trim($toAddress) != '') {
 					$email_subject = 'Nuovo ordine ricevuto su ' . '=?UTF-8?B?' . base64_encode(env('custom.app_name')) . '?=';
 					$this->send_email_pagamento_ok($toAddress, $dati_email, $email_subject, 'nuovo_ordine_ricevuto');
 				}
@@ -304,118 +476,20 @@ class Payment extends \Lc5\Web\Controllers\MasterWeb
 				// 
 				// 
 
+
 		}
 	}
 
 	//--------------------------------------------------------------------
-	private function updateObjectOnDB_failed($order_type, $order_id)
-	{
-	}
+	private function updateObjectOnDB_failed($order_type, $order_id) {}
 	//--------------------------------------------------------------------
-	private function updateObjectOnDB_canceled($order_type, $order_id)
-	{
-	}
+	private function updateObjectOnDB_canceled($order_type, $order_id) {}
 	//--------------------------------------------------------------------
 	//--------------------------------------------------------------------
 
 	//--------------------------------------------------------------------
 	//--------------------------------------------------------------------
-	protected function inviaEmail($toAddress, $mailSubject,  $htmlbody)
-	{
-
-		if (env('custom.email.protocol') == 'mailgun_api') {
-			return $this->inviaEmailMailGunApi($toAddress, $mailSubject,  $htmlbody);
-		} elseif (env('custom.email.protocol') == 'smtp') {
-			return $this->inviaEmailSMTP($toAddress, $mailSubject,  $htmlbody);
-		}
-	}
-
-
-	//--------------------------------------------------------------------
-	protected function inviaEmailMailGunApi($toAddress, $mailSubject,  $htmlbody)
-	{
-		if (!env('custom.email.MailGunSigningKey') || !env('custom.email.MailGunDomain')) {
-			return FALSE;
-		}
-		$refMailGunClass = '\Mailgun\Mailgun';
-		if (class_exists($refMailGunClass)) {
-			$mg = $refMailGunClass::create(env('custom.email.MailGunSigningKey'), 'https://api.eu.mailgun.net'); // For EU servers
-			$mailGun_message = $mg->messages()->send(env('custom.email.MailGunDomain'), [
-				'from'    => env('custom.from_address'), //env('custom.from_name')
-				'to'      => $toAddress,
-				'subject' => $mailSubject,
-				'html'    =>  $htmlbody,
-				'text'    => 'Questa email è stata inviata in formato HTML. Visualizzi questo messaggio perché il tuo client di posta non supporta queste funzionalità.',
-
-			]);
-			return $mailGun_message;
-		}
-		return FALSE;
-
-		// return $this->inviaEmailSMTP($toAddress, $mailSubject,  $htmlbody);
-	}
-
-
-	//--------------------------------------------------------------------
-	protected function inviaEmailSMTP($toAddress, $mailSubject,  $htmlbody)
-	{
-		$filePath = ROOTPATH . 'Lc5/Web/ThirdParty/PHPMailer/language/';
-		$mail = new \PHPMailer\PHPMailer\PHPMailer(true);
-		$mail->setLanguage('it', $filePath);
-		try {
-			//Server settings
-			// $mail->SMTPDebug = \PHPMailer\PHPMailer\SMTP::DEBUG_SERVER;
-			$mail->isSMTP();
-			$mail->Host       = $this->send_mail_config['SMTPHost'];
-			$mail->SMTPAuth   = true;
-			$mail->Username   = $this->send_mail_config['SMTPUser'];
-			$mail->Password   = $this->send_mail_config['SMTPPass'];
-			$mail->SMTPSecure = 'tls'; // \PHPMailer\PHPMailer\PHPMailer::ENCRYPTION_SMTPS;            //Enable implicit TLS encryption
-			$mail->Port       = $this->send_mail_config['SMTPPort'];
-
-			//Recipients
-			$mail->setFrom(env('custom.from_address'), env('custom.from_name'));
-			$mail->addAddress($toAddress);
-
-			//Content
-			$mail->isHTML(true);
-			$mail->Subject = $mailSubject;
-			$mail->Body    = $htmlbody;
-			$mail->AltBody = 'Questa email è stata inviata in formato HTML. Visualizzi questo messaggio perché il tuo client di posta non supporta queste funzionalità.';
-
-			$mail->send();
-			return true;
-		} catch (\PHPMailer\PHPMailer\Exception $e) {
-			// echo "Message could not be sent. Mailer Error: {$mail->ErrorInfo}";
-			return false;
-		}
-		return FALSE;
-	}
-
-	//--------------------------------------------------------------------
-	private function getEnvEmailConfig()
-	{
-		if (env('custom.email.protocol') == 'mailgun_api') {
-			return [];
-		} elseif (env('custom.email.protocol') == 'smtp') {
-			return [
-				'mailType' => 'html',
-				'SMTPHost' => env('custom.email.SMTPHost'),
-				'SMTPPort' => env('custom.email.SMTPPort'), //  465,//
-				'protocol' => env('custom.email.protocol'),
-				'SMTPUser' => env('custom.email.SMTPUser'),
-				'SMTPPass' => env('custom.email.SMTPPass'),
-				// 'SMTPCrypto' => 'tls',
-				// 'SMTPAuth' => true,
-				// 'SMTPKeepAlive' => true,
-				// 'mailPath' => '/var/qmail/mailnames',
-			];
-		}
-
-
-		return FALSE;
-	}
-
+	// 
 
 
 
@@ -431,7 +505,16 @@ class Payment extends \Lc5\Web\Controllers\MasterWeb
 		$user_mess->title = 'Si è verificato un errore';
 		$user_mess->content = '';
 		//
-		$htmlbody = file_get_contents(APPPATH . 'Views/email/' . $modello_html . '.html');
+		// $htmlbody = file_get_contents(APPPATH . 'Views/email/' . $modello_html . '.html');
+
+		if (appIsFile($this->base_view_filesystem . 'email/' . $modello_html . '.html')) {
+			$htmlbody = file_get_contents(APPPATH . 'email/' . $modello_html . '.html');
+		} else {
+			$htmlbody = file_get_contents(APPPATH . '../LcShop/Web/Views/email/' . $modello_html . '.html');
+		}
+
+
+
 		$htmlbody = str_replace('{{logo_path}}', env('custom.logo_path'), $htmlbody);
 		$htmlbody = str_replace('{{app_name}}', env('custom.app_name'), $htmlbody);
 		$htmlbody = str_replace('{{name}}', $dati_mess['name'], $htmlbody);
@@ -440,6 +523,7 @@ class Payment extends \Lc5\Web\Controllers\MasterWeb
 		$htmlbody = str_replace('{{order_id}}', $dati_mess['order_id'], $htmlbody);
 		$htmlbody = str_replace('{{order_total}}', $dati_mess['order_total'], $htmlbody);
 		$htmlbody = str_replace('{{ripilogo_products}}', $dati_mess['ripilogo_products'], $htmlbody);
+
 
 		// $email_subject = 'Il tuo ordine ' . '=?UTF-8?B?' . base64_encode(env('custom.app_name')) . '?=';
 		if ($this->inviaEmail($toAddress, $email_subject, $htmlbody)) {
@@ -451,3 +535,101 @@ class Payment extends \Lc5\Web\Controllers\MasterWeb
 
 	//--------------------------------------------------------------------
 }
+
+
+	// protected function inviaEmail($toAddress, $mailSubject,  $htmlbody)
+	// {
+
+	// 	if (env('custom.email.protocol') == 'mailgun_api') {
+	// 		return $this->inviaEmailMailGunApi($toAddress, $mailSubject,  $htmlbody);
+	// 	} elseif (env('custom.email.protocol') == 'smtp') {
+	// 		return $this->inviaEmailSMTP($toAddress, $mailSubject,  $htmlbody);
+	// 	}
+	// }
+
+
+	// //--------------------------------------------------------------------
+	// protected function inviaEmailMailGunApi($toAddress, $mailSubject,  $htmlbody)
+	// {
+	// 	if (!env('custom.email.MailGunSigningKey') || !env('custom.email.MailGunDomain')) {
+	// 		return FALSE;
+	// 	}
+	// 	$refMailGunClass = '\Mailgun\Mailgun';
+	// 	if (class_exists($refMailGunClass)) {
+	// 		$mg = $refMailGunClass::create(env('custom.email.MailGunSigningKey'), 'https://api.eu.mailgun.net'); // For EU servers
+	// 		$mailGun_message = $mg->messages()->send(env('custom.email.MailGunDomain'), [
+	// 			'from'    => env('custom.from_address'), //env('custom.from_name')
+	// 			'to'      => $toAddress,
+	// 			'subject' => $mailSubject,
+	// 			'html'    =>  $htmlbody,
+	// 			'text'    => 'Questa email è stata inviata in formato HTML. Visualizzi questo messaggio perché il tuo client di posta non supporta queste funzionalità.',
+
+	// 		]);
+	// 		return $mailGun_message;
+	// 	}
+	// 	return FALSE;
+
+	// 	// return $this->inviaEmailSMTP($toAddress, $mailSubject,  $htmlbody);
+	// }
+
+
+	// //--------------------------------------------------------------------
+	// protected function inviaEmailSMTP($toAddress, $mailSubject,  $htmlbody)
+	// {
+	// 	$filePath = ROOTPATH . 'Lc5/Web/ThirdParty/PHPMailer/language/';
+	// 	$mail = new \PHPMailer\PHPMailer\PHPMailer(true);
+	// 	$mail->setLanguage('it', $filePath);
+	// 	try {
+	// 		//Server settings
+	// 		// $mail->SMTPDebug = \PHPMailer\PHPMailer\SMTP::DEBUG_SERVER;
+	// 		$mail->isSMTP();
+	// 		$mail->Host       = $this->send_mail_config['SMTPHost'];
+	// 		$mail->SMTPAuth   = true;
+	// 		$mail->Username   = $this->send_mail_config['SMTPUser'];
+	// 		$mail->Password   = $this->send_mail_config['SMTPPass'];
+	// 		$mail->SMTPSecure = 'tls'; // \PHPMailer\PHPMailer\PHPMailer::ENCRYPTION_SMTPS;            //Enable implicit TLS encryption
+	// 		$mail->Port       = $this->send_mail_config['SMTPPort'];
+
+	// 		//Recipients
+	// 		$mail->setFrom(env('custom.from_address'), env('custom.from_name'));
+	// 		$mail->addAddress($toAddress);
+
+	// 		//Content
+	// 		$mail->isHTML(true);
+	// 		$mail->Subject = $mailSubject;
+	// 		$mail->Body    = $htmlbody;
+	// 		$mail->AltBody = 'Questa email è stata inviata in formato HTML. Visualizzi questo messaggio perché il tuo client di posta non supporta queste funzionalità.';
+
+	// 		$mail->send();
+	// 		return true;
+	// 	} catch (\PHPMailer\PHPMailer\Exception $e) {
+	// 		// echo "Message could not be sent. Mailer Error: {$mail->ErrorInfo}";
+	// 		return false;
+	// 	}
+	// 	return FALSE;
+	// }
+
+	// //--------------------------------------------------------------------
+	// private function getEnvEmailConfig()
+	// {
+	// 	if (env('custom.email.protocol') == 'mailgun_api') {
+	// 		return [];
+	// 	} elseif (env('custom.email.protocol') == 'smtp') {
+	// 		return [
+	// 			'mailType' => 'html',
+	// 			'SMTPHost' => env('custom.email.SMTPHost'),
+	// 			'SMTPPort' => env('custom.email.SMTPPort'), //  465,//
+	// 			'protocol' => env('custom.email.protocol'),
+	// 			'SMTPUser' => env('custom.email.SMTPUser'),
+	// 			'SMTPPass' => env('custom.email.SMTPPass'),
+	// 			// 'SMTPCrypto' => 'tls',
+	// 			// 'SMTPAuth' => true,
+	// 			// 'SMTPKeepAlive' => true,
+	// 			// 'mailPath' => '/var/qmail/mailnames',
+	// 		];
+	// 	}
+
+
+	// 	return FALSE;
+	// }
+

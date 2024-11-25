@@ -352,6 +352,8 @@ class Shop extends \Lc5\Web\Controllers\MasterWeb
 
                     ];
 
+                    // dd( $all_user_data);
+
                     if ($this->validate($validate_rules)) {
 
                         // 
@@ -377,6 +379,14 @@ class Shop extends \Lc5\Web\Controllers\MasterWeb
                                 'street_number' => $this->request->getPost('ship_address_number'),
                                 'tel_num' => $this->request->getPost('ship_phone'),
                             ];
+
+                            if($all_user_data->name == ''){
+                                $new_user_data['name'] = $this->request->getPost('ship_name');
+                            }
+                            if($all_user_data->surname == ''){
+                                $new_user_data['surname'] = $this->request->getPost('ship_surname');
+                            }
+
                             $this->appuser->updateUserData($new_user_data);
                         }
 
@@ -413,7 +423,7 @@ class Shop extends \Lc5\Web\Controllers\MasterWeb
                             }
                             $this->cart->svuotaCarrello();
                             // VAI AL PAGAMENTO
-                            return redirect()->route('web_shop_pay_now', [$new_id]);
+                            return redirect()->route('web_shop_pay_on_stripe_app', [$new_id]);
                         } else {
                             // VAI AI DATI DI FATURAZIONE
                             session()->set('order_data', $order_data);
@@ -548,7 +558,7 @@ class Shop extends \Lc5\Web\Controllers\MasterWeb
                             }
                         }
                         $this->cart->svuotaCarrello();
-                        return redirect()->route('web_shop_pay_now', [$new_id]);
+                        return redirect()->route('web_shop_pay_on_stripe_app', [$new_id]);
                     } else {
                         session()->setFlashdata('ui_mess', $this->validator->getErrors());
                         session()->setFlashdata('ui_mess_type', 'alert alert-danger');

@@ -1,0 +1,30 @@
+<html style="background-color: #f5f5f5;">
+
+<head>
+    <title>APP</title>
+    <style type="text/css">
+        body {
+            font-family: Verdana, Arial, Helvetica, sans-serif;
+            font-size: 14px;
+            font-weight: normal;
+            color: #000000;
+            background-color: #FFFFFF;
+            padding: 40px; box-sizing: border-box;
+        }
+    </style>
+</head>
+
+<body style="width: 90%; max-width: 600px; margin: 20px auto;">
+    <p>Ciao {{name}},<br />grazie per il tuo ordine.</p>
+    <p>Abbiamo ricevuto il tuo ordine e stiamo lavorando per te.</p>
+    <p><b>Il tuo ordine:</b></p>
+
+    <div>{{ripilogo_products}}</div>
+    
+    <p>Totale ordine €: <strong>{{order_total}}</strong> (compresivo di spese e tasse)</p>
+    <p>Se hai bisogno di assistenza, non esitare a contattarci.</p>
+
+    <p>Grazie. Il team di <strong>{{app_name}}</strong></p>
+</body>
+
+</html>

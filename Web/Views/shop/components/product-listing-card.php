@@ -16,13 +16,13 @@
 
 						<?php if (isset($single_items->misura_obj) && $single_items->misura_obj != null && isset($single_items->misura_obj->nome)) { ?>
 							<div class="lcshop-card-dati-item lcshop-card-dati-item-misura">
-								<span class="lcshop-card-dati-item-label"><?= langLabel('Misura') ?></span>
+								<span class="lcshop-card-dati-item-label"><?= langLabel('Misura') ?>: </span>
 								<span class="lcshop-card-dati-item-val"><?= $single_items->misura_obj->nome ?></span>
 							</div>
 						<?php } ?>
 						<?php if (isset($single_items->colore_obj) && $single_items->colore_obj != null && isset($single_items->colore_obj->nome)) { ?>
 							<div class="lcshop-card-dati-item lcshop-card-dati-item-color">
-								<span class="lcshop-card-dati-item-label"><?= langLabel('Colore') ?></span>
+								<span class="lcshop-card-dati-item-label"><?= langLabel('Tipo') ?>: </span>
 								<span class="lcshop-card-dati-item-val"><?= $single_items->colore_obj->nome ?></span>
 							</div>
 						<?php } ?>
