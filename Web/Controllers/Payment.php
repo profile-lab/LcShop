@@ -178,7 +178,9 @@ class Payment extends \Lc5\Web\Controllers\MasterWeb
 		$products_archive_qb->where('parent', 0);
 		// $products_archive_qb->where('(parent IS NULL OR parent <  1 )');
 
-
+		// 
+		$discounts = [];
+		// 
 		$checkout_line_items = [];
 		foreach ($orders_items as $orders_item) {
 			$checkout_line_items[] = [
@@ -196,6 +198,17 @@ class Payment extends \Lc5\Web\Controllers\MasterWeb
 		// dd($checkout_line_items);
 
 		\Stripe\Stripe::setApiKey(env('custom.stripe_secret_key'));
+
+		// $discountId = \Stripe\Coupon::create([
+		// 	'percent_off' => 90 * 1,
+		// 	'duration' => 'once',
+		// 	'name' => 'test pagamenti',
+		//  ]);
+		//  $discounts[] = [
+		// 	'coupon' => $discountId->id,
+		//  ];
+
+
 		$checkout_session = \Stripe\Checkout\Session::create(
 			[
 				// 'shipping_address_collection' => ['allowed_countries' => ['IT']],
@@ -244,6 +257,7 @@ class Payment extends \Lc5\Web\Controllers\MasterWeb
 				'mode' => 'payment',
 				'payment_method_types' => ['card'],
 				'line_items' => $checkout_line_items,
+				'discounts' => $discounts,
 				'success_url' => site_url(route_to('web_shop_pay_completed', $riepilogo_order_data->id)),
 				'cancel_url' => site_url(route_to('web_shop_pay_canceled', $riepilogo_order_data->id)),
 			]
