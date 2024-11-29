@@ -198,6 +198,49 @@ class Payment extends \Lc5\Web\Controllers\MasterWeb
 		\Stripe\Stripe::setApiKey(env('custom.stripe_secret_key'));
 		$checkout_session = \Stripe\Checkout\Session::create(
 			[
+				// 'shipping_address_collection' => ['allowed_countries' => ['IT']],
+				// 'shipping_options' => [
+				// 	// [
+				// 	//    'shipping_rate_data' => [
+				// 	//       'type' => 'fixed_amount',
+				// 	//       'fixed_amount' => [
+				// 	//          'amount' => 0,
+				// 	//          'currency' => 'eur',
+				// 	//       ],
+				// 	//       'display_name' => 'Free',
+				// 	//       'delivery_estimate' => [
+				// 	//          'minimum' => [
+				// 	//             'unit' => 'business_day',
+				// 	//             'value' => 5,
+				// 	//          ],
+				// 	//          'maximum' => [
+				// 	//             'unit' => 'business_day',
+				// 	//             'value' => 7,
+				// 	//          ],
+				// 	//       ],
+				// 	//    ],
+				// 	// ],
+				// 	[
+				// 		'shipping_rate_data' => [
+				// 			'type' => 'fixed_amount',
+				// 			'fixed_amount' => [
+				// 				'amount' => 1500,
+				// 				'currency' => 'eur',
+				// 			],
+				// 			'display_name' => 'Consegna veloce',
+				// 			'delivery_estimate' => [
+				// 				'minimum' => [
+				// 					'unit' => 'business_day',
+				// 					'value' => 1,
+				// 				],
+				// 				'maximum' => [
+				// 					'unit' => 'business_day',
+				// 					'value' => 1,
+				// 				],
+				// 			],
+				// 		],
+				// 	],
+				// ],
 				'mode' => 'payment',
 				'payment_method_types' => ['card'],
 				'line_items' => $checkout_line_items,
@@ -632,4 +675,3 @@ class Payment extends \Lc5\Web\Controllers\MasterWeb
 
 	// 	return FALSE;
 	// }
-
