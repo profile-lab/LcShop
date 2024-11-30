@@ -73,6 +73,7 @@ class ShopOrders extends MasterLc
                 }
             }
         }
+        return null;
     }
     //--------------------------------------------------------------------
     private function getUsers()

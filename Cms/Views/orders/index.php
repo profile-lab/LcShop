@@ -29,7 +29,7 @@
                     <tr class="order_row order_row_status_<?= $item->order_status ?>">
                         <td><?= $item->id ?></td>
                         <td>
-                            <a href="<?= site_url(route_to($route_prefix . '_edit', $item->id)) ?>">Ordine da <?= $item->user->name ?> <?= $item->user->surname ?></a>
+                            <a href="<?= site_url(route_to($route_prefix . '_edit', $item->id)) ?>">Ordine da <?= ($item->user) ?  $item->user->name  .' '.  $item->user->surname : 'Utente Opsite' ?></a>
                         </td>
                         <td><?= humanData($item->created_at) ?></td>
                         <td>

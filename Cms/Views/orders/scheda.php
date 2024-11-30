@@ -149,7 +149,9 @@
                             <?= view('Lc5\Cms\Views\form-cmp/readonly', ['item' => ['label' => 'Spedizione', 'value' => $entity->spedizione_name]]) ?>
                             <?= view('Lc5\Cms\Views\form-cmp/readonly', ['item' => ['label' => 'Tipo spedizione', 'value' => (isset($all_spedizioni_type_labels[$entity->spedizione_type])) ? $all_spedizioni_type_labels[$entity->spedizione_type] : $entity->spedizione_type]]) ?>
                             <?= view('Lc5\Cms\Views\form-cmp/number', ['item' => ['label' => 'spese di spedizione €', 'name' => 'spese_spedizione', 'value' => $entity->spese_spedizione, 'step' => '0.01', 'decimal' => 2]]) ?>
-                            <!-- <?= view('Lc5\Cms\Views\form-cmp/number', ['item' => ['label' => 'spese spedizione imponibile €', 'name' => 'spese_spedizione_imponibile', 'value' => $entity->spese_spedizione_imponibile, 'step' => '0.01', 'decimal' => 2]]) ?> -->
+                            <?php /*
+                            <?= view('Lc5\Cms\Views\form-cmp/number', ['item' => ['label' => 'spese spedizione imponibile €', 'name' => 'spese_spedizione_imponibile', 'value' => $entity->spese_spedizione_imponibile, 'step' => '0.01', 'decimal' => 2]]) ?> 
+                            */ ?>
                         </div>
                         <div class="row">
                             <hr />
@@ -158,7 +160,10 @@
                             <?= view('Lc5\Cms\Views\form-cmp/number', ['item' => ['label' => 'imponibile €', 'name' => 'imponibile_total', 'value' => $entity->imponibile_total, 'step' => '0.01', 'decimal' => 2]]) ?>
                             <?= view('Lc5\Cms\Views\form-cmp/number', ['item' => ['label' => 'iva €', 'name' => 'iva_total', 'value' => $entity->iva_total, 'step' => '0.01', 'decimal' => 2]]) ?>
                             <?= view('Lc5\Cms\Views\form-cmp/number', ['item' => ['label' => 'totale ordine €', 'name' => 'total', 'value' => $entity->total, 'step' => '0.01', 'decimal' => 2]]) ?>
-                            <!-- <?= view('Lc5\Cms\Views\form-cmp/number', ['item' => ['label' => 'promo_total', 'name' => 'promo_total', 'value' => $entity->promo_total, 'step' => '0.01', 'decimal' => 2]]) ?> -->
+                            <?php /*
+                            <?= view('Lc5\Cms\Views\form-cmp/number', ['item' => ['label' => 'promo_total', 'name' => 'promo_total', 'value' => $entity->promo_total, 'step' => '0.01', 'decimal' => 2]]) ?> 
+                            */ ?>
+
                             <?= view('Lc5\Cms\Views\form-cmp/number', ['item' => ['label' => 'Totale pagato €', 'name' => 'pay_total', 'value' => $entity->pay_total, 'step' => '0.01', 'decimal' => 2]]) ?>
                         </div>
                         <div class="row">
