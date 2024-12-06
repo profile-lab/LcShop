@@ -54,7 +54,12 @@ class Cart extends \App\Controllers\BaseController
         if ($this->req->getPost()) {
             if ($this->req->getPost('cart_action') == 'ADD') {
                 if ($this->addToCart($this->req->getPost('prod_id'), 'p_')) {
-                    return TRUE;
+                    session()->setFlashdata('ui_mess', 'Prodotto aggiunto al carrello');
+                    session()->setFlashdata('ui_mess_type', 'alert alert-shop alert-success');
+                    return route_to('web_shop_cart');
+                    // 
+                    // return TRUE;
+                    // 
                 }
             }
         }

@@ -181,8 +181,14 @@ class Shop extends \Lc5\Web\Controllers\MasterWeb
     public function index($category_guid = null)
     {
 
-        if ($this->cart->checkCartAction()) {
-            return redirect()->to(site_url(uri_string()));
+        if ($cartAtcion = $this->cart->checkCartAction()) {
+            if($cartAtcion){
+                if(is_string($cartAtcion)){
+                    return redirect()->to($cartAtcion);
+                }else{
+                    return redirect()->to(site_url(uri_string()));
+                }
+            }
         }
         $pages_entity_rows = null;
         $products_archive_qb_category = null;
@@ -245,8 +251,14 @@ class Shop extends \Lc5\Web\Controllers\MasterWeb
     //--------------------------------------------------------------------
     public function detail($product_guid, $model_id = null)
     {
-        if ($this->cart->checkCartAction()) {
-            return redirect()->to(site_url(uri_string()));
+        if ($cartAtcion = $this->cart->checkCartAction()) {
+            if($cartAtcion){
+                if(is_string($cartAtcion)){
+                    return redirect()->to($cartAtcion);
+                }else{
+                    return redirect()->to(site_url(uri_string()));
+                }
+            }
         }
         $pages_entity_rows = null;
         if (!$model_id) {

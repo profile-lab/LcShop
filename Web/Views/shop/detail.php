@@ -12,6 +12,9 @@
             </hgroup>
         </div>
     </section>
+    <?php /*
+    <?= user_mess($ui_mess, $ui_mess_type) ?>
+    */ ?>
     <div class="myIn lcshop-flex">
         <div class="lcshop-scheda">
             <?php /*
