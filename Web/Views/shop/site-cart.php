@@ -24,8 +24,8 @@
                     <div class="cart-page-col cart-page-col-qnt">
                         <b>Quantità</b>
                     </div>
-                    <div class="cart-page-col cart-page-col-price">Prezzo</div>
-                    <div class="cart-page-col cart-page-col-price">Totale</div>
+                    <div class="cart-page-col cart-page-col-price">Prezzo €</div>
+                    <div class="cart-page-col cart-page-col-price">Totale €</div>
                     <div class="cart-page-col cart-page-col-action">
                         
                     </div>
