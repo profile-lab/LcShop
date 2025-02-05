@@ -21,7 +21,7 @@ class ShopAction extends \App\Controllers\BaseController
 
         $shop_products_model = new ShopProductsModel();
         $shop_products_model->setForFrontemd();
-        $products_archive_qb = $shop_products_model->where('parent <', 1)->asObject();
+        $products_archive_qb = $shop_products_model->where('parent <', 1)->where('public',1)->asObject();
 
         if ($category_id) {
             $products_archive_qb->where('category', $category_id);
