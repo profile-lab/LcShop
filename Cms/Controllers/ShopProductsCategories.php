@@ -113,4 +113,12 @@ class ShopProductsCategories extends MasterLc
 		$this->lc_ui_date->entity = $curr_entity;
 		return view('LcShop\Cms\Views/products-cats/scheda', $this->lc_ui_date->toArray());
 	}
+
+	//--------------------------------------------------------------------
+	public function delete($id)
+	{
+		$shop_product_cat_model = new ShopProductsCategoriesModel();
+		$shop_product_cat_model->delete($id);
+		return redirect()->route($this->route_prefix);
+	}
 }
