@@ -82,7 +82,7 @@ class Shop extends \Lc5\Web\Controllers\MasterWeb
         // 
 
         // 
-        $this->categories = $this->shop_products_cat_model->asObject()->findAll();
+        $this->categories = $this->shop_products_cat_model->asObject()->orderBy('ordine', 'ASC')->findAll();
         foreach ($this->categories as $category) {
             $category->permalink = route_to(__locale_uri__ . 'web_shop_category', $category->guid);
         }
