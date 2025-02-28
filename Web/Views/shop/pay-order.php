@@ -26,9 +26,8 @@
                                 <?php  } ?>
                             </div>
                         <?php } else { ?>
-                            <div class="make-order-page-main">
-                                <?= view(customOrDefaultViewFragment('users/components/login-form', 'LcUsers')) ?>
-                                <?= view(customOrDefaultViewFragment('users/components/signup-login-alternative', 'LcUsers')) ?>
+                            <div class="myIn lcshop-flex">
+                                <?= view(customOrDefaultViewFragment('shop/components/user-required', 'LcShop')) ?>
                             </div>
                         <?php } ?>
                     </div>
