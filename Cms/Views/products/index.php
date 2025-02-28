@@ -1,7 +1,7 @@
 <?= $this->extend('Lc5\Cms\Views\layout/body') ?>
 <?= $this->section('content') ?>
 <div class="d-md-flex">
-    <h1><?= $module_name ?></h1>
+    <h1>Lista <?= $module_name ?></h1>
     <div class="d-flex align-items-center">
         <div>
             <a class="btn btn-primary" href="<?= site_url(route_to($route_prefix . '_new')) ?>"><span class="oi oi-plus mr-1"></span>Crea nuovo</a>
