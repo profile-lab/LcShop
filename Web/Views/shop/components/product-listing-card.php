@@ -1,5 +1,5 @@
 <?php if (isset($single_items) && $single_items != null) { ?>
-	<div class="lcshop-card <?= ($single_items->in_promo) ? ' is_in_promo' : '' ?>">
+	<div class="lcshop-card <?= ($single_items->in_promo) ? ' is_in_promo' : '' ?> <?= ($single_items->is_evi) ? ' is_evi_new' : '' ?>">
 		<form method="post" name="add_to_cart_form">
 
 			<?= (isset($single_items->permalink) && $single_items->permalink != null) ? '<a href="' . $single_items->permalink . '" title="' . $single_items->titolo . '" class="shop_product_link" >' : '' ?>

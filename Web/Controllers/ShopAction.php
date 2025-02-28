@@ -33,6 +33,10 @@ class ShopAction extends \App\Controllers\BaseController
             $products_archive_qb->like('nome', $req->getGet('s'));
         }
 
+        $products_archive_qb->orderBy('is_evi', 'DESC');
+        $products_archive_qb->orderBy('ordine', 'ASC');
+        $products_archive_qb->orderBy('created_at', 'DESC');
+
         if ($products_archive = $products_archive_qb->paginate(($select_limit))) { //findAll()) {
             foreach ($products_archive as $product) {
                 $product->abstract = word_limiter(strip_tags($product->testo), 20);
