@@ -42,6 +42,7 @@ class ShopProducts extends MasterLc
 	public function index()
 	{
 		$updateOrdineValue = $this->shop_products_model->where('ordine is null')->set(['ordine' => 1500])->update();
+		$updateIsEviValue = $this->shop_products_model->where('is_evi is null')->set(['is_evi' => 0])->update();
 		// 
 		$list = $this->shop_products_model->where('parent', 0)->orderBy('id', 'DESC')->findAll();
 		$this->lc_ui_date->list = $list;

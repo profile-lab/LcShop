@@ -144,6 +144,8 @@
                         <?php } ?>
                         <div class="row">
                             <?= view('Lc5\Cms\Views\form-cmp/select', ['item' => ['label' => 'Public', 'name' => 'public', 'input_class' => 'public', 'value' => $entity->public, 'width' => 'col-md-12', 'sources' => $bool_values, 'no_empty' => true]]); ?>
+                            <?= view('Lc5\Cms\Views\form-cmp/number', ['item' => ['label' => 'Ordine', 'name' => 'ordine', 'value' => $entity->ordine, 'placeholder' => '']]) ?>
+                            <?= view('Lc5\Cms\Views\form-cmp/select', ['item' => ['label' => 'Novità/Evidenza', 'name' => 'is_evi', 'input_class' => 'is_evi', 'value' => $entity->is_evi, 'width' => 'col-md-12', 'sources' => $bool_values, 'no_empty' => true]]); ?>
                             <?= view('Lc5\Cms\Views\form-cmp/text', ['item' => ['label' => 'Barcode', 'name' => 'barcode', 'value' => $entity->barcode, 'placeholder' => '']]) ?>
                             <?= view('Lc5\Cms\Views\form-cmp/text', ['item' => ['label' => 'SKU', 'name' => 'sku', 'value' => $entity->sku, 'placeholder' => '']]) ?>
                             <?php if (isset($entity->categories_list) && is_iterable($entity->categories_list)) { ?>
