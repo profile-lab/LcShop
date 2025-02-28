@@ -127,6 +127,7 @@ if (!function_exists('getShopEviProducts')) {
         if (
             $pages_archive = $qb_prodotti->orderBy('is_evi', 'ASC')
             ->where('parent', 0)
+            ->orderBy('is_evi', 'DESC')
             ->orderBy('id', 'RANDOM')
             ->findAll($limit)
         ) {
