@@ -1,6 +1,6 @@
 <?= $this->extend(customOrDefaultViewFragment('layout/body')) ?>
 <?= $this->section('content') ?>
-<article>
+<article class="lc-shop-scheda-prodotto <?= ($in_promo) ? ' is_in_promo' : '' ?>">
     <?= view(customOrDefaultViewFragment('shop/components/breadcrumb', 'LcShop')) ?>
     <section class="lcshop-header">
         <div class="myIn">
