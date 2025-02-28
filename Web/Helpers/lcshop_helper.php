@@ -125,10 +125,12 @@ if (!function_exists('getShopEviProducts')) {
         $shop_products_model->setForFrontemd();
         $qb_prodotti = $shop_products_model->asObject();
         if (
-            $pages_archive = $qb_prodotti->orderBy('is_evi', 'ASC')
+            $pages_archive = $qb_prodotti
             ->where('parent', 0)
+            // ->orderBy('id', 'RANDOM')
             ->orderBy('is_evi', 'DESC')
-            ->orderBy('id', 'RANDOM')
+            ->orderBy('ordine', 'ASC')
+            ->orderBy('created_at', 'DESC')            
             ->findAll($limit)
         ) {
             foreach ($pages_archive as $key => $single) {
