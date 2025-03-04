@@ -75,7 +75,7 @@
                     </div>
                     <div class="lcshop-detail-tools">
                         <?php if ($giacenza && $giacenza > 0) { ?>
-                            <form method="post" name="add_to_cart_form">
+                            <form method="post" name="add_to_cart_form" id="formAddToCart">
                                 <?= view(customOrDefaultViewFragment('shop/components/add_to_cart_component',  'LcShop'), ['giacenza' => $giacenza]) ?>
                                 <input type="hidden" name="prod_id" value="<?= $prod_id ?>">
                                 <input type="hidden" name="prod_model_id" value="<?= $prod_model_id ?>" />
@@ -133,8 +133,22 @@
 <?= $this->section('footer_script') ?>
 
 <script type="text/javascript">
-    $(document).ready(function() {
-
+    document.getElementById("formAddToCart").addEventListener("submit", function(e) {
+        e.preventDefault();
+        const cart_in_button = document.querySelector(".cart_in");
+        cart_in_button.classList.add("loading");
+        cart_in_button.disabled = true;
+        cart_in_button.innerHTML = "...";
+        fbq('track', 'AddToCart', {
+            content_ids: ['<?= $prod_id ?>'],
+            content_name: '<?= $titolo ?>',
+            value: <?= $prezzo ?>,
+            currency: 'EUR'
+        });
+        setTimeout(() => {
+            cart_in_button.classList.remove("loading");
+            e.target.submit();
+        }, 300);
     });
 </script>
 
