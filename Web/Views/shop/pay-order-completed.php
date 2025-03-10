@@ -21,8 +21,8 @@
                 </div>
             <?php } else { ?>
                 <div class="make-order-page">
-                    <h4 class=""><?= appLabel('Qualcosa è andato storto', $app->labels, true) ?></h4>
-                    <p><?= appLabel('Non esitare a contattarci in caso di problemi o richieste.', $app->labels, true) ?></p>
+                    <h4 class=""><?= appLabel('Stiamo verificando il tuo pagamento', $app->labels, true) ?></h4>
+                    <p><?= appLabel('Una email di riepilogo ti avviserà quando il pagamento sarà elaborato.<br />Non esitare a contattarci in caso di problemi o richieste.', $app->labels, true) ?></p>
                 </div>
             <?php } ?>
         <?php } else { ?>
