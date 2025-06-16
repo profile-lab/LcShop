@@ -170,7 +170,17 @@ class Payment extends \Lc5\Web\Controllers\MasterWeb
 		if (!$riepilogo_order_data) {
 			throw new \CodeIgniter\Exceptions\PageNotFoundException('Ordine non trovato');
 		}
+		// dd($riepilogo_order_data);
 		$orders_items = $this->shop_orders_items_model->where('order_id', $riepilogo_order_data->id)->findAll();
+
+		$riepilogo_order_data->spese_spedizione;
+		$riepilogo_order_data->spese_spedizione_formatted;
+		$riepilogo_order_data->spese_spedizione_imponibile;
+		$riepilogo_order_data->spese_spedizione_imponibile_formatted;
+		$riepilogo_order_data->spedizione_name;
+		$riepilogo_order_data->peso_totale_kg;
+		$riepilogo_order_data->peso_totale_grammi;
+
 
 		//
 		$pages_entity_rows = null;
@@ -183,13 +193,15 @@ class Payment extends \Lc5\Web\Controllers\MasterWeb
 		// 
 		$checkout_line_items = [];
 		foreach ($orders_items as $orders_item) {
+			// dd($orders_item);
 			$checkout_line_items[] = [
 				'price_data' => [
 					'currency' => 'eur',
 					'product_data' => [
 						'name' => $orders_item->full_nome_prodotto,
 					],
-					'unit_amount' => $orders_item->prezzo * 100,
+					'unit_amount' => $orders_item->prezzo_uni * 100,
+					// 'unit_amount' => $orders_item->prezzo * 100,
 				],
 				'quantity' => intval($orders_item->qnt),
 			];
@@ -208,60 +220,86 @@ class Payment extends \Lc5\Web\Controllers\MasterWeb
 		// 	'coupon' => $discountId->id,
 		//  ];
 
+		$checkout_session_data = [
+			'mode' => 'payment',
+			'payment_method_types' => ['card'],
+			'line_items' => $checkout_line_items,
+			'discounts' => $discounts,
+			'success_url' => site_url(route_to('web_shop_pay_completed', $riepilogo_order_data->id)),
+			'cancel_url' => site_url(route_to('web_shop_pay_canceled', $riepilogo_order_data->id)),
+		];
+
+		if($riepilogo_order_data->spese_spedizione > 0) {
+			$checkout_session_data['shipping_options'] = [
+				[
+					'shipping_rate_data' => [
+						'type' => 'fixed_amount',
+						'fixed_amount' => [
+							'amount' => $riepilogo_order_data->spese_spedizione * 100,
+							'currency' => 'eur',
+						],
+						'display_name' => $riepilogo_order_data->spedizione_name,
+					],
+				],
+			];
+		}
 
 		$checkout_session = \Stripe\Checkout\Session::create(
-			[
-				// 'shipping_address_collection' => ['allowed_countries' => ['IT']],
-				// 'shipping_options' => [
-				// 	// [
-				// 	//    'shipping_rate_data' => [
-				// 	//       'type' => 'fixed_amount',
-				// 	//       'fixed_amount' => [
-				// 	//          'amount' => 0,
-				// 	//          'currency' => 'eur',
-				// 	//       ],
-				// 	//       'display_name' => 'Free',
-				// 	//       'delivery_estimate' => [
-				// 	//          'minimum' => [
-				// 	//             'unit' => 'business_day',
-				// 	//             'value' => 5,
-				// 	//          ],
-				// 	//          'maximum' => [
-				// 	//             'unit' => 'business_day',
-				// 	//             'value' => 7,
-				// 	//          ],
-				// 	//       ],
-				// 	//    ],
-				// 	// ],
-				// 	[
-				// 		'shipping_rate_data' => [
-				// 			'type' => 'fixed_amount',
-				// 			'fixed_amount' => [
-				// 				'amount' => 1500,
-				// 				'currency' => 'eur',
-				// 			],
-				// 			'display_name' => 'Consegna veloce',
-				// 			'delivery_estimate' => [
-				// 				'minimum' => [
-				// 					'unit' => 'business_day',
-				// 					'value' => 1,
-				// 				],
-				// 				'maximum' => [
-				// 					'unit' => 'business_day',
-				// 					'value' => 1,
-				// 				],
-				// 			],
-				// 		],
-				// 	],
-				// ],
-				'mode' => 'payment',
-				'payment_method_types' => ['card'],
-				'line_items' => $checkout_line_items,
-				'discounts' => $discounts,
-				'success_url' => site_url(route_to('web_shop_pay_completed', $riepilogo_order_data->id)),
-				'cancel_url' => site_url(route_to('web_shop_pay_canceled', $riepilogo_order_data->id)),
-			]
+			$checkout_session_data
 		);
+		// $checkout_session = \Stripe\Checkout\Session::create(
+		// 	[
+		// 		// 'shipping_address_collection' => ['allowed_countries' => ['IT']],
+		// 		// 'shipping_options' => [
+		// 		// 	// [
+		// 		// 	//    'shipping_rate_data' => [
+		// 		// 	//       'type' => 'fixed_amount',
+		// 		// 	//       'fixed_amount' => [
+		// 		// 	//          'amount' => 0,
+		// 		// 	//          'currency' => 'eur',
+		// 		// 	//       ],
+		// 		// 	//       'display_name' => 'Free',
+		// 		// 	//       'delivery_estimate' => [
+		// 		// 	//          'minimum' => [
+		// 		// 	//             'unit' => 'business_day',
+		// 		// 	//             'value' => 5,
+		// 		// 	//          ],
+		// 		// 	//          'maximum' => [
+		// 		// 	//             'unit' => 'business_day',
+		// 		// 	//             'value' => 7,
+		// 		// 	//          ],
+		// 		// 	//       ],
+		// 		// 	//    ],
+		// 		// 	// ],
+		// 		// 	[
+		// 		// 		'shipping_rate_data' => [
+		// 		// 			'type' => 'fixed_amount',
+		// 		// 			'fixed_amount' => [
+		// 		// 				'amount' => 1500,
+		// 		// 				'currency' => 'eur',
+		// 		// 			],
+		// 		// 			'display_name' => 'Consegna veloce',
+		// 		// 			'delivery_estimate' => [
+		// 		// 				'minimum' => [
+		// 		// 					'unit' => 'business_day',
+		// 		// 					'value' => 1,
+		// 		// 				],
+		// 		// 				'maximum' => [
+		// 		// 					'unit' => 'business_day',
+		// 		// 					'value' => 1,
+		// 		// 				],
+		// 		// 			],
+		// 		// 		],
+		// 		// 	],
+		// 		// ],
+		// 		'mode' => 'payment',
+		// 		'payment_method_types' => ['card'],
+		// 		'line_items' => $checkout_line_items,
+		// 		'discounts' => $discounts,
+		// 		'success_url' => site_url(route_to('web_shop_pay_completed', $riepilogo_order_data->id)),
+		// 		'cancel_url' => site_url(route_to('web_shop_pay_canceled', $riepilogo_order_data->id)),
+		// 	]
+		// );
 
 		$order_stripe_session_data = [
 			'stripe_pi' => $checkout_session->id,
@@ -424,8 +462,8 @@ class Payment extends \Lc5\Web\Controllers\MasterWeb
 
 			// Handle the event
 			switch ($event->type) {
-					// case 'payment_intent.created':
-					//   break;
+				// case 'payment_intent.created':
+				//   break;
 				case 'payment_intent.succeeded':
 					$this->updateObjectOnDB_succeeded($order_type, $order_id, $pi_ID);
 					break;
@@ -435,8 +473,8 @@ class Payment extends \Lc5\Web\Controllers\MasterWeb
 				case 'payment_intent.canceled':
 					$this->updateObjectOnDB_canceled($order_type, $order_id, $pi_ID);
 					break;
-					// case 'payment_method.attached':
-					//   break;
+				// case 'payment_method.attached':
+				//   break;
 				default:
 					http_response_code(400);
 					exit();
