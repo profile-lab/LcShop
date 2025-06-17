@@ -132,24 +132,4 @@
 <?= $this->endSection() ?>
 <?= $this->section('footer_script') ?>
 
-<script type="text/javascript">
-    document.getElementById("formAddToCart").addEventListener("submit", function(e) {
-        e.preventDefault();
-        const cart_in_button = document.querySelector(".cart_in");
-        cart_in_button.classList.add("loading");
-        cart_in_button.disabled = true;
-        cart_in_button.innerHTML = "...";
-        fbq('track', 'AddToCart', {
-            content_ids: ['<?= $prod_id ?>'],
-            content_name: '<?= $titolo ?>',
-            value: <?= $prezzo ?>,
-            currency: 'EUR'
-        });
-        setTimeout(() => {
-            cart_in_button.classList.remove("loading");
-            e.target.submit();
-        }, 300);
-    });
-</script>
-
 <?= $this->endSection() ?>
